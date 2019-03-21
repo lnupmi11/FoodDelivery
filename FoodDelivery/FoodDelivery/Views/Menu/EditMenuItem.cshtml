@@ -1,0 +1,27 @@
+﻿@model MenuItemModel
+
+
+@{
+    ViewData["Title"] = "EditMenuItem";
+}
+
+<h2>Edit Menu Item</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(model => model.Name, "Name")
+    <br />
+    <h4>
+        @Model.Name
+    </h4>
+    <br /><br />
+    @Html.LabelFor(model => model.Price, "Price")
+    <br />
+    @Html.EditorFor(model => model.Price)
+    <br /><br />
+    @Html.LabelFor(model => model.Description, "Description")
+    <br />
+    @Html.EditorFor(model => model.Description)
+    <br /><br />
+    <input type="submit" value="Edit" />
+    }
