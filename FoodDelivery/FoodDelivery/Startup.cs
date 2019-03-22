@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FoodDelivery.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using FoodDelivery.DAL.EntityFramework;
 
 namespace FoodDelivery
 {
@@ -34,11 +34,13 @@ namespace FoodDelivery
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<FoodDeliveryContext>(options =>
+                options.UseSqlServer(connection, b => b.MigrationsAssembly("FoodDelivery")));
+
             services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<FoodDeliveryContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
