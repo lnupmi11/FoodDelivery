@@ -1,38 +1,54 @@
 ﻿@using FoodDelivery.Models
 @model List<MenuItemModel>
 
-    @{
-        ViewData["Title"] = "Index";
-    }
-    <section class="sections random-product">
-        <div class="container-fluid">
-            <div class="container">
-                <div class="row">
-                    <h4>Menu items</h4>
-                    @foreach(var item in Model)
-                    {
-                        <div class="col-md-4">
-                            <div class="card">
-                                <img class="card-img-top" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png"Card image cap">
-                                <div class="card-body">
-                                    <h3 class="card-title">
-                                        <a href="#">@item.Name</a>
-                                    </h3>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="float-left">
-                                        <a href="#">@item.Price</a>
-                                        <br>
-                                        <span>@item.Description</span>
-                                        <br>
-                                        @Html.ActionLink("Edit", "EditMenuItem", "Menu", new { name = @item.Name})
-                                    </div>
-                                </div>
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Scripts
+{
+    <script>
+        function AddToCart(itemId) {
+            $.ajax({
+                url: "Cart/AddItem?itemId=" + itemId,
+                success: function () {
+                    alert("success");
+                }
+            });
+        }
+    </script>
+}
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row">
+            <h4>Menu items</h4>
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <img class="card-img-top" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png" Card image cap">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <a href="#">@item.Name</a>
+                            </h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="float-left">
+                                <h4>@item.Price $</h4>
+                                <br>
+                                <span>@item.Description</span>
+                                <br>
+                                @Html.ActionLink("Edit", "EditMenuItem", "Menu", new { name = @item.Name })
                             </div>
-                        </div><!--.col-->
-                    }
-                </div><!--.row-->
-            </div><!--.container-->
-        </div><!--.container-fluid-->
-    </section>
+                            <div class="float-reight">
+                                <button type="submit" onclick="return AddToCart(@item.Id);" class="btn btn-primary btn-md">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 

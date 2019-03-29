@@ -1,0 +1,67 @@
+﻿@model IEnumerable<FoodDelivery.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Scripts
+    {
+    <script>
+        function AddToCart(itemId) {
+            $.ajax({
+                url: "Cart/AddItem?itemId=" + itemId,
+                success: function () {
+                    $('#' + itemId).val(parseInt($('#' + itemId).val()) + 1);
+                }
+            });
+        }
+
+        function RemoveFromCart(itemId) {
+            $.ajax({
+                url: "Cart/RemoveItem?itemId=" + itemId,
+                success: function () {
+                    $('#' + itemId).val(parseInt($('#' + itemId).val()) - 1);
+                    if ($('#' + itemId).val() == 0) {
+                        $('#' + itemId).val(1);
+                    }
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('.count').prop('disabled', true);
+        });
+    </script>
+}
+@foreach (var item in Model)
+{
+    <div class="card">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <img class="card-img-inline-cart" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png" Card image cap">
+                </div>
+                <div class="col-md-6">
+                    <div class="card-inline-cart">
+                        <div class="item-description-cart ">
+                            <h3 class="item-title-cart">
+                                <a href="#">@item.ItemTitle</a>
+                            </h3>
+                            <p>@item.Discription</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1">                            
+                    <h3>@item.Price $</h3>
+                </div>
+                <div class="col-md-2">
+                    <div class="item-counter-cart">
+                        <span class="minus bg-dark" onclick="return RemoveFromCart(@item.Id)">-</span>
+                        <input type="number" id="@item.Id" class="count" value="@item.Count">
+                        <span class="plus bg-dark" onclick="return AddToCart(@item.Id)">+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
