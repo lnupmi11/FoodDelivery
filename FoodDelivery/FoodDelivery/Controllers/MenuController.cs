@@ -15,13 +15,13 @@ namespace FoodDelivery.Controllers
         {
             menuItems = new List<MenuItemModel>
             {
-                 new MenuItemModel { Name = "Item1", Price = 100, Description = "Description1" },
-                 new MenuItemModel { Name = "Item2", Price = 150, Description = "Description2" },
-                 new MenuItemModel { Name = "Item3", Price = 200, Description = "Description3" },
-                 new MenuItemModel { Name = "Item4", Price = 250, Description = "Description4" },
-                 new MenuItemModel { Name = "Item5", Price = 300, Description = "Description5" },
-                 new MenuItemModel { Name = "Item6", Price = 350, Description = "Description6" },
-                 new MenuItemModel { Name = "Item7", Price = 400, Description = "Description7" },
+                 new MenuItemModel { Name = "Item1", Price = 100, Description = "Description1", Id = 1 },
+                 new MenuItemModel { Name = "Item2", Price = 150, Description = "Description2", Id = 2 },
+                 new MenuItemModel { Name = "Item3", Price = 200, Description = "Description3", Id = 3 },
+                 new MenuItemModel { Name = "Item4", Price = 250, Description = "Description4", Id = 4 },
+                 new MenuItemModel { Name = "Item5", Price = 300, Description = "Description5", Id = 5 },
+                 new MenuItemModel { Name = "Item6", Price = 350, Description = "Description6", Id = 6 },
+                 new MenuItemModel { Name = "Item7", Price = 400, Description = "Description7", Id = 7 },
             };
         }
 
