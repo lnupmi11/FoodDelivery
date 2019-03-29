@@ -15,16 +15,12 @@ namespace FoodDelivery.DAL.EntityFramework
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Category> ItemCategories { get; set; }
 
-        public FoodDeliveryContext(DbContextOptions<FoodDeliveryContext> options)
-
-            : base(options)
+        public FoodDeliveryContext(DbContextOptions<FoodDeliveryContext> options) : base(options)
         {
             Database.EnsureCreated();
         }
 
-        public FoodDeliveryContext()
-            : base()
-        { }
+        public FoodDeliveryContext() : base() { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

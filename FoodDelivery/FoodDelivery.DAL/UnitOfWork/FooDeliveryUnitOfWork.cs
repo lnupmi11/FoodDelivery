@@ -8,7 +8,7 @@ namespace FoodDelivery.DAL.UnitOfWork
 {
     public class FoodDeliveryUnitOfWork
     {
-        private FoodDeliveryContext db = new FoodDeliveryContext();
+        private FoodDeliveryContext _db = new FoodDeliveryContext();
         private IRepository<Basket> _basketsRepository;
         private IRepository<Discount> _discountRepository;
         private IRepository<Category> _itemCategoryRepository;
@@ -19,7 +19,7 @@ namespace FoodDelivery.DAL.UnitOfWork
             get
             {
                 if (_basketsRepository == null)
-                    _basketsRepository = new GenericRepository<Basket>(db);
+                    _basketsRepository = new GenericRepository<Basket>(_db);
                 return _basketsRepository;
             }
         }
@@ -29,7 +29,7 @@ namespace FoodDelivery.DAL.UnitOfWork
             get
             {
                 if (_discountRepository == null)
-                    _discountRepository = new GenericRepository<Discount>(db);
+                    _discountRepository = new GenericRepository<Discount>(_db);
                 return _discountRepository;
             }
         }
@@ -39,7 +39,7 @@ namespace FoodDelivery.DAL.UnitOfWork
             get
             {
                 if (_itemCategoryRepository == null)
-                    _itemCategoryRepository = new GenericRepository<Category>(db);
+                    _itemCategoryRepository = new GenericRepository<Category>(_db);
                 return _itemCategoryRepository;
             }
         }
@@ -49,14 +49,14 @@ namespace FoodDelivery.DAL.UnitOfWork
             get
             {
                 if (_itemRepository == null)
-                    _itemRepository = new GenericRepository<MenuItem>(db);
+                    _itemRepository = new GenericRepository<MenuItem>(_db);
                 return _itemRepository;
             }
         }
 
         public void Save()
         {
-            db.SaveChanges();
+            _db.SaveChanges();
         }
     }
 }
