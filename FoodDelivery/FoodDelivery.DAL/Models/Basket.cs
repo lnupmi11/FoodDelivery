@@ -6,7 +6,7 @@ namespace FoodDelivery.DAL.Models
 {
     public class Basket
     {
-        public int BasketId { get; set; }
+        public int Id { get; set; }
         public ICollection<MenuItem> Items { get; set; }
     }
 }
