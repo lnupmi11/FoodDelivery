@@ -19,11 +19,30 @@ namespace FoodDelivery.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("FoodDelivery.DAL.Models.Address", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("BuildingNum");
+
+                    b.Property<int>("Region");
+
+                    b.Property<string>("Street");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("FoodDelivery.DAL.Models.Basket", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.HasKey("Id");
 
@@ -32,55 +51,84 @@ namespace FoodDelivery.Migrations
 
             modelBuilder.Entity("FoodDelivery.DAL.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("CategoryName");
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("MenuItemId");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ItemCategories");
+                    b.HasIndex("MenuItemId");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("FoodDelivery.DAL.Models.Discount", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
+
+                    b.Property<string>("MenuItemId");
 
                     b.Property<double>("Percentage");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
 
                     b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("FoodDelivery.DAL.Models.MenuItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BasketId");
-
-                    b.Property<int?>("CategoryId");
+                    b.Property<string>("BasketId");
 
                     b.Property<string>("Description");
 
-                    b.Property<int?>("DiscountId");
-
                     b.Property<string>("Name");
+
+                    b.Property<double>("Price");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BasketId");
 
                     b.ToTable("MenuItems");
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.Order", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AddressId");
+
+                    b.Property<DateTime>("EstimatedTime");
+
+                    b.Property<int>("PaymentType");
+
+                    b.Property<DateTime>("ReceivedTime");
+
+                    b.Property<DateTime>("SentTime");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -253,17 +301,58 @@ namespace FoodDelivery.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("BasketId");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<DateTime>("RegistrationDate");
+
+                    b.HasIndex("BasketId");
 
                     b.ToTable("ApplicationUser");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("FoodDelivery.DAL.Models.Address", b =>
+                {
+                    b.HasOne("FoodDelivery.DAL.Models.ApplicationUser")
+                        .WithMany("SavedAdresses")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.Category", b =>
+                {
+                    b.HasOne("FoodDelivery.DAL.Models.MenuItem")
+                        .WithMany("Categories")
+                        .HasForeignKey("MenuItemId");
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.Discount", b =>
+                {
+                    b.HasOne("FoodDelivery.DAL.Models.MenuItem")
+                        .WithMany("Discounts")
+                        .HasForeignKey("MenuItemId");
+                });
+
             modelBuilder.Entity("FoodDelivery.DAL.Models.MenuItem", b =>
                 {
                     b.HasOne("FoodDelivery.DAL.Models.Basket")
-                        .WithMany("Items")
+                        .WithMany("MenuItems")
                         .HasForeignKey("BasketId");
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.Order", b =>
+                {
+                    b.HasOne("FoodDelivery.DAL.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("FoodDelivery.DAL.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -309,6 +398,13 @@ namespace FoodDelivery.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("FoodDelivery.DAL.Models.Basket", "Basket")
+                        .WithMany()
+                        .HasForeignKey("BasketId");
                 });
 #pragma warning restore 612, 618
         }

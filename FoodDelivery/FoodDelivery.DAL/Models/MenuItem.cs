@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FoodDelivery.DAL.Models
 {
     public class MenuItem
     {
-        public int Id { get; set; }
-        public String Name { get; set; }
-        public String Description { get; set; }
-        public int ? CategoryId { get; set; }
-        public int ? DiscountId { get; set; }
+        [Key]
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public string Description { get; set; }
+        public virtual ICollection<Category> Categories { get; set; }
+        public virtual ICollection<Discount> Discounts { get; set; }
     }
 }

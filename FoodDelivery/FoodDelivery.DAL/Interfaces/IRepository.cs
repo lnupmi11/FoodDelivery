@@ -9,11 +9,12 @@ namespace FoodDelivery.DAL.Interfaces
     public interface IRepository<T>
     {
         IEnumerable<T> GetAll();
-        IEnumerable<T> Get(Func<T, bool> predicate);
-        T Get(int id);
+        IEnumerable<T> GetAllWhere(Func<T, bool> predicate);
+        T Get(string id);
+        T Get(Func<T, bool> predicate);
         void Create(T item);
         void Update(T item);
-        void Delete(int id);
+        void Delete(string id);
         IQueryable<T> GetQuery();
     }
 }
