@@ -60,11 +60,20 @@ namespace FoodDelivery.DAL.Repositories
         }
         public void Update(ApplicationUser user)
         {
-            if(user == null)
+            if (user == null)
             {
                 throw new ArgumentNullException("Trying to create null user");
             }
             _users.Update(user);
+            _context.SaveChanges();
+        }
+        public void Delete(ApplicationUser user)
+        {
+            if (user == null)
+            {
+                return;
+            }
+            _users.Remove(user);
             _context.SaveChanges();
         }
         public void Delete(string id)
