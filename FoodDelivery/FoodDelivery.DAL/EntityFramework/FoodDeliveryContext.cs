@@ -28,6 +28,19 @@ namespace FoodDelivery.DAL.EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<BasketItem>()
+            .HasKey(t => new { t.BasketId, t.MenuItemId });
+
+            modelBuilder.Entity<BasketItem>()
+                .HasOne(sc => sc.Basket)
+                .WithMany(s => s.MenuItems)
+                .HasForeignKey(sc => sc.BasketId);
+
+            modelBuilder.Entity<BasketItem>()
+                .HasOne(sc => sc.MenuItem)
+                .WithMany(c => c.Baskets)
+                .HasForeignKey(sc => sc.MenuItemId);
         }
     }
 }

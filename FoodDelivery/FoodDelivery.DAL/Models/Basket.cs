@@ -9,6 +9,6 @@ namespace FoodDelivery.DAL.Models
     {
         [Key]
         public string Id { get; set; }
-        public ICollection<MenuItem> MenuItems { get; set; }
+        public ICollection<BasketItem> MenuItems { get; set; }
     }
 }

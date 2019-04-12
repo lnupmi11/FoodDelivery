@@ -6,11 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodDelivery.DAL\FoodDelivery.DAL.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Implementation\" />
-    <Folder Include="Interfaces\" />
+    <ProjectReference Include="..\FoodDelivery.DTO\FoodDelivery.DTO.csproj" />
   </ItemGroup>
 
 </Project>
