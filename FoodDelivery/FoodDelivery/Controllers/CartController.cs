@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FoodDelivery.BLL.Implementation;
 using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Repositories;
-using FoodDelivery.Models;
+using FoodDelivery.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDelivery.Controllers

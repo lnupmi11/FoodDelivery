@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodDelivery.Models.ManageViewModels
+namespace FoodDelivery.DTO.Models.ManageViewModels
 {
     public class SetPasswordViewModel
     {

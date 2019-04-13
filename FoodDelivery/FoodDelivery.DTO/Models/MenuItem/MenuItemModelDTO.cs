@@ -1,4 +1,4 @@
-﻿namespace FoodDelivery.Models
+﻿namespace FoodDelivery.DTO.Models
 {
     public class MenuItemModel
     {

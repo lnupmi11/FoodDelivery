@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodDelivery.DAL", "FoodDel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodDelivery.BLL", "FoodDelivery.BLL\FoodDelivery.BLL.csproj", "{674E9901-430E-4BF7-87A3-29D7B60A8B1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDelivery.DTO", "FoodDelivery.DTO\FoodDelivery.DTO.csproj", "{1DE12A06-EE36-4756-BBCC-7EDE3638B91E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodDelivery.DTO", "FoodDelivery.DTO\FoodDelivery.DTO.csproj", "{1DE12A06-EE36-4756-BBCC-7EDE3638B91E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
