@@ -8,8 +8,4 @@
     <ProjectReference Include="..\FoodDelivery.DAL\FoodDelivery.DAL.csproj" />
     <ProjectReference Include="..\FoodDelivery.DTO\FoodDelivery.DTO.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
 </Project>

@@ -15,6 +15,10 @@ using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Models;
 using System.IO;
 using FoodDelivery.DAL.Models.Enums;
+using FoodDelivery.BLL.Interfaces;
+using FoodDelivery.BLL.Services;
+using FoodDelivery.DAL.Interfaces;
+using FoodDelivery.DAL.UnitOfWork;
 
 namespace FoodDelivery
 {
@@ -38,6 +42,10 @@ namespace FoodDelivery
                     .AddDefaultTokenProviders();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddScoped(typeof(IUnitOfWork), typeof(FoodDeliveryUnitOfWork));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IOrderService), typeof(OrderService));
 
             CreateRoles(services.BuildServiceProvider()).Wait();
         }
@@ -72,7 +80,6 @@ namespace FoodDelivery
             }
             await UserManager.AddToRoleAsync(user, Roles.Admin.ToString());
 
-
             ApplicationUser user1 = await UserManager.FindByEmailAsync("user@user.com");
 
             if (user1 == null)
@@ -98,7 +105,6 @@ namespace FoodDelivery
                 await UserManager.CreateAsync(user2, "Manager@1");
             }
             await UserManager.AddToRoleAsync(user2, Roles.OrderManager.ToString());
-
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
