@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    MenuItemDTO currItem = null;
 }
 
 @section Scripts
@@ -18,37 +19,50 @@
     </script>
 }
 
-<div class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <h4>Menu items</h4>
-            @foreach (var item in Model)
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <h1 class="my-4">Sort by</h1>
+            <div class="list-group">
+                <div class="radio">
+                    <label><input type="radio" ng-model="ordervalue" value="ASC" ng-change="getProducts(1, ordervalue);">Price ascending</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" ng-model="ordervalue" value="DESC" ng-change="getProducts(1, ordervalue);">Price descending</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            @for(int i = 0; i <= Model.Count() / 3; ++i)
             {
-                <div class="col-md-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png" Card image cap">
-                        <div class="card-body">
-                            <h3 class="card-title">
-                                <a href="#">@item.Name</a>
-                            </h3>
-                        </div>
-                        <div class="card-footer">
-                            <div class="float-left">
-                                <h4>@item.Price $</h4>
-                                <br>
-                                <span>@item.Description</span>
-                                <br>
-                                <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                <a asp-controller="Menu" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <div class="row">
+                    @for (int j = 0; j < 3 && i * 3 + j < Model.Count(); ++j)
+                    {
+                        <div class="col-lg-4 col-md-4 mb-4">
+                            @{currItem = Model.ElementAt(i * 3 + j);}
+                            <div class="card">
+                                <img class="card-img-top" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png" Card image cap">
+                                <h4 class="card-title">
+                                    <a href="#">@currItem.Name</a>
+                                </h4>
+                                <div class="card-body">
+                                    <span>@currItem.Price $</span>
+                                    <br>
+                                    <span>@currItem.Description</span>
+                                    <br>
+                                    <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id">Edit</a>
+                                    <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id">Delete</a>
+                                </div>
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-success" onclick="return AddToCart(@currItem.Id);">Add to cart</button>
+                                </div>
                             </div>
-                            <div class="float-reight">
-                                <button type="submit" onclick="return AddToCart(@item.Id);" class="btn btn-primary btn-md">Add to cart</button>
-                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             }
         </div>
     </div>
 </div>
-
