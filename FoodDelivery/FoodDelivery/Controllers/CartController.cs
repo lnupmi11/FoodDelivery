@@ -1,7 +1,5 @@
-﻿using System.Linq;
+using System.Linq;
 using FoodDelivery.BLL.Interfaces;
-using FoodDelivery.BLL.Services;
-using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DTO.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

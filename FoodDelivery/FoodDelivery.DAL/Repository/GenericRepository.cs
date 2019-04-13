@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Interfaces;
-using FoodDelivery.DAL.Models;
 
 namespace FoodDelivery.DAL.Repository
 {
@@ -64,6 +62,11 @@ namespace FoodDelivery.DAL.Repository
         public IQueryable<TEntity> GetQuery()
         {
             return _dbSet;
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
         }
     }
 }

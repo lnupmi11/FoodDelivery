@@ -13,6 +13,7 @@ namespace FoodDelivery.DAL.Interfaces
         void Create(T item);
         void Update(T item);
         void Delete(string id);
+        void SaveChanges();
         IQueryable<T> GetQuery();
     }
 }

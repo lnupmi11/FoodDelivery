@@ -2,7 +2,7 @@
 using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Interfaces;
 using FoodDelivery.DAL.Models;
-using FoodDelivery.DTO.ItemsDTO;
+using FoodDelivery.DTO.Cart;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ namespace FoodDelivery.BLL.Services
     public class OrderService : IOrderService
     {
         private IUnitOfWork _unitOfWork;
-
         public OrderService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -36,13 +35,13 @@ namespace FoodDelivery.BLL.Services
 
         }
 
-        public IEnumerable<MenuItemDTO> GetAllBasketItems(string basketId)
+        public IEnumerable<CartItemDTO> GetAllBasketItems(string basketId)
         {
-            var basket = _unitOfWork.BasketsRepository.GetQuery().Include(b => b.MenuItems).FirstOrDefault(b => b.Id == basketId);
+            var basket = _unitOfWork.BasketsRepository.GetQuery().Include(b=>b.MenuItems).FirstOrDefault(b=>b.Id == basketId);
             if (basket != null)
             {
                 var menuItemIds = basket.MenuItems.Select(m => m.MenuItemId).ToArray();
-                return _unitOfWork.MenuItemsRepository.GetAllWhere(m => menuItemIds.Contains(m.Id)).Select(m => new MenuItemDTO
+                return _unitOfWork.MenuItemsRepository.GetAllWhere(m => menuItemIds.Contains(m.Id)).Select(m => new CartItemDTO
                 {
                     Description = m.Description,
                     Id = m.Id,
@@ -50,7 +49,7 @@ namespace FoodDelivery.BLL.Services
                     Price = m.Price
                 });
             }
-            return new List<MenuItemDTO>();
+            return new List<CartItemDTO>();
         }
     }
 }
