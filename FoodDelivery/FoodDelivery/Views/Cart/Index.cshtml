@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FoodDelivery.DTO.Models.CartItem>
+﻿@model IEnumerable<FoodDelivery.DTO.Cart.CartItemDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -45,9 +45,9 @@
                     <div class="card-inline-cart">
                         <div class="item-description-cart ">
                             <h3 class="item-title-cart">
-                                <a href="#">@item.ItemTitle</a>
+                                <a href="#">@item.Name</a>
                             </h3>
-                            <p>@item.Discription</p>
+                            <p>@item.Description</p>
                         </div>
                     </div>
                 </div>

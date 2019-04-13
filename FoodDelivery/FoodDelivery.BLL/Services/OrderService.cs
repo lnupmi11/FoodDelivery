@@ -19,37 +19,75 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork = unitOfWork;
         }
 
-        public void AddItemToBasket(string basketId, string itemId)
+        public void AddItemToBasket(string userName, string itemId)
         {
             var item = _unitOfWork.MenuItemsRepository.Get(itemId);
             if (item != null)
             {
-                var basket = _unitOfWork.BasketsRepository.Get(basketId);
-                basket?.MenuItems.Add(new BasketItem { Basket = basket, MenuItem = item, BasketId= basketId, MenuItemId = itemId });
+                var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
+                                                        .Include(u=>u.Basket.MenuItems)
+                                                        .FirstOrDefault(u => u.UserName == userName)
+                                                        .Basket;
+                if (basket.MenuItems == null)
+                {
+                    basket.MenuItems = new List<BasketItem>();
+                }
+
+                var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
+                if (cartItem != null)
+                {
+                    cartItem.Count++;
+                }
+                else
+                {
+                    basket?.MenuItems.Add(new BasketItem { Basket = basket, MenuItem = item, BasketId = basket.Id, MenuItemId = itemId, Count = 1 });
+                }
                 _unitOfWork.SaveChanges();
             }
         }
 
-        public void DeleteItemFromBasket(string basketId, string itemId)
+        public void DeleteItemFromBasket(string userName, string itemId)
         {
-
+            var item = _unitOfWork.MenuItemsRepository.Get(itemId);
+            if (item != null)
+            {
+                var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
+                                                        .Include(u => u.Basket.MenuItems)
+                                                        .FirstOrDefault(u => u.UserName == userName)
+                                                        .Basket;
+                if (basket.MenuItems == null)
+                {
+                    return;
+                }
+                var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
+                if (cartItem != null)
+                {
+                    cartItem.Count--;
+                    _unitOfWork.SaveChanges();
+                }            
+            }
         }
 
-        public IEnumerable<CartItemDTO> GetAllBasketItems(string basketId)
+        public IEnumerable<CartItemDTO> GetAllUserBasketItems(string userName)
         {
-            var basket = _unitOfWork.BasketsRepository.GetQuery().Include(b=>b.MenuItems).FirstOrDefault(b=>b.Id == basketId);
-            if (basket != null)
-            {
-                var menuItemIds = basket.MenuItems.Select(m => m.MenuItemId).ToArray();
-                return _unitOfWork.MenuItemsRepository.GetAllWhere(m => menuItemIds.Contains(m.Id)).Select(m => new CartItemDTO
-                {
-                    Description = m.Description,
-                    Id = m.Id,
-                    Name = m.Name,
-                    Price = m.Price
-                });
-            }
-            return new List<CartItemDTO>();
+            var basketItems = _unitOfWork.UsersRepository.GetQuery()
+                                   .Include(u => u.Basket)
+                                   .Include(u => u.Basket.MenuItems)
+                                   .FirstOrDefault(u => u.UserName == userName)
+                                   .Basket
+                                   .MenuItems;
+
+            var menuItems = _unitOfWork.MenuItemsRepository.GetQuery();
+
+            return from basketItem in basketItems
+                   join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
+                   select new CartItemDTO {
+                       Count = basketItem.Count,
+                       Id = menuItem.Id,
+                       Description = menuItem.Description,
+                       Name = menuItem.Name,
+                       Price = menuItem.Price
+                   };
         }
     }
 }
