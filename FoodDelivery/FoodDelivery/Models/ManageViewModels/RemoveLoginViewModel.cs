@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FoodDelivery.DTO.Models.ManageViewModels
+namespace FoodDelivery.Models.ManageViewModels
 {
     public class RemoveLoginViewModel
     {

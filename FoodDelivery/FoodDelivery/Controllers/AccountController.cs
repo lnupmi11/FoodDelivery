@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using global::FoodDelivery.DAL.Models;
-using global::FoodDelivery.DTO.Models.AccountViewModels;
+using global::FoodDelivery.Models.AccountViewModels;
 using FoodDelivery.DAL.Models.Enums;
 
 namespace FoodDelivery.Controllers

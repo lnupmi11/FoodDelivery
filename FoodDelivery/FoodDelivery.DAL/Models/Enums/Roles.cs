@@ -1,9 +1,17 @@
-﻿namespace FoodDelivery.DAL.Models.Enums
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+
+namespace FoodDelivery.DAL.Models.Enums
 {
     public enum Roles
     {
+        [Description("Admin")]
         Admin,
-        Manager,
+        [Description("OrderManager")]
+        OrderManager,
+        [Description("User")]
         User,
     }
 }
