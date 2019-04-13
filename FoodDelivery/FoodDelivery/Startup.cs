@@ -14,6 +14,10 @@ using Microsoft.Extensions.DependencyInjection;
 using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Models;
 using System.IO;
+using FoodDelivery.BLL.Interfaces;
+using FoodDelivery.BLL.Services;
+using FoodDelivery.DAL.Interfaces;
+using FoodDelivery.DAL.UnitOfWork;
 
 namespace FoodDelivery
 {
@@ -78,6 +82,9 @@ namespace FoodDelivery
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddScoped(typeof(IUnitOfWork), typeof(FoodDeliveryUnitOfWork));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IOrderService), typeof(OrderService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

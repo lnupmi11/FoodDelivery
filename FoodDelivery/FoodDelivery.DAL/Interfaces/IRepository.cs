@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FoodDelivery.DAL.Interfaces
 {
@@ -16,5 +14,6 @@ namespace FoodDelivery.DAL.Interfaces
         void Update(T item);
         void Delete(string id);
         void SaveChanges();
+        IQueryable<T> GetQuery();
     }
 }
