@@ -46,6 +46,7 @@ namespace FoodDelivery
             services.AddScoped(typeof(IUnitOfWork), typeof(FoodDeliveryUnitOfWork));
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(IOrderService), typeof(OrderService));
+            services.AddScoped(typeof(IMenuService), typeof(MenuService));
 
             CreateRoles(services.BuildServiceProvider()).Wait();
         }

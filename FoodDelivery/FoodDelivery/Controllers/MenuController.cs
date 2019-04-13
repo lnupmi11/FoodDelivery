@@ -2,68 +2,86 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FoodDelivery.BLL.Interfaces;
 using FoodDelivery.DTO.Menu;
 using FoodDelivery.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
+using FoodDelivery.DAL.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FoodDelivery.Controllers
 {
     public class MenuController : Controller
     {
-        List<MenuItemDTO> menuItems;
+        IMenuService _menuService;
 
-        public MenuController() : base()
+        public MenuController(IMenuService menuService) : base()
         {
-            menuItems = new List<MenuItemDTO>
-            {
-                 new MenuItemDTO { Name = "Item1", Price = 100, Description = "Description1", Id = "1" },
-                 new MenuItemDTO { Name = "Item2", Price = 150, Description = "Description2", Id = "2" },
-                 new MenuItemDTO { Name = "Item4", Price = 250, Description = "Description4", Id = "4" },
-                 new MenuItemDTO { Name = "Item5", Price = 300, Description = "Description5", Id = "5" },
-                 new MenuItemDTO { Name = "Item6", Price = 350, Description = "Description6", Id = "6" },
-                 new MenuItemDTO { Name = "Item7", Price = 400, Description = "Description7", Id = "7" },
-            };
+            _menuService = menuService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            return View(menuItems);
+            return View(_menuService.GetAll());
         }
 
         [HttpGet]
-        public IActionResult AddMenuItem()
+        [Authorize(Roles = "Admin")]
+        public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddMenuItem(MenuItemDTO modelToAdd)
+        [Authorize(Roles="Admin")]
+        public IActionResult Add(MenuItemDTO modelToAdd)
         {
-            menuItems.Add(modelToAdd);
+            _menuService.Add(modelToAdd);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult EditMenuItem(string name)
+        [Authorize(Roles="Admin")]
+        public IActionResult Edit(string id)
         {
-            var menuItem = menuItems.FirstOrDefault(m => m.Name == name);
-            if (menuItem != null)
+            var res = _menuService.Get(id);
+            if (res != null)
             {
-                return View(menuItem);
+                return View(res);
             }
+            ///TODO:
+            ///Change to some Errro view
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult EditMenuItem(MenuItemDTO newDataItem)
+        [Authorize(Roles="Admin")]
+        public IActionResult Edit(MenuItemDTO newDataItem)
         {
-            var menuItem = menuItems.FirstOrDefault(m => m.Name == newDataItem.Name);
-            if (menuItem != null)
+            _menuService.Update(newDataItem);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(string id)
+        {
+            var res = _menuService.Get(id);
+            if (res != null)
             {
-                menuItem.Description = newDataItem.Description;
-                menuItem.Price = newDataItem.Price;
+                return View(res);
             }
+            ///TODO:
+            ///Change to some Errro view
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(MenuItemDTO newDataItem)
+        {
+            _menuService.Delete(newDataItem);
             return RedirectToAction("Index");
         }
     }

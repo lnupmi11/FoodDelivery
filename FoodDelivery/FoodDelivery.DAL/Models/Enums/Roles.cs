@@ -9,7 +9,7 @@ namespace FoodDelivery.DAL.Models.Enums
     {
         [Description("Admin")]
         Admin,
-        [Description("Order Manager")]
+        [Description("OrderManager")]
         OrderManager,
         [Description("User")]
         User,

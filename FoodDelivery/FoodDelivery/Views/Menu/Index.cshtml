@@ -1,5 +1,4 @@
-﻿@using FoodDelivery.DTO.Models
-@model List<MenuItemDTO>
+﻿@model IEnumerable<MenuItemDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -39,7 +38,8 @@
                                 <br>
                                 <span>@item.Description</span>
                                 <br>
-                                @Html.ActionLink("Edit", "EditMenuItem", "Menu", new { name = @item.Name })
+                                <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                <a asp-controller="Menu" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                             </div>
                             <div class="float-reight">
                                 <button type="submit" onclick="return AddToCart(@item.Id);" class="btn btn-primary btn-md">Add to cart</button>
