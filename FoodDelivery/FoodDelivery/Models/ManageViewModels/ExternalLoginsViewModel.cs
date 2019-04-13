@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace FoodDelivery.DTO.Models.ManageViewModels
+namespace FoodDelivery.Models.ManageViewModels
 {
     public class ExternalLoginsViewModel
     {

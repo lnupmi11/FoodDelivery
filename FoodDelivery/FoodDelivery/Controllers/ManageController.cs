@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FoodDelivery.DTO.Models;
-using FoodDelivery.DTO.Models.ManageViewModels;
+using FoodDelivery.Models.ManageViewModels;
 using FoodDelivery.BLL.Interfaces;
 
 namespace FoodDelivery.Controllers
