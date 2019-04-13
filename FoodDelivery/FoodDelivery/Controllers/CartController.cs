@@ -1,41 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FoodDelivery.BLL.Implementation;
+﻿using System.Linq;
+using FoodDelivery.BLL.Interfaces;
+using FoodDelivery.BLL.Services;
 using FoodDelivery.DAL.EntityFramework;
-using FoodDelivery.DAL.Repositories;
 using FoodDelivery.DTO.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDelivery.Controllers
 {
     public class CartController : Controller
     {
-        private List<CartItem> Carts;
-        OrderService orderService;
+        IOrderService _orderService;
 
-        public CartController(FoodDeliveryContext context) : base()
+        public CartController(IOrderService orderService) : base()
         {
-            orderService = new OrderService(context);   
+            _orderService = orderService;   
         }
 
+        [Authorize]
         public IActionResult Index()
         {
-            Carts = orderService.GetAllBasketItems("TestBasket").Select(i=>new CartItem { Id = i.Id, ItemTitle = i.Name, Discription = i.Description}).ToList();
-            return View(Carts);
+            var aaa = User.Identity.Name;
+            var itemsInCart = _orderService.GetAllBasketItems("TestBasket").Select(i=>new CartItem { Id = i.Id, ItemTitle = i.Name, Discription = i.Description}).ToList();
+            return View(itemsInCart);
         }
 
         public IActionResult AddItem(string itemId)
         {
-            orderService.AddItemToBasket("TestBasket", itemId);
+            _orderService.AddItemToBasket("TestBasket", itemId);
             return new EmptyResult();
         }
 
         public IActionResult RemoveItem(string itemId)
         {
             // Use CartService to addcby id
-            orderService.DeleteItemFromBasket("TestBasket", itemId);
+            _orderService.DeleteItemFromBasket("TestBasket", itemId);
             return new EmptyResult();
         }
     }
