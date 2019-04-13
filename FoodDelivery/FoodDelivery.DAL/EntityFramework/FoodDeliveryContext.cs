@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FoodDelivery.DAL.Models;
+﻿using FoodDelivery.DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +14,7 @@ namespace FoodDelivery.DAL.EntityFramework
         public DbSet<Order> Orders { get; set; }
         public DbSet<Address> Addresses {get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
 
         public FoodDeliveryContext(DbContextOptions<FoodDeliveryContext> options) : base(options)
         {

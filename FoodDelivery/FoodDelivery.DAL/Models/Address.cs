@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 using FoodDelivery.DAL.Models.Enums;
 
 namespace FoodDelivery.DAL.Models
