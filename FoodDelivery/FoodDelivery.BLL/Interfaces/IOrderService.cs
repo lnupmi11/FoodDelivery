@@ -9,6 +9,6 @@ namespace FoodDelivery.BLL.Interfaces
     {
         void AddItemToBasket(string basketId, string itemId);
         void DeleteItemFromBasket(string basketId, string itemId);
-        IEnumerable<CartItemDTO> GetAllBasketItems(string basketId);
+        IEnumerable<CartItemDTO> GetAllUserBasketItems(string basketId);
     }
 }
