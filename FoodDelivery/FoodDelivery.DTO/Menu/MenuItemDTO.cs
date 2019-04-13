@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FoodDelivery.DTO.ItemsDTO
+namespace FoodDelivery.DTO.Menu
 {
     public class MenuItemDTO
     {

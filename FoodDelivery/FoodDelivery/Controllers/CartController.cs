@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FoodDelivery.BLL.Implementation;
+using FoodDelivery.BLL.Services;
 using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Repositories;
 using FoodDelivery.DTO.Models;
 using Microsoft.AspNetCore.Mvc;
+using FoodDelivery.BLL.Interfaces;
 
 namespace FoodDelivery.Controllers
 {
     public class CartController : Controller
     {
         private List<CartItem> Carts;
-        OrderService orderService;
+        IOrderService orderService;
 
         public CartController(FoodDeliveryContext context) : base()
         {

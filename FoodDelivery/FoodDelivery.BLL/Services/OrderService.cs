@@ -2,13 +2,13 @@
 using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Models;
 using FoodDelivery.DAL.Repositories;
-using FoodDelivery.DTO.ItemsDTO;
+using FoodDelivery.DTO.Cart;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FoodDelivery.BLL.Implementation
+namespace FoodDelivery.BLL.Services
 {
     public class OrderService : IOrderService
     {
@@ -46,13 +46,13 @@ namespace FoodDelivery.BLL.Implementation
             }
         }
 
-        public IEnumerable<MenuItemDTO> GetAllBasketItems(string basketId)
+        public IEnumerable<CartItemDTO> GetAllBasketItems(string basketId)
         {
             var basket = _basketRepository.Get(basketId);
             if (basket != null)
             {
                 var menuItemIds = basket.MenuItems.Select(m => m.MenuItemId).ToArray();
-                return _menuItemRepository.GetAllWhere(m => menuItemIds.Contains(m.Id)).Select(m => new MenuItemDTO
+                return _menuItemRepository.GetAllWhere(m => menuItemIds.Contains(m.Id)).Select(m => new CartItemDTO
                 {
                     Description = m.Description,
                     Id = m.Id,
@@ -60,7 +60,7 @@ namespace FoodDelivery.BLL.Implementation
                     Price = m.Price
                 });
             }
-            return new List<MenuItemDTO>();
+            return new List<CartItemDTO>();
         }
     }
 }

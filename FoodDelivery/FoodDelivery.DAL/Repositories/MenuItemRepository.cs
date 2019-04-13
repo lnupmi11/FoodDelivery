@@ -78,9 +78,9 @@ namespace FoodDelivery.DAL.Repositories
             }
         }
 
-        public IQueryable<MenuItem> GetQuery()
+        public void SaveChanges()
         {
-            return _menuItems;
+            _context.SaveChanges();
         }
     }
 }

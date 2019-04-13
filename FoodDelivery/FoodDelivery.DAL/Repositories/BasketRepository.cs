@@ -1,4 +1,5 @@
 ﻿using FoodDelivery.DAL.EntityFramework;
+using FoodDelivery.DAL.Interfaces;
 using FoodDelivery.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace FoodDelivery.DAL.Repositories
 {
-    public class BasketRepository
+    public class BasketRepository : IRepository<Basket>
     {
         private readonly FoodDeliveryContext _context;
         private DbSet<Basket> _basketItems;
@@ -74,14 +75,9 @@ namespace FoodDelivery.DAL.Repositories
             }
         }
 
-        public IQueryable<Basket> GetQuery()
-        {
-            return _basketItems;
-        }
-
         public void SaveChanges()
         {
-             _context.SaveChanges();
+            _context.SaveChanges();
         }
     }
 }

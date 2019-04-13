@@ -1,14 +1,14 @@
-﻿using FoodDelivery.DTO.ItemsDTO;
+﻿using FoodDelivery.DTO.Cart;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FoodDelivery.BLL.Interfaces
 {
-    interface IOrderService
+    public interface IOrderService
     {
         void AddItemToBasket(string basketId, string itemId);
         void DeleteItemFromBasket(string basketId, string itemId);
-        IEnumerable<MenuItemDTO> GetAllBasketItems(string basketId);
+        IEnumerable<CartItemDTO> GetAllBasketItems(string basketId);
     }
 }

@@ -85,9 +85,10 @@ namespace FoodDelivery.DAL.Repositories
                 _context.SaveChanges();
             }
         }
-        public IQueryable<ApplicationUser> GetQuery()
+
+        public void SaveChanges()
         {
-            return _users;
+            _context.SaveChanges();
         }
     }
 }
