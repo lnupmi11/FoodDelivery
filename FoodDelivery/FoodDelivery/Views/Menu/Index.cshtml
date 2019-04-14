@@ -20,8 +20,8 @@
 
 <div class="container-fluid">
     <div class="container">
+        <h4>Menu items</h4>
         <div class="row">
-            <h4>Menu items</h4>
             @foreach (var item in Model)
             {
                 <div class="col-md-4">
@@ -33,17 +33,13 @@
                             </h3>
                         </div>
                         <div class="card-footer">
-                            <div class="float-left">
-                                <h4>@item.Price $</h4>
-                                <br>
-                                <span>@item.Description</span>
-                                <br>
-                                <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                <a asp-controller="Menu" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            </div>
-                            <div class="float-reight">
-                                <button type="submit" onclick="return AddToCart(@item.Id);" class="btn btn-primary btn-md">Add to cart</button>
-                            </div>
+                            <h4 style="display:inline-block">@item.Price $</h4>
+                            <button type="submit" onclick="return AddToCart(@item.Id);" class="btn btn-primary btn-md float-reight">Add to cart</button>
+                            <br>
+                            <span>@item.Description</span>
+                            <br>
+                            <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                            <a asp-controller="Menu" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                         </div>
                     </div>
                 </div>
