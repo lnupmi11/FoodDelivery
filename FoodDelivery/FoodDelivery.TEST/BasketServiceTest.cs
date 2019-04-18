@@ -108,6 +108,87 @@ namespace FoodDelivery.TEST
             Assert.IsTrue(false);
         }
 
+        [Test]
+        public void DeleteMenuItemFromUserBasketSuccssesfully()
+        {
+            string userName = "firstTestUser";
+            string menuItemId = "firstMenuItemId";
+
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket).
+                Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            int startCount = user.Basket.MenuItems.FirstOrDefault(mi => mi.MenuItemId == menuItemId).Count;
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            basketService.DeleteItemFromBasket(userName, menuItemId);
+
+            int finalCount = user.Basket.MenuItems.FirstOrDefault(mi => mi.MenuItemId == menuItemId).Count;
+            Assert.AreEqual(startCount - 1, finalCount);
+        }
+
+        [Test]
+        public void DeleteMenuItemFromUserBasketWhatDoesNotExistInBasket()
+        {
+            string userName = "secondTestUser";
+            string menuItemId = "firstMenuItemId";
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket)
+                .Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            var menuItemInBasket = user.Basket.MenuItems.FirstOrDefault(mi => mi.MenuItemId == menuItemId);
+            Assert.AreEqual(null, menuItemInBasket);
+
+            try
+            {
+                BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+                basketService.DeleteItemFromBasket(userName, menuItemId);
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.IsTrue(ex.Message == $"There is no menu item in the user basket with the following id: {menuItemId}");
+                return;
+            }
+
+            Assert.True(false);
+        }
+
+        [Test]
+        public void DeleteMenuItemFromUserBasketInvalidUserName()
+        {
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            string userName = "thirdTestUser";
+            string menuItemId = "firstMenuItemId";
+            try
+            {
+                basketService.DeleteItemFromBasket(userName, menuItemId);
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.IsTrue(ex.Message == $"There is no user item with the following userName: {userName}");
+                return;
+            }
+            Assert.IsTrue(false);
+        }
+
+        [Test]
+        public void DeleteMenuItemFromUserBasketInvalidMenuItemId()
+        {
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            string menuItemId = "tenthMenuItemId";
+            string userName = "firstUser";
+            try
+            {
+                basketService.DeleteItemFromBasket(userName, menuItemId);
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.IsTrue(ex.Message == $"There is no menu item with the following id: {menuItemId}");
+                return;
+            }
+            Assert.IsTrue(false);
+        }
+
         public IQueryable<ApplicationUser> GetUserRepositoryQuery()
         {
             var menuItems = GetMenuItems();
