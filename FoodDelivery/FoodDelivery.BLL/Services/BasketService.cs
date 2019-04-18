@@ -80,6 +80,10 @@ namespace FoodDelivery.BLL.Services
                         cartItem.Count--;
                         _unitOfWork.SaveChanges();
                     }
+                    else
+                    {
+                        throw new ArgumentException($"There is no menu item in the user basket with the following id: {itemId}");
+                    }
                 }
                 catch (NullReferenceException)
                 {
