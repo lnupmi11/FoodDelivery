@@ -3,20 +3,9 @@
 @{
     ViewData["Title"] = "Index";
     MenuItemDTO currItem = null;
-}
-
-@section Scripts
-{
-    <script>
-        function AddToCart(itemId) {
-            $.ajax({
-                url: "Cart/AddItem?itemId=" + itemId,
-                success: function () {
-                    alert("success");
-                }
-            });
-        }
-    </script>
+    bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole("Admin");
+    bool isManager = User.Identity.IsAuthenticated && User.IsInRole("OrderManager");
+    bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
 }
 
 
@@ -35,7 +24,7 @@
         </div>
 
         <div class="col-lg-9">
-            @for(int i = 0; i <= Model.Count() / 3; ++i)
+            @for (int i = 0; i <= Model.Count() / 3; ++i)
             {
                 <div class="row">
                     @for (int j = 0; j < 3 && i * 3 + j < Model.Count(); ++j)
@@ -43,7 +32,7 @@
                         <div class="col-lg-4 col-md-4 mb-4">
                             @{currItem = Model.ElementAt(i * 3 + j);}
                             <div class="card">
-                                <img class="card-img-top" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png" Card image cap">
+                                <img class="card-img-top" src="@currItem.Image" alt="Image">
                                 <h4 class="card-title">
                                     <a href="#">@currItem.Name</a>
                                 </h4>
@@ -52,11 +41,17 @@
                                     <br>
                                     <span>@currItem.Description</span>
                                     <br>
-                                    <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id">Edit</a>
-                                    <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id">Delete</a>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="submit" class="btn btn-success" onclick="return AddToCart(@currItem.Id);">Add to cart</button>
+                                    @if (isUser)
+                                    {
+                                        <a asp-controller="" asp-action="" asp-route-id="@currItem.Id" class="btn btn-success">Add to cart</a>
+                                    }
+                                    @if (isAdmin || isManager)
+                                    {
+                                        <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id" class="btn btn-primary">Edit</a>
+                                        <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id" class="btn btn-danger">Delete</a>
+                                    }
                                 </div>
                             </div>
                         </div>

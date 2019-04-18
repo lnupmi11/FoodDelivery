@@ -4,22 +4,43 @@
     ViewData["Title"] = "AddMenuItem";
 }
 
-<h2>New Menu Item</h2>
+<h4>Add MenuItem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data" asp-controller="Menu" asp-action="Add" >
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" name="files" multiple />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
 
-@using (Html.BeginForm())
-{
-    @Html.LabelFor(model => model.Name, "Name")
-    <br />
-    @Html.EditorFor(model => model.Name)
-    <br /><br />
-    @Html.LabelFor(model => model.Price, "Price")
-    <br />
-    @Html.EditorFor(model => model.Price)
-    <br /><br />
-    @Html.LabelFor(model => model.Description, "Description")
-    <br />
-    @Html.EditorFor(model => model.Description)
-    <br /><br />
-    <input type="submit" value="Add" />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
 
