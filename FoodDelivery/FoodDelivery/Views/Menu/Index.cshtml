@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MenuItemDTO>
+
+@{
+    ViewData["Title"] = "Index";
+    MenuItemDTO currItem = null;
+    bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole("Admin");
+    bool isManager = User.Identity.IsAuthenticated && User.IsInRole("OrderManager");
+    bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <h1 class="my-4">Sort by</h1>
+            <div class="list-group">
+                <div class="radio">
+                    <label><input type="radio" ng-model="ordervalue" value="ASC" ng-change="getProducts(1, ordervalue);">Price ascending</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" ng-model="ordervalue" value="DESC" ng-change="getProducts(1, ordervalue);">Price descending</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            @for (int i = 0; i <= Model.Count() / 3; ++i)
+            {
+                <div class="row">
+                    @for (int j = 0; j < 3 && i * 3 + j < Model.Count(); ++j)
+                    {
+                        <div class="col-lg-4 col-md-4 mb-4">
+                            @{currItem = Model.ElementAt(i * 3 + j);}
+                            <div class="card">
+                                <img class="card-img-top" src="@currItem.Image" alt="Image">
+                                <h4 class="card-title">
+                                    <a href="#">@currItem.Name</a>
+                                </h4>
+                                <div class="card-body">
+                                    <span>@currItem.Price $</span>
+                                    <br>
+                                    <span>@currItem.Description</span>
+                                    <br>
+                                </div>
+                                <div class="card-footer">
+                                    @if (isUser)
+                                    {
+                                        <a asp-controller="" asp-action="" asp-route-id="@currItem.Id" class="btn btn-success">Add to cart</a>
+                                    }
+                                    @if (isAdmin || isManager)
+                                    {
+                                        <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id" class="btn btn-primary">Edit</a>
+                                        <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id" class="btn btn-danger">Delete</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

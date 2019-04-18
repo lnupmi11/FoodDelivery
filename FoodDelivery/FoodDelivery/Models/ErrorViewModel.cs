@@ -1,6 +1,6 @@
 using System;
 
-namespace FoodDelivery.Models
+namespace FoodDelivery.DTO.Models
 {
     public class ErrorViewModel
     {
