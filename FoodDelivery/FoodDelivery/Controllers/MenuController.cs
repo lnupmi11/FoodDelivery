@@ -43,27 +43,7 @@ namespace FoodDelivery.Controllers
         [Authorize(Roles="Admin")]
         public IActionResult Add(MenuItemDTO modelToAdd)
         {
-            var files = HttpContext.Request.Form.Files;
-            if( files.Count > 0)
-            {
-                var file = files.ElementAt(0);
-                if( file.Length > 0)
-                {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var myUniqueFileName = Convert.ToString(Guid.NewGuid());
-                    var FileExtension = Path.GetExtension(fileName);
-                    var physicalWebRootPath = _appEnvironment.ContentRootPath;
-                    var newFileName = myUniqueFileName + FileExtension;
-                    fileName = "wwwroot\\images\\menu" + $@"\{newFileName}";
-                    modelToAdd.Image = "images\\menu\\" + newFileName;
-
-                    using (FileStream fs = System.IO.File.Create($"{physicalWebRootPath}\\{fileName}"))
-                    {
-                        file.CopyTo(fs);
-                        fs.Flush();
-                    }
-                }
-            }
+            AddImage(modelToAdd);
             _menuService.Add(modelToAdd);
             return RedirectToAction("Index");
         }
@@ -86,6 +66,7 @@ namespace FoodDelivery.Controllers
         [Authorize(Roles="Admin")]
         public IActionResult Edit(MenuItemDTO newDataItem)
         {
+            AddImage(newDataItem);
             _menuService.Update(newDataItem);
             return RedirectToAction("Index");
         }
@@ -110,6 +91,31 @@ namespace FoodDelivery.Controllers
         {
             _menuService.Delete(newDataItem);
             return RedirectToAction("Index");
+        }
+
+        private void AddImage(MenuItemDTO model)
+        {
+            var files = HttpContext.Request.Form.Files;
+            if (files.Count > 0)
+            {
+                var file = files.ElementAt(0);
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var myUniqueFileName = Convert.ToString(Guid.NewGuid());
+                    var FileExtension = Path.GetExtension(fileName);
+                    var physicalWebRootPath = _appEnvironment.ContentRootPath;
+                    var newFileName = myUniqueFileName + FileExtension;
+                    fileName = "wwwroot\\images\\menu" + $@"\{newFileName}";
+                    model.Image = "images\\menu\\" + newFileName;
+
+                    using (FileStream fs = System.IO.File.Create($"{physicalWebRootPath}\\{fileName}"))
+                    {
+                        file.CopyTo(fs);
+                        fs.Flush();
+                    }
+                }
+            }
         }
     }
 }

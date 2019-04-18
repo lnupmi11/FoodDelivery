@@ -74,7 +74,8 @@ namespace FoodDelivery.BLL.Services
             item.Name = menuItem.Name;
             item.Price = menuItem.Price;
             item.Description = menuItem.Description;
-            item.Image = menuItem.Image;
+            if(menuItem.Image != String.Empty)
+                item.Image = menuItem.Image;
             _unitOfWork.MenuItemsRepository.Update(item);
             _unitOfWork.SaveChanges();
         }
