@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodDelivery.DTO", "FoodDel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodDelivery.BLL", "FoodDelivery.BLL\FoodDelivery.BLL.csproj", "{0C1BDB52-A2B3-4EBE-ACC6-CD00B81ADC6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodDelivery.TEST", "FoodDelivery.TEST\FoodDelivery.TEST.csproj", "{65E8261A-AFD5-4FBF-A01E-157EFFFEC880}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0C1BDB52-A2B3-4EBE-ACC6-CD00B81ADC6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C1BDB52-A2B3-4EBE-ACC6-CD00B81ADC6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C1BDB52-A2B3-4EBE-ACC6-CD00B81ADC6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65E8261A-AFD5-4FBF-A01E-157EFFFEC880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65E8261A-AFD5-4FBF-A01E-157EFFFEC880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65E8261A-AFD5-4FBF-A01E-157EFFFEC880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65E8261A-AFD5-4FBF-A01E-157EFFFEC880}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
