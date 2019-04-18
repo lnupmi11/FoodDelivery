@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FoodDelivery.BLL.Interfaces
 {
-    public interface IOrderService
+    public interface IBasketService
     {
         void AddItemToBasket(string basketId, string itemId);
         void DeleteItemFromBasket(string basketId, string itemId);
