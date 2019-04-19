@@ -11,10 +11,10 @@ using System.Text;
 
 namespace FoodDelivery.BLL.Services
 {
-    public class OrderService : IOrderService
+    public class BasketService : IBasketService
     {
         private IUnitOfWork _unitOfWork;
-        public OrderService(IUnitOfWork unitOfWork)
+        public BasketService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -24,25 +24,37 @@ namespace FoodDelivery.BLL.Services
             var item = _unitOfWork.MenuItemsRepository.Get(itemId);
             if (item != null)
             {
-                var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
-                                                        .Include(u=>u.Basket.MenuItems)
+                try
+                {
+                    Basket basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
+                                                        .Include(u => u.Basket.MenuItems)
                                                         .FirstOrDefault(u => u.UserName == userName)
                                                         .Basket;
-                if (basket.MenuItems == null)
-                {
-                    basket.MenuItems = new List<BasketItem>();
-                }
+                    if (basket.MenuItems == null)
+                    {
+                        basket.MenuItems = new List<BasketItem>();
+                    }
 
-                var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
-                if (cartItem != null)
-                {
-                    cartItem.Count++;
+                    var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
+                    if (cartItem != null)
+                    {
+                        cartItem.Count++;
+                    }
+                    else
+                    {
+                        basket?.MenuItems.Add(new BasketItem { Basket = basket, MenuItem = item, BasketId = basket.Id, MenuItemId = itemId, Count = 1 });
+                    }
+
+                    _unitOfWork.SaveChanges();
                 }
-                else
+                catch(NullReferenceException)
                 {
-                    basket?.MenuItems.Add(new BasketItem { Basket = basket, MenuItem = item, BasketId = basket.Id, MenuItemId = itemId, Count = 1 });
+                    throw new ArgumentException($"There is no user item with the following userName: {userName}");
                 }
-                _unitOfWork.SaveChanges();
+            }
+            else
+            {
+                throw new ArgumentException($"There is no menu item with the following id: {itemId}");
             }
         }
 
@@ -51,20 +63,36 @@ namespace FoodDelivery.BLL.Services
             var item = _unitOfWork.MenuItemsRepository.Get(itemId);
             if (item != null)
             {
-                var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
+                try
+                {
+                    var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
                                                         .Include(u => u.Basket.MenuItems)
                                                         .FirstOrDefault(u => u.UserName == userName)
                                                         .Basket;
-                if (basket.MenuItems == null)
-                {
-                    return;
+                    if (basket.MenuItems == null)
+                    {
+                        throw new Exception();
+                    }
+
+                    var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
+                    if (cartItem != null)
+                    {
+                        cartItem.Count--;
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"There is no menu item in the user basket with the following id: {itemId}");
+                    }
                 }
-                var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
-                if (cartItem != null)
+                catch (NullReferenceException)
                 {
-                    cartItem.Count--;
-                    _unitOfWork.SaveChanges();
-                }            
+                    throw new ArgumentException($"There is no user item with the following userName: {userName}");
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"There is no menu item with the following id: {itemId}");
             }
         }
 

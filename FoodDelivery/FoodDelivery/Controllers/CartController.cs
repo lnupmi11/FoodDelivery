@@ -10,9 +10,9 @@ namespace FoodDelivery.Controllers
 {
     public class CartController : Controller
     {
-        IOrderService _orderService;
+        IBasketService _orderService;
 
-        public CartController(IOrderService orderService) : base()
+        public CartController(IBasketService orderService) : base()
         {
             _orderService = orderService;   
         }

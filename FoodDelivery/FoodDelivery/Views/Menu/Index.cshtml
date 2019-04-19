@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MenuItemDTO>
+@model IEnumerable<MenuItemDTO>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +7,6 @@
     bool isManager = User.Identity.IsAuthenticated && User.IsInRole("OrderManager");
     bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
 }
-
 
 <div class="container">
     <div class="row">

@@ -45,7 +45,7 @@ namespace FoodDelivery
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddScoped(typeof(IUnitOfWork), typeof(FoodDeliveryUnitOfWork));
             services.AddScoped(typeof(IUserService), typeof(UserService));
-            services.AddScoped(typeof(IOrderService), typeof(OrderService));
+            services.AddScoped(typeof(IBasketService), typeof(BasketService));
             services.AddScoped(typeof(IMenuService), typeof(MenuService));
 
             CreateRoles(services.BuildServiceProvider()).Wait();
