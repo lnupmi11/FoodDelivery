@@ -28,7 +28,8 @@ namespace FoodDelivery.BLL.Services
                     Id = item.Id,
                     Name = item.Name,
                     Price = item.Price,
-                    Description = item.Description
+                    Description = item.Description,
+                    Image = item.Image
                 };
             }
             return null;
@@ -45,7 +46,8 @@ namespace FoodDelivery.BLL.Services
                     Id = item.Id,
                     Name = item.Name,
                     Description = item.Description,
-                    Price = item.Price
+                    Price = item.Price,
+                    Image = item.Image
                 });
 
             }
@@ -60,6 +62,7 @@ namespace FoodDelivery.BLL.Services
                 Name = menuItem.Name,
                 Price = menuItem.Price,
                 Description = menuItem.Description,
+                Image = menuItem.Image
             });
             _unitOfWork.SaveChanges();
         }
@@ -71,6 +74,8 @@ namespace FoodDelivery.BLL.Services
             item.Name = menuItem.Name;
             item.Price = menuItem.Price;
             item.Description = menuItem.Description;
+            if(menuItem.Image != String.Empty)
+                item.Image = menuItem.Image;
             _unitOfWork.MenuItemsRepository.Update(item);
             _unitOfWork.SaveChanges();
         }
