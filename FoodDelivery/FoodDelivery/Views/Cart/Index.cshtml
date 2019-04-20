@@ -32,15 +32,17 @@
         });
     </script>
 }
+<a asp-controller="Cart" asp-action="Clear" class="btn btn-success">Clear Cart</a>
+<a asp-controller="Cart" asp-action="Submit" class="btn btn-success">Submit Cart</a>
 @foreach (var item in Model)
 {
     <div class="card card-item">
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <img class="card-img-inline-cart" src="https://freeiconshop.com/wp-content/uploads/edd/image-solid.png" Card image cap">
+                    <img class="card-img-inline-cart" src="@item.Image" alt="Image">
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="card-inline-cart">
                         <div class="item-description-cart ">
                             <h3 class="item-title-cart">
@@ -50,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-1">                            
+                <div class="col-md-2">
                     <h3 style="margin-top: 20px;">@item.Price $</h3>
                 </div>
                 <div class="col-md-2">

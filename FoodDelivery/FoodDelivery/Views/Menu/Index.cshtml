@@ -8,6 +8,20 @@
     bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
 }
 
+@section Scripts
+{
+    <script>
+        function AddToCart(itemId) {
+            $.ajax({
+                url: "Cart/AddItem?itemId=" + itemId,
+                success: function () {
+                    alert("success");
+                }
+            });
+        }
+    </script>
+}
+
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
@@ -44,7 +58,7 @@
                                 <div class="card-footer">
                                     @if (isUser)
                                     {
-                                        <a asp-controller="" asp-action="" asp-route-id="@currItem.Id" class="btn btn-success">Add to cart</a>
+                                        <button type="submit" onclick="AddToCart('@currItem.Id');" class="btn btn-success">Add to cart</button>
                                     }
                                     @if (isAdmin || isManager)
                                     {

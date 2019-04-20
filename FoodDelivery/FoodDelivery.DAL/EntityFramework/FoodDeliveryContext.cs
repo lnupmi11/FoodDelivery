@@ -15,6 +15,7 @@ namespace FoodDelivery.DAL.EntityFramework
         public DbSet<Address> Addresses {get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         public FoodDeliveryContext(DbContextOptions<FoodDeliveryContext> options) : base(options)
         {
