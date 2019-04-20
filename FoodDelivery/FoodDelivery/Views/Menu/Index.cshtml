@@ -34,6 +34,11 @@
                     <label><input type="radio" ng-model="ordervalue" value="DESC" ng-change="getProducts(1, ordervalue);">Price descending</label>
                 </div>
             </div>
+            @if (isAdmin || isManager)
+            {
+                <hr/>
+                <a asp-controller="Menu" asp-action="Add" class="btn btn-primary">Add  menu item</a>
+            }
         </div>
 
         <div class="col-lg-9">
@@ -56,14 +61,14 @@
                                     <br>
                                 </div>
                                 <div class="card-footer">
-                                    @if (isUser)
-                                    {
-                                        <button type="submit" onclick="AddToCart('@currItem.Id');" class="btn btn-success">Add to cart</button>
-                                    }
                                     @if (isAdmin || isManager)
                                     {
                                         <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id" class="btn btn-primary">Edit</a>
                                         <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id" class="btn btn-danger">Delete</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="" asp-action="" asp-route-id="@currItem.Id" class="btn btn-success">Add to cart</a>
                                     }
                                 </div>
                             </div>
