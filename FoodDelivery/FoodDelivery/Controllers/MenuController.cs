@@ -27,9 +27,15 @@ namespace FoodDelivery.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            return View(_menuService.GetAll());
+            const int kItemsPerPage = 6;
+            const int kRows = 2;
+            ViewBag.Rows = kRows;
+            ViewBag.Cols = kItemsPerPage / kRows;
+            ViewBag.Page = page;
+            ViewBag.Total = Math.Ceiling(_menuService.GetCount() / (double)kItemsPerPage);
+            return View(_menuService.GetPaginated(page, kItemsPerPage));
         }
 
         [HttpGet]

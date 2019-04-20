@@ -85,5 +85,16 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.MenuItemsRepository.Delete(menuItem.Id);
             _unitOfWork.SaveChanges();
         }
+
+        public IEnumerable<MenuItemDTO> GetPaginated(int currPage, int pageSize)
+        {
+            var data = GetAll();
+            return data.OrderBy(d => d.Id).Skip((currPage - 1) * pageSize).Take(pageSize);
+        }
+
+        public int GetCount()
+        {
+            return GetAll().Count();
+        }
     }
 }
