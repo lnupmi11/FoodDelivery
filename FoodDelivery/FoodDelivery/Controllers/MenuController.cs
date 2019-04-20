@@ -27,7 +27,7 @@ namespace FoodDelivery.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int page = 1)
+        public IActionResult Index(int page = 1, string sort = "none")
         {
             const int kItemsPerPage = 6;
             const int kRows = 2;
@@ -35,7 +35,17 @@ namespace FoodDelivery.Controllers
             ViewBag.Cols = kItemsPerPage / kRows;
             ViewBag.Page = page;
             ViewBag.Total = Math.Ceiling(_menuService.GetCount() / (double)kItemsPerPage);
-            return View(_menuService.GetPaginated(page, kItemsPerPage));
+            var result =  _menuService.GetPaginated(page, kItemsPerPage);
+            switch(sort)
+            {
+                case "asc":
+                    result = result.OrderBy(i => i.Price);
+                    break;
+                case "desc":
+                    result = result.OrderByDescending(i => i.Price);
+                    break;
+            }
+            return View(result);
         }
 
         [HttpGet]

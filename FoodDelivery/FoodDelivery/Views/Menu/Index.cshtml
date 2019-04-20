@@ -12,18 +12,15 @@
     <div class="row">
         <div class="col-lg-3">
             <h1 class="my-4">Sort by</h1>
-            <div class="list-group">
-                <div class="radio">
-                    <label><input type="radio" ng-model="ordervalue" value="ASC" ng-change="getProducts(1, ordervalue);">Price ascending</label>
-                </div>
-                <div class="radio">
-                    <label><input type="radio" ng-model="ordervalue" value="DESC" ng-change="getProducts(1, ordervalue);">Price descending</label>
-                </div>
+            <div class="btn-group-vertical">
+                <a asp-controller="Menu" asp-action="Index" asp-route-sort="asc" class="btn btn-outline-dark">Price ascending</a>
+                <a asp-controller="Menu" asp-action="Index" asp-route-sort="desc" class="btn btn-outline-dark">Price descending</a>
+                <a asp-controller="Menu" asp-action="Index" asp-route-sort="discounts" class="btn btn-outline-dark">With discount</a>
             </div>
             @if (isAdmin || isManager)
             {
-                <hr/>
-                <a asp-controller="Menu" asp-action="Add" class="btn btn-primary">Add  menu item</a>
+                <hr />
+                <a asp-controller="Menu" asp-action="Add" class="btn btn-dark">Add  menu item</a>
             }
         </div>
 
