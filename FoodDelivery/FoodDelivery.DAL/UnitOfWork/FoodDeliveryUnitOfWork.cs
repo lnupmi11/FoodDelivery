@@ -20,6 +20,7 @@ namespace FoodDelivery.DAL.UnitOfWork
         IRepository<Address> _addressRepository;
         IRepository<ApplicationUser> _userRepository;
         IRepository<BasketItem> _basketItemRepository;
+        IRepository<OrderItem> _orderItemRepository;
 
         public FoodDeliveryUnitOfWork(FoodDeliveryContext context)
         {
@@ -118,6 +119,18 @@ namespace FoodDelivery.DAL.UnitOfWork
                     _basketItemRepository = new GenericRepository<BasketItem>(_context);
                 }
                 return _basketItemRepository;
+            }
+        }
+
+        public IRepository<OrderItem> OrderItemsRepository
+        {
+            get
+            {
+                if (_orderItemRepository == null)
+                {
+                    _orderItemRepository = new GenericRepository<OrderItem>(_context);
+                }
+                return _orderItemRepository;
             }
         }
 

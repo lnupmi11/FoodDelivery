@@ -44,5 +44,22 @@ namespace FoodDelivery.Controllers
             _orderService.DeleteItemFromBasket(userName, itemId);
             return new EmptyResult();
         }
+
+        [Authorize]
+        public IActionResult Submit()
+        {
+            var userName = User.Identity.Name;
+            _orderService.SubmitBasket(userName);
+            return new RedirectToRouteResult(new { controller = "Purchace", action = "AllPurchaces" });
+        }
+
+        [Authorize]
+        public IActionResult Clear()
+        {
+            var userName = User.Identity.Name;
+            _orderService.ClearBasket(userName);
+            return RedirectToRoute(new { controller = "Menu", action = "Index" });
+        }
+
     }
 }

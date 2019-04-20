@@ -17,5 +17,6 @@ namespace FoodDelivery.DAL.Models
         public virtual ICollection<Address> SavedAdresses { get; set; }
         public DateTime RegistrationDate {get;set;}
         public virtual Basket Basket { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

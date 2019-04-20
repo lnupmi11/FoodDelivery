@@ -1,0 +1,35 @@
+﻿@model IEnumerable<FoodDelivery.DTO.Purchace.PurchaceItemDTO>
+@{
+    ViewData["Title"] = "ItemsInSelectedPurchace";
+}
+
+@foreach (var item in Model)
+{
+    <div class="card card-item">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <img class="card-img-inline-cart" src="~/@item.Image" alt="Image">
+                </div>
+                <div class="col-md-5">
+                    <div class="card-inline-cart">
+                        <div class="item-description-cart ">
+                            <h3 class="item-title-cart">
+                                <a href="#">@item.Name</a>
+                            </h3>
+                            <p>@item.Description</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <h3 style="margin-top: 20px;">@item.Price $</h3>
+                </div>
+                <div class="col-md-2">
+                    <div class="item-counter-cart">
+                        <input type="number" id="@item.Id" class="count" value="@item.Count">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
