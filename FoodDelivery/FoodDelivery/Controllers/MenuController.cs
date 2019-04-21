@@ -27,25 +27,19 @@ namespace FoodDelivery.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int page = 1, string sort = "none")
+        public IActionResult Index(int page = 1, string searchWord = "", string filterOpt="")
         {
-            const int kItemsPerPage = 6;
+            const int kPageSize = 6;
             const int kRows = 2;
+            const int kCols = 3;
             ViewBag.Rows = kRows;
-            ViewBag.Cols = kItemsPerPage / kRows;
+            ViewBag.Cols = kCols;
             ViewBag.Page = page;
-            ViewBag.Total = Math.Ceiling(_menuService.GetCount() / (double)kItemsPerPage);
-            var result =  _menuService.GetPaginated(page, kItemsPerPage);
-            switch(sort)
-            {
-                case "asc":
-                    result = result.OrderBy(i => i.Price);
-                    break;
-                case "desc":
-                    result = result.OrderByDescending(i => i.Price);
-                    break;
-            }
-            return View(result);
+            ViewBag.Total = Math.Ceiling(_menuService.GetCount(searchWord)/(double)kPageSize);
+
+            ViewBag.FilterOpt = filterOpt;
+            ViewBag.SearchWord = searchWord;
+            return View(_menuService.GetPaginated(page, kPageSize, filterOpt, searchWord));
         }
 
         [HttpGet]

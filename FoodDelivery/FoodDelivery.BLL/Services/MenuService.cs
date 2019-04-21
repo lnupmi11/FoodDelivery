@@ -2,6 +2,7 @@
 using FoodDelivery.DAL.Interfaces;
 using FoodDelivery.DAL.Models;
 using FoodDelivery.DTO.Menu;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +21,17 @@ namespace FoodDelivery.BLL.Services
 
         public MenuItemDTO Get(string id)
         {
-            var item = _unitOfWork.MenuItemsRepository.Get(id);
+            var item = _unitOfWork.MenuItemsRepository.GetQuery()
+                .Include(i => i.Discounts).Where(i => i.Id == id).FirstOrDefault();
             if(item != null)
             {
-                return new MenuItemDTO
+                var res = new MenuItemDTO
                 {
                     Id = item.Id,
                     Name = item.Name,
                     Price = item.Price,
                     Description = item.Description,
-                    Image = item.Image
+                    Image = item.Image,
                 };
             }
             return null;
@@ -37,7 +39,8 @@ namespace FoodDelivery.BLL.Services
 
         public IEnumerable<MenuItemDTO> GetAll()
         {
-            var menu = _unitOfWork.MenuItemsRepository.GetAll();
+            var menu = _unitOfWork.MenuItemsRepository.GetQuery()
+                .Include(i => i.Discounts);
 
             if (menu != null)
             {
@@ -86,15 +89,29 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<MenuItemDTO> GetPaginated(int currPage, int pageSize)
+        public IEnumerable<MenuItemDTO> GetPaginated(int page, int pageSize, string filterOpt, string searchWord)
         {
-            var data = GetAll();
-            return data.OrderBy(d => d.Id).Skip((currPage - 1) * pageSize).Take(pageSize);
+            var result = GetAll();
+            if(searchWord != null && searchWord != String.Empty)
+            {
+                result = result.Where(i => i.Name.Contains(searchWord));
+            }
+            switch (filterOpt)
+            {
+                case "asc":
+                    result = result.OrderBy(i => i.Price);
+                    break;
+                case "desc":
+                    result = result.OrderByDescending(i => i.Price);
+                    break;
+            }
+            result = result.Skip((page - 1) * pageSize).Take(pageSize);
+            return result;
         }
 
-        public int GetCount()
+        public int GetCount(string searchWord)
         {
-            return GetAll().Count();
+            return _unitOfWork.MenuItemsRepository.GetQuery().Where(i => i.Name.Contains(searchWord)).Count();
         }
     }
 }

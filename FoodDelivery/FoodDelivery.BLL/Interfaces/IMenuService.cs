@@ -9,10 +9,10 @@ namespace FoodDelivery.BLL.Interfaces
     {
         MenuItemDTO Get(string id);
         IEnumerable<MenuItemDTO> GetAll();
-        IEnumerable<MenuItemDTO> GetPaginated(int currPage, int pageSize);
         void Add(MenuItemDTO menuItem);
         void Update(MenuItemDTO menuItem);
         void Delete(MenuItemDTO menuItem);
-        int GetCount();
+        IEnumerable<MenuItemDTO> GetPaginated(int page, int pagesize, string filterOpt, string searchWord);
+        int GetCount(string searchWord);
     }
 }
