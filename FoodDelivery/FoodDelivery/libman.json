@@ -10,6 +10,11 @@
       "provider": "cdnjs",
       "library": "jquery@3.4.0",
       "destination": "wwwroot/jquery/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "popper.js@1.15.0",
+      "destination": "wwwroot/lib/popper.js/"
     }
   ]
 }

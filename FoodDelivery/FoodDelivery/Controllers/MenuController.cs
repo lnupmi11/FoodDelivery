@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Hosting;
+using FoodDelivery.Models;
 
 namespace FoodDelivery.Controllers
 {
@@ -19,15 +20,17 @@ namespace FoodDelivery.Controllers
     {
         private readonly IHostingEnvironment _appEnvironment;
         IMenuService _menuService;
+        ICategoryService _categoryService;
 
-        public MenuController(IMenuService menuService, IHostingEnvironment appEnvironment) : base()
+        public MenuController(IMenuService menuService, ICategoryService categoryService, IHostingEnvironment appEnvironment) : base()
         {
             _menuService = menuService;
+            _categoryService = categoryService;
             _appEnvironment = appEnvironment;
         }
 
         [HttpGet]
-        public IActionResult Index(int page = 1, string searchWord = "", string filterOpt="")
+        public IActionResult Index(int page = 1, string searchWord = "", string filterOpt="", string categoryId = "")
         {
             const int kPageSize = 6;
             const int kRows = 2;
@@ -39,22 +42,36 @@ namespace FoodDelivery.Controllers
 
             ViewBag.FilterOpt = filterOpt;
             ViewBag.SearchWord = searchWord;
-            return View(_menuService.GetPaginated(page, kPageSize, filterOpt, searchWord));
+            ViewBag.CategoryId = categoryId;
+            return View(new MenuModel
+            {
+                MenuItems = _menuService.GetPaginated(page, kPageSize, filterOpt, searchWord, categoryId),
+                Categories = _categoryService.GetAll()
+            });
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
-            return View();
+            var res  = new AddMenuModel
+            {
+                MenuItemDTO = new MenuItemDTO
+                {
+                    Categories = new List<CategoryDTO>()
+                },
+                Categories = _categoryService.GetAll()
+            };
+            res.MenuItemDTO.Categories.Add(new CategoryDTO());
+            return View(res);
         }
 
         [HttpPost]
         [Authorize(Roles="Admin")]
-        public IActionResult Add(MenuItemDTO modelToAdd)
+        public IActionResult Add(AddMenuModel modelToAdd)
         {
-            AddImage(modelToAdd);
-            _menuService.Add(modelToAdd);
+            AddImage(modelToAdd.MenuItemDTO);
+            _menuService.Add(modelToAdd.MenuItemDTO);
             return RedirectToAction("Index");
         }
 
@@ -62,9 +79,15 @@ namespace FoodDelivery.Controllers
         [Authorize(Roles="Admin")]
         public IActionResult Edit(string id)
         {
-            var res = _menuService.Get(id);
-            if (res != null)
+            var menuItem = _menuService.Get(id);
+            if (menuItem != null)
             {
+                var res = new AddMenuModel
+                {
+                    MenuItemDTO = menuItem,
+                    Categories = _categoryService.GetAll()
+                };
+                res.MenuItemDTO.Categories.Add(new CategoryDTO());
                 return View(res);
             }
             ///TODO:
@@ -74,10 +97,10 @@ namespace FoodDelivery.Controllers
 
         [HttpPost]
         [Authorize(Roles="Admin")]
-        public IActionResult Edit(MenuItemDTO newDataItem)
+        public IActionResult Edit(AddMenuModel newDataItem)
         {
-            AddImage(newDataItem);
-            _menuService.Update(newDataItem);
+            AddImage(newDataItem.MenuItemDTO);
+            _menuService.Update(newDataItem.MenuItemDTO);
             return RedirectToAction("Index");
         }
 
