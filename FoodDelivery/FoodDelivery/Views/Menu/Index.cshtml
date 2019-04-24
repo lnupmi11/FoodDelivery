@@ -8,6 +8,20 @@
     bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
 }
 
+@section Scripts
+{
+    <script>
+        function AddToCart(itemId) {
+            $.ajax({
+                url: "Cart/AddItem?itemId=" + itemId,
+                success: function () {
+                    alert("success");
+                }
+            });
+        }
+    </script>
+}
+
 <div class="container">
     <div class="row">
         <div class="col-lg-3">

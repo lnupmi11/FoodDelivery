@@ -114,8 +114,49 @@ namespace FoodDelivery.BLL.Services
                        Id = menuItem.Id,
                        Description = menuItem.Description,
                        Name = menuItem.Name,
-                       Price = menuItem.Price
+                       Price = menuItem.Price,
+                       Image =menuItem.Image
                    };
+        }
+
+        public void ClearBasket(string basketId)
+        {
+            try
+            {
+                var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
+                                                    .Include(u => u.Basket.MenuItems)
+                                                    .FirstOrDefault(u => u.UserName == basketId)
+                                                    .Basket;
+                if (basket.MenuItems != null)
+                {
+                    basket.MenuItems.Clear();
+                    _unitOfWork.SaveChanges();
+                }
+            }
+            catch (NullReferenceException)
+            {
+                throw new ArgumentException($"There is no basket with the following basketId: {basketId}");
+            }
+        }
+
+        public void SubmitBasket(string basketId)
+        {
+            try
+            {
+                var user = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
+                                                    .Include(u => u.Basket.MenuItems)
+                                                    .FirstOrDefault(u => u.UserName == basketId);
+                if (user.Basket.MenuItems != null)
+                {
+                    List<OrderItem> orderItems = user.Basket.MenuItems.Select(mi => new OrderItem { Count = mi.Count, MenuItem = mi.MenuItem, MenuItemId = mi.MenuItemId }).ToList();
+                    _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime= DateTime.Now});
+                    ClearBasket(basketId);
+                }
+            }
+            catch (NullReferenceException)
+            {
+                throw new ArgumentException($"There is no basket with the following basketId: {basketId}");
+            }
         }
     }
 }

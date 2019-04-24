@@ -12,6 +12,7 @@ namespace FoodDelivery.DAL.Interfaces
         IRepository<Address> AddressesRepository { get; }
         IRepository<ApplicationUser> UsersRepository { get; }
         IRepository<BasketItem> BasketItemsRepository { get; }
+        IRepository<OrderItem> OrderItemsRepository { get; }
         void SaveChanges();
     }
 }
