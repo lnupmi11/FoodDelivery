@@ -12,5 +12,7 @@ namespace FoodDelivery.BLL.Interfaces
         void Add(MenuItemDTO menuItem);
         void Update(MenuItemDTO menuItem);
         void Delete(MenuItemDTO menuItem);
+        IEnumerable<MenuItemDTO> GetPaginated(int page, int pagesize, string filterOpt, string searchWord, string categoryId);
+        int GetCount(string searchWord);
     }
 }
