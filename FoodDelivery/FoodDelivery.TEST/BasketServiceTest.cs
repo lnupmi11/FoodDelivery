@@ -16,6 +16,7 @@ namespace FoodDelivery.TEST
         [SetUp]
         public void Setup()
         {
+            Orders = new List<Order>();
             var userRepositoryMock = new Mock<IRepository<ApplicationUser>>();
             userRepositoryMock.Setup(repository => repository.GetQuery()).Returns(GetUserRepositoryQuery());
 
@@ -23,10 +24,13 @@ namespace FoodDelivery.TEST
             menuItemRepositoryMock.Setup(repository => repository.GetQuery()).Returns(GetMenuItemRepositoryQuery());
             menuItemRepositoryMock.Setup(repository => repository.Get(It.IsAny<string>())).Returns((string menuItemId) => GetMenuItem(menuItemId));
 
+            var orderRepositoryMock = new Mock<IRepository<Order>>();
+            orderRepositoryMock.Setup(repository => repository.Create(It.IsAny<Order>())).Callback((Order order) => Orders.Add(order));
+
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(ufw => ufw.UsersRepository).Returns(userRepositoryMock.Object);
             unitOfWorkMock.Setup(ufw => ufw.MenuItemsRepository).Returns(menuItemRepositoryMock.Object);
-
+            unitOfWorkMock.Setup(ufw => ufw.OrdersRepository).Returns(orderRepositoryMock.Object);
             foodDeliveryUnitOfWork = unitOfWorkMock.Object;
         }
 
@@ -155,6 +159,59 @@ namespace FoodDelivery.TEST
             Assert.That(ex.Message, Is.EqualTo($"There is no menu item with the following id: {menuItemId}"));
         }
 
+        [Test]
+        public void SubmitCartSuccessfully()
+        {
+            string userName = "firstTestUser";
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket).
+                Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            var itemsIds = user.Basket.MenuItems.Select(mi => mi.MenuItemId);
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            basketService.SubmitBasket(userName);
+            Assert.IsTrue(!user.Basket.MenuItems.Any());
+        }
+
+        [Test]
+        public void SubmitCartForNotExistingUser()
+        {
+            string userName = "firstUser";
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket).
+                Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var ex = Assert.Throws<ArgumentException>(() => basketService.SubmitBasket(userName));
+            Assert.That(ex.Message, Is.EqualTo($"There is no basket for user: { userName}"));
+        }
+
+        [Test]
+        public void ClearCartSuccessfully()
+        {
+            string userName = "firstTestUser";
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket).
+                Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            basketService.ClearBasket(userName);
+            Assert.IsTrue(!user.Basket.MenuItems.Any());
+        }
+
+        [Test]
+        public void ClearCartForNotExistingUser()
+        {
+            string userName = "firstUser";
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket).
+                Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var ex = Assert.Throws<ArgumentException>(() => basketService.ClearBasket(userName));
+            Assert.That(ex.Message, Is.EqualTo($"There is no basket with the following user: {userName}"));
+        }
+
         public IQueryable<ApplicationUser> GetUserRepositoryQuery()
         {
             var menuItems = GetMenuItems();
@@ -216,5 +273,7 @@ namespace FoodDelivery.TEST
                 new ApplicationUser{ UserName = "secondTestUser", Basket = baskets[1]}
             };
         }
+
+        public List<Order> Orders { get; set; }
     }
 }
