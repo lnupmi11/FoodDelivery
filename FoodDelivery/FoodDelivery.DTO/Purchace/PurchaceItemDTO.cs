@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FoodDelivery.DTO.Purchace
+namespace FoodDelivery.DTO.Purchase
 {
-    public class PurchaceItemDTO
+    public class PurchaseItemDTO
     {
         public string Id { get; set; }
         public string Name { get; set; }

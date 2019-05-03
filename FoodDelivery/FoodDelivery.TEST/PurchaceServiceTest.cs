@@ -11,7 +11,7 @@ using System.Text;
 
 namespace FoodDelivery.TEST
 {
-    class PurchaceServiceTest
+    class PurchaseServiceTest
     {
         IUnitOfWork foodDeliveryUnitOfWork;
 
@@ -32,40 +32,40 @@ namespace FoodDelivery.TEST
         }
 
         [Test]
-        public void GetUserPurchacesListSuccssesfully()
+        public void GetUserPurchasesListSuccssesfully()
         {
             string userName = "firstTestUser";
-            PurchaceService purchaceService = new PurchaceService(foodDeliveryUnitOfWork);
-            var purchaceList = purchaceService.GetListOfPurchaces(userName);
-            Assert.AreEqual(purchaceList.Count, 2);
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var purchaseList = purchaseService.GetListOfPurchases(userName);
+            Assert.AreEqual(purchaseList.Count, 2);
         }
 
         [Test]
-        public void GetUserPurchacesListNoUserWithSuchName()
+        public void GetUserPurchasesListNoUserWithSuchName()
         {
             string userName = "randomUser";
-            PurchaceService purchaceService = new PurchaceService(foodDeliveryUnitOfWork);
-            var ex = Assert.Throws<ArgumentException>(() => purchaceService.GetListOfPurchaces(userName));
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var ex = Assert.Throws<ArgumentException>(() => purchaseService.GetListOfPurchases(userName));
             Assert.That(ex.Message, Is.EqualTo($"There is no user item with the following userName: { userName }"));
         }
 
         [Test]
-        public void GetItemsFromPurchaceListSuccssesfully()
+        public void GetItemsFromPurchaseListSuccssesfully()
         {
             string orderId = "firstOrder";
-            PurchaceService purchaceService = new PurchaceService(foodDeliveryUnitOfWork);
-            var purchaceItemIds = purchaceService.GetPurchaceItems(orderId).Select(i=>i.Id).ToArray();
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var purchaseItemIds = purchaseService.GetPurchaseItems(orderId).Select(i=>i.Id).ToArray();
             string[] orderItemsIds = new string[] { "firstOrdertemId", "secondOrdertemId", "thirdOrdertemId" };
-            Assert.AreEqual(orderItemsIds.Count(), orderItemsIds.Intersect(purchaceItemIds).Count());
+            Assert.AreEqual(orderItemsIds.Count(), orderItemsIds.Intersect(purchaseItemIds).Count());
         }
 
         [Test]
-        public void GetItemsFromPurchaceListIncorrectPurchaceId()
+        public void GetItemsFromPurchaseListIncorrectPurchaseId()
         {
             string orderId = "randomOrder";
-            PurchaceService purchaceService = new PurchaceService(foodDeliveryUnitOfWork);
-            var purchaceItemIds = purchaceService.GetPurchaceItems(orderId).Select(i => i.Id).ToArray();
-            Assert.IsTrue(!purchaceItemIds.Any());
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var purchaseItemIds = purchaseService.GetPurchaseItems(orderId).Select(i => i.Id).ToArray();
+            Assert.IsTrue(!purchaseItemIds.Any());
         }
 
         public IQueryable<ApplicationUser> GetUserRepositoryQuery()

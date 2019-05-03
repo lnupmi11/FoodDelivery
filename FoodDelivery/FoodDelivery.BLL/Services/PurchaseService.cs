@@ -1,6 +1,6 @@
 ﻿using FoodDelivery.BLL.Interfaces;
 using FoodDelivery.DAL.Interfaces;
-using FoodDelivery.DTO.Purchace;
+using FoodDelivery.DTO.Purchase;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,22 +9,22 @@ using System.Text;
 
 namespace FoodDelivery.BLL.Services
 {
-    public class PurchaceService : IPurchaceService
+    public class PurchaseService : IPurchaseService
     {
         public IUnitOfWork _unitOfWork;
 
-        public PurchaceService(IUnitOfWork unitOfWork)
+        public PurchaseService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public List<PurchaceItemDTO> GetPurchaceItems(string orderId)
+        public List<PurchaseItemDTO> GetPurchaseItems(string orderId)
         {
             return _unitOfWork.OrderItemsRepository.GetQuery()
                                                    .Include(oi => oi.MenuItem)
                                                    .Include(oi => oi.Order)
                                                    .Where(oi => orderId == oi.Order.OrderId)
-                                                   .Select(oi => new PurchaceItemDTO
+                                                   .Select(oi => new PurchaseItemDTO
                                                    {
                                                        Id = oi.OrderItemId,
                                                        Count = oi.Count,
@@ -35,7 +35,7 @@ namespace FoodDelivery.BLL.Services
                                                    }).ToList();
         }
 
-        public List<PurchaceDTO> GetListOfPurchaces(string userName)
+        public List<PurchaseDTO> GetListOfPurchases(string userName)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace FoodDelivery.BLL.Services
                                                        .Include(oi => oi.Order)
                                                        .Where(oi => orderIds.Contains(oi.Order.OrderId))
                                                        .GroupBy(oi => oi.Order.OrderId)
-                                                       .Select(oi => new PurchaceDTO
+                                                       .Select(oi => new PurchaseDTO
                                                        {
                                                            Id = oi.Key,
                                                            TotalPrice = oi.Sum(v => v.MenuItem.Price * v.Count),

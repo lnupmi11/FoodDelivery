@@ -9,27 +9,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDelivery.Controllers
 {
-    public class PurchaceController : Controller
+    public class PurchaseController : Controller
     {
-        IPurchaceService _purchaceService;
-        public PurchaceController(IPurchaceService purchaceService)
+        IPurchaseService _purchaseService;
+        public PurchaseController(IPurchaseService purchaseService)
         {
-            _purchaceService = purchaceService;
+            _purchaseService = purchaseService;
         }
 
         [Authorize]
-        public IActionResult AllPurchaces()
+        public IActionResult AllPurchases()
         {
             var userName = User.Identity.Name;
-            var purchaces = _purchaceService.GetListOfPurchaces(userName);
-            return View(purchaces);
+            var purchases = _purchaseService.GetListOfPurchases(userName);
+            return View(purchases);
         }
 
         [Authorize]
-        public IActionResult ItemsInSelectedPurchace(string purchaceId)
+        public IActionResult ItemsInSelectedPurchase(string purchaseId)
         {
-            var purchaceItems = _purchaceService.GetPurchaceItems(purchaceId);
-            return View(purchaceItems);
+            var purchaseItems = _purchaseService.GetPurchaseItems(purchaseId);
+            return View(purchaseItems);
         }
     }
 }
