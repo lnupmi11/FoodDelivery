@@ -57,9 +57,9 @@
                 </div>
                 <div class="col-md-2">
                     <div class="item-counter-cart">
-                        <span class="minus bg-dark" onclick="return RemoveFromCart(@item.Id)">-</span>
-                        <input type="number" id="@item.Id" class="count" value="@item.Count">
-                        <span class="plus bg-dark" onclick="return AddToCart(@item.Id)">+</span>
+                        <span class="minus bg-dark" onclick="return RemoveFromCart('@item.Id')">-</span>
+                        <input type="number" id="@item.Id" class="count" value="@item.Count" style="width: 40px; display:inline-block;">
+                        <span class="plus bg-dark" onclick="return AddToCart('@item.Id')">+</span>
                     </div>
                 </div>
             </div>

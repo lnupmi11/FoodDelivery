@@ -50,7 +50,7 @@ namespace FoodDelivery.Controllers
         {
             var userName = User.Identity.Name;
             _orderService.SubmitBasket(userName);
-            return new RedirectToRouteResult(new { controller = "Purchace", action = "AllPurchaces" });
+            return new RedirectToRouteResult(new { controller = "Purchase", action = "AllPurchases" });
         }
 
         [Authorize]

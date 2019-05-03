@@ -119,13 +119,13 @@ namespace FoodDelivery.BLL.Services
                    };
         }
 
-        public void ClearBasket(string basketId)
+        public void ClearBasket(string userName)
         {
             try
             {
                 var basket = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
                                                     .Include(u => u.Basket.MenuItems)
-                                                    .FirstOrDefault(u => u.UserName == basketId)
+                                                    .FirstOrDefault(u => u.UserName == userName)
                                                     .Basket;
                 if (basket.MenuItems != null)
                 {
@@ -135,27 +135,27 @@ namespace FoodDelivery.BLL.Services
             }
             catch (NullReferenceException)
             {
-                throw new ArgumentException($"There is no basket with the following basketId: {basketId}");
+                throw new ArgumentException($"There is no basket with the following user: {userName}");
             }
         }
 
-        public void SubmitBasket(string basketId)
+        public void SubmitBasket(string userName)
         {
             try
             {
                 var user = _unitOfWork.UsersRepository.GetQuery().Include(u => u.Basket)
                                                     .Include(u => u.Basket.MenuItems)
-                                                    .FirstOrDefault(u => u.UserName == basketId);
+                                                    .FirstOrDefault(u => u.UserName == userName);
                 if (user.Basket.MenuItems != null)
                 {
                     List<OrderItem> orderItems = user.Basket.MenuItems.Select(mi => new OrderItem { Count = mi.Count, MenuItem = mi.MenuItem, MenuItemId = mi.MenuItemId }).ToList();
                     _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime= DateTime.Now});
-                    ClearBasket(basketId);
+                    ClearBasket(userName);
                 }
             }
             catch (NullReferenceException)
             {
-                throw new ArgumentException($"There is no basket with the following basketId: {basketId}");
+                throw new ArgumentException($"There is no basket for user: {userName}");
             }
         }
     }

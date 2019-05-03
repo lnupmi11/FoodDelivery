@@ -97,7 +97,7 @@
                                     }
                                     else
                                     {
-                                        <a asp-controller="" asp-action="" asp-route-id="@currItem.Id" class="btn btn-success">Add to cart</a>
+                                        <input type="button" value="Add to cart" onclick="AddToCart('@currItem.Id')" class="btn btn-success">
                                     }
                                 </div>
                             </div>
