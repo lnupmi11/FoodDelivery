@@ -96,16 +96,8 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string menuItemId = "tenthMenuItemId";
             string userName = "firstUser";
-            try
-            {
-                basketService.AddItemToBasket(userName, menuItemId);
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsTrue(ex.Message == $"There is no menu item with the following id: {menuItemId}");
-                return;
-            }
-            Assert.IsTrue(false);
+            var ex = Assert.Throws<ArgumentException>(() => basketService.AddItemToBasket(userName, menuItemId));
+            Assert.That(ex.Message, Is.EqualTo($"There is no menu item with the following id: {menuItemId}"));
         }
 
         [Test]
@@ -138,19 +130,9 @@ namespace FoodDelivery.TEST
 
             var menuItemInBasket = user.Basket.MenuItems.FirstOrDefault(mi => mi.MenuItemId == menuItemId);
             Assert.AreEqual(null, menuItemInBasket);
-
-            try
-            {
-                BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
-                basketService.DeleteItemFromBasket(userName, menuItemId);
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsTrue(ex.Message == $"There is no menu item in the user basket with the following id: {menuItemId}");
-                return;
-            }
-
-            Assert.True(false);
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var ex = Assert.Throws<ArgumentException>(() => basketService.DeleteItemFromBasket(userName, menuItemId));
+            Assert.That(ex.Message, Is.EqualTo($"There is no menu item in the user basket with the following id: {menuItemId}"));
         }
 
         [Test]
@@ -159,16 +141,8 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string userName = "thirdTestUser";
             string menuItemId = "firstMenuItemId";
-            try
-            {
-                basketService.DeleteItemFromBasket(userName, menuItemId);
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsTrue(ex.Message == $"There is no user item with the following userName: {userName}");
-                return;
-            }
-            Assert.IsTrue(false);
+            var ex = Assert.Throws<ArgumentException>(() => basketService.DeleteItemFromBasket(userName, menuItemId));
+            Assert.That(ex.Message, Is.EqualTo($"There is no user item with the following userName: {userName}"));
         }
 
         [Test]
@@ -177,16 +151,8 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string menuItemId = "tenthMenuItemId";
             string userName = "firstUser";
-            try
-            {
-                basketService.DeleteItemFromBasket(userName, menuItemId);
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsTrue(ex.Message == $"There is no menu item with the following id: {menuItemId}");
-                return;
-            }
-            Assert.IsTrue(false);
+            var ex = Assert.Throws<ArgumentException>(() => basketService.DeleteItemFromBasket(userName, menuItemId));
+            Assert.That(ex.Message, Is.EqualTo($"There is no menu item with the following id: {menuItemId}"));
         }
 
         public IQueryable<ApplicationUser> GetUserRepositoryQuery()
