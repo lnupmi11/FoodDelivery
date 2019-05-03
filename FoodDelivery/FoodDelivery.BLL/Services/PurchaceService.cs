@@ -37,23 +37,30 @@ namespace FoodDelivery.BLL.Services
 
         public List<PurchaceDTO> GetListOfPurchaces(string userName)
         {
-            var orderIds = _unitOfWork.UsersRepository.GetQuery()
+            try
+            {
+                var orderIds = _unitOfWork.UsersRepository.GetQuery()
                 .Include(u => u.Orders)
-                .FirstOrDefault(u => u.UserName == userName)
+                .FirstOrDefault(u => u.UserName == userName)?
                 .Orders
                 .Select(o => o.OrderId);
 
-            return _unitOfWork.OrderItemsRepository.GetQuery()
-                                                   .Include(oi => oi.MenuItem)
-                                                   .Include(oi => oi.Order)
-                                                   .Where(oi => orderIds.Contains(oi.Order.OrderId))
-                                                   .GroupBy(oi => oi.Order.OrderId)
-                                                   .Select(oi => new PurchaceDTO
-                                                   {
-                                                       Id = oi.Key,
-                                                       TotalPrice = oi.Sum(v=> v.MenuItem.Price * v.Count),
-                                                       SubmittedTime = oi.FirstOrDefault().Order.SentTime
-                                                   }).ToList();
+                return _unitOfWork.OrderItemsRepository.GetQuery()
+                                                       .Include(oi => oi.MenuItem)
+                                                       .Include(oi => oi.Order)
+                                                       .Where(oi => orderIds.Contains(oi.Order.OrderId))
+                                                       .GroupBy(oi => oi.Order.OrderId)
+                                                       .Select(oi => new PurchaceDTO
+                                                       {
+                                                           Id = oi.Key,
+                                                           TotalPrice = oi.Sum(v => v.MenuItem.Price * v.Count),
+                                                           SubmittedTime = oi.FirstOrDefault().Order.SentTime
+                                                       }).ToList();
+            }
+            catch(ArgumentNullException)
+            {
+                throw new ArgumentException($"There is no user item with the following userName: {userName}");
+            }
 
         }
     }
