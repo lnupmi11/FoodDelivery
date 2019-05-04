@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System;
+using FoodDelivery.DAL.Models.Enums;
 
 namespace FoodDelivery.TEST
 {
@@ -27,10 +28,14 @@ namespace FoodDelivery.TEST
             var orderRepositoryMock = new Mock<IRepository<Order>>();
             orderRepositoryMock.Setup(repository => repository.Create(It.IsAny<Order>())).Callback((Order order) => Orders.Add(order));
 
+            var addressRepositoryMock = new Mock<IRepository<Address>>();
+            addressRepositoryMock.Setup(repository => repository.GetQuery()).Returns(GetAddress()); ;
+
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(ufw => ufw.UsersRepository).Returns(userRepositoryMock.Object);
             unitOfWorkMock.Setup(ufw => ufw.MenuItemsRepository).Returns(menuItemRepositoryMock.Object);
             unitOfWorkMock.Setup(ufw => ufw.OrdersRepository).Returns(orderRepositoryMock.Object);
+            unitOfWorkMock.Setup(ufw => ufw.AddressesRepository).Returns(addressRepositoryMock.Object);
             foodDeliveryUnitOfWork = unitOfWorkMock.Object;
         }
 
@@ -169,7 +174,7 @@ namespace FoodDelivery.TEST
 
             var itemsIds = user.Basket.MenuItems.Select(mi => mi.MenuItemId);
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
-            basketService.SubmitBasket(userName);
+            basketService.SubmitBasket(userName, "testAddress", (int)PaymentType.Cash);
             Assert.IsTrue(!user.Basket.MenuItems.Any());
         }
 
@@ -182,7 +187,7 @@ namespace FoodDelivery.TEST
                 Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
 
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
-            var ex = Assert.Throws<ArgumentException>(() => basketService.SubmitBasket(userName));
+            var ex = Assert.Throws<ArgumentException>(() => basketService.SubmitBasket(userName, "testAddress", (int)PaymentType.Cash));
             Assert.That(ex.Message, Is.EqualTo($"There is no basket for user: { userName}"));
         }
 
@@ -272,6 +277,15 @@ namespace FoodDelivery.TEST
                 new ApplicationUser{ UserName = "firstTestUser", Basket = baskets[0]},
                 new ApplicationUser{ UserName = "secondTestUser", Basket = baskets[1]}
             };
+        }
+
+        public IQueryable<Address> GetAddress()
+        {
+            return new List<Address>
+            {
+                new Address{ Id = "testAddress"},
+                new Address{ Id = "secondAddress"}
+            }.AsQueryable();
         }
 
         public List<Order> Orders { get; set; }

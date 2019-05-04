@@ -1,0 +1,92 @@
+﻿@model FoodDelivery.DTO.Cart.PreSubmitCartDTO
+
+@section Scripts
+{
+    <script>
+        function hideSavedAddressForm() {
+            $('#savedAddressForm').hide();
+            $('#newAddressForm').show();
+        };
+
+        function hideNewAddressForm() {
+            $('#savedAddressForm').show();
+            $('#newAddressForm').hide();
+        };
+
+    </script>
+}
+
+@{
+    ViewData["Title"] = "Submit";
+}
+<h3>Cart submition</h3>
+
+<label>
+    <input onclick="hideNewAddressForm()" type="radio" asp-for="IsSavedAddress" value="false" /> Choose from saved addresses
+</label>
+<label style="margin-left: 10px;">
+    <input onclick="hideSavedAddressForm()" type="radio" asp-for="IsSavedAddress" value="true" /> Enter new address
+</label>
+
+<div id="savedAddressForm" style="margin-top:30px;">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("SubmitOnSavedAddres", "Cart", FormMethod.Post))
+            {
+                <label class="cartSubmitionInput" for="addressId">Saved Address:</label>
+                <select class="cartSubmitionInput" name="addressId">
+                    @foreach (var address in Model.SavedAddresses)
+                    {
+                        <option value="@address.AddressId">@address.Region, @address.Street, @address.BuildingNumber </option>
+                    }
+                </select>
+                <br /><br />
+                <label class="cartSubmitionInput" for="additionalInfo">Comments (additional)</label>
+                <input class="cartSubmitionInput" name="additionalInfo" />
+                <br /><br />
+                <label class="cartSubmitionInput" for="paymentType">Payment type:</label>
+                <select class="cartSubmitionInput" name="paymentType">
+                    <option value="0">Cash</option>
+                    <option value="1">Debit card</option>
+                </select>
+                <br /><br />
+                <input type="submit" value="Submit" class="btn btn-success"/>
+                <br /><br />
+            }
+        </div>
+    </div>
+</div>
+<div id="newAddressForm" style="display:none; margin-top:30px;">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Html.BeginForm("SubmitOnNewAddres", "Cart", FormMethod.Post))
+            {
+                <label class="cartSubmitionInput" for="address.Region">Region</label>
+                <select class="cartSubmitionInput" name="address.Region">
+                    @foreach (var address in Model.Regions)
+                    {
+                        <option value="@address">@address</option>
+                    }
+                </select>
+                <br /><br />
+                <label class="cartSubmitionInput" for="address.Street">Street</label>
+                <input class="cartSubmitionInput" name="address.Street" />
+                <br /><br />
+                <label class="cartSubmitionInput" for="address.BuildingNumber">Building Number</label>
+                <input class="cartSubmitionInput" name="address.BuildingNumber" />
+                <br /><br />
+                <label class="cartSubmitionInput" for="additionalInfo">Comments (additional)</label>
+                <input class="cartSubmitionInput" name="additionalInfo" />
+                <br /><br />
+                <label class="cartSubmitionInput" for="paymentType">Payment type:</label>
+                <select class="cartSubmitionInput" name="paymentType">
+                    <option value="0">Cash</option>
+                    <option value="1">Debit card</option>
+                </select>
+                <br /><br />
+                <input type="submit" value="Submit" class="btn btn-success" />
+                <br /><br />
+            }
+        </div>
+    </div>
+</div>

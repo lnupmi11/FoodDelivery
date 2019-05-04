@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Linq;
+using FoodDelivery.DTO;
+using Microsoft.EntityFrameworkCore;
+using FoodDelivery.DAL.Models.Enums;
 
 namespace FoodDelivery.BLL.Services
 {
@@ -50,10 +53,20 @@ namespace FoodDelivery.BLL.Services
             //_unitOfWork.UsersRepository.Delete(user);
         }
 
-        public void AddSavedAddress(ApplicationUser user, Address address)
+        public void AddSavedAddress(string userName, AddressDTO address)
         {
-            user.SavedAdresses.Add(address);
-            _unitOfWork.UsersRepository.Update(user);
+            int regionNumber = EnumConverter.GetEnumByDescription<Region>(address.Region, Region.OdesaRegion);
+            var user = _unitOfWork.UsersRepository.GetQuery().FirstOrDefault(u => u.UserName == userName);
+            if (user != null)
+            {
+                user.SavedAdresses.Add(new Address
+                {
+                    BuildingNum = address.BuildingNumber,
+                    Region = (Region)regionNumber,
+                    Street = address.Street
+                });
+                _unitOfWork.UsersRepository.Update(user);
+            }
         }
 
         public void UpdateSavedAddress(ApplicationUser user, Address address)
@@ -66,6 +79,54 @@ namespace FoodDelivery.BLL.Services
         {
             user.SavedAdresses.Remove(address);
             _unitOfWork.UsersRepository.Update(user);
+        }
+
+        public IEnumerable<AddressDTO> GetSavedAddresses(string userName)
+        {
+            var user = _unitOfWork.UsersRepository.GetQuery()
+                                       .Include(u => u.SavedAdresses)
+                                       .FirstOrDefault(u => u.UserName == userName);
+
+            if (user != null)
+            {
+                return user.SavedAdresses.Select(a => new AddressDTO
+                {
+                    BuildingNumber = a.BuildingNum,
+                    Region = a.Region.ToString(),
+                    Street = a.Street,
+                    AddressId = a.Id
+                }).ToList();
+            }
+            else
+            {
+                throw new ArgumentException($"There is no user item with the following userName: {userName}");
+            }
+        }
+
+        public string GetSavedAddressId(AddressDTO address)
+        {
+            int regionId = EnumConverter.GetEnumByDescription<Region>(address.Region, Region.LvivRegion);
+            var addressModel = _unitOfWork.AddressesRepository.GetQuery().FirstOrDefault(a =>
+                     a.Region == (Region)regionId
+                     && a.Street == address.Street 
+                     && a.BuildingNum == address.BuildingNumber
+                );
+            if (addressModel != null)
+            {
+                return addressModel.Id;
+            }
+            return null;
+        }
+
+        public IEnumerable<string> GetRegions()
+        {
+            var regionObjs = Enum.GetValues(typeof(Region));
+            List<string> regions = new List<string>();
+            foreach(var region in regionObjs)
+            {
+                regions.Add(region.ToString());
+            }
+            return regions;
         }
     }
 }

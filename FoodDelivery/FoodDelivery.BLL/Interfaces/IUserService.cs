@@ -1,8 +1,6 @@
 ﻿using FoodDelivery.DAL.Models;
-using System;
+using FoodDelivery.DTO;
 using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
 
 namespace FoodDelivery.BLL.Interfaces
 {
@@ -14,6 +12,9 @@ namespace FoodDelivery.BLL.Interfaces
         void ChangeSecondName(ApplicationUser user, string lastName);
         void Update(ApplicationUser user);
         void Delete(ApplicationUser user);
-        void AddSavedAddress(ApplicationUser user, Address address);
+        void AddSavedAddress(string userName, AddressDTO address);
+        IEnumerable<AddressDTO> GetSavedAddresses(string userName);
+        string GetSavedAddressId(AddressDTO address);
+        IEnumerable<string> GetRegions();
     }
 }
