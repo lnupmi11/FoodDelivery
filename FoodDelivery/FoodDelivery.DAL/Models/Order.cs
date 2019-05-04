@@ -12,6 +12,7 @@ namespace FoodDelivery.DAL.Models
         public DateTime SentTime {get; set;}
         public DateTime ReceivedTime {get;set;}
         public DateTime EstimatedTime {get; set;}
+        public string Status { get; set; }
 
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }

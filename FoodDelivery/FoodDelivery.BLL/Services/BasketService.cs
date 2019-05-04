@@ -149,7 +149,7 @@ namespace FoodDelivery.BLL.Services
                 if (user.Basket.MenuItems != null)
                 {
                     List<OrderItem> orderItems = user.Basket.MenuItems.Select(mi => new OrderItem { Count = mi.Count, MenuItem = mi.MenuItem, MenuItemId = mi.MenuItemId }).ToList();
-                    _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime= DateTime.Now});
+                    _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime= DateTime.Now, Status = DAL.Models.Enums.OrderStatus.WaitingResponse.ToString()});
                     ClearBasket(userName);
                 }
             }

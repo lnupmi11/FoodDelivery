@@ -176,10 +176,6 @@ input:disabled {
     background-clip: padding-box;
 }
 
-div {
-    text-align: center;
-}
-
 .minus:hover {
     background-color: #808080 !important;
 }
