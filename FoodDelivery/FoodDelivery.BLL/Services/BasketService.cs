@@ -2,6 +2,7 @@
 using FoodDelivery.DAL.EntityFramework;
 using FoodDelivery.DAL.Interfaces;
 using FoodDelivery.DAL.Models;
+using FoodDelivery.DAL.Models.Enums;
 using FoodDelivery.DTO.Cart;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -47,7 +48,7 @@ namespace FoodDelivery.BLL.Services
 
                     _unitOfWork.SaveChanges();
                 }
-                catch(NullReferenceException)
+                catch (NullReferenceException)
                 {
                     throw new ArgumentException($"There is no user item with the following userName: {userName}");
                 }
@@ -109,13 +110,14 @@ namespace FoodDelivery.BLL.Services
 
             return from basketItem in basketItems
                    join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
-                   select new CartItemDTO {
+                   select new CartItemDTO
+                   {
                        Count = basketItem.Count,
                        Id = menuItem.Id,
                        Description = menuItem.Description,
                        Name = menuItem.Name,
                        Price = menuItem.Price,
-                       Image =menuItem.Image
+                       Image = menuItem.Image
                    };
         }
 
@@ -139,7 +141,7 @@ namespace FoodDelivery.BLL.Services
             }
         }
 
-        public void SubmitBasket(string userName)
+        public void SubmitBasket(string userName, string addresId, int paymentType)
         {
             try
             {
@@ -148,9 +150,18 @@ namespace FoodDelivery.BLL.Services
                                                     .FirstOrDefault(u => u.UserName == userName);
                 if (user.Basket.MenuItems != null)
                 {
-                    List<OrderItem> orderItems = user.Basket.MenuItems.Select(mi => new OrderItem { Count = mi.Count, MenuItem = mi.MenuItem, MenuItemId = mi.MenuItemId }).ToList();
-                    _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime= DateTime.Now});
-                    ClearBasket(userName);
+                    List<OrderItem> orderItems = user.Basket.MenuItems.Select(mi => new OrderItem {
+                        Count = mi.Count,
+                        MenuItem = mi.MenuItem,
+                        MenuItemId = mi.MenuItemId,
+                    }).ToList();
+                    var address = _unitOfWork.AddressesRepository.GetQuery().FirstOrDefault(a=> a.Id == addresId);
+                    if (address != null)
+                    {
+                        var paymentTypeEnum = (PaymentType)paymentType;
+                        _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime = DateTime.Now, Address = address, PaymentType = paymentTypeEnum });
+                        ClearBasket(userName);
+                    }
                 }
             }
             catch (NullReferenceException)

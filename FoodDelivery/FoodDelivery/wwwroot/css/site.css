@@ -187,3 +187,7 @@ div {
 .plus:hover {
     background-color: #808080 !important;
 }
+
+.cartSubmitionInput {
+    width: 300px;
+}

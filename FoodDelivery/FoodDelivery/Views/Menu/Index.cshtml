@@ -15,7 +15,7 @@
             $.ajax({
                 url: "Cart/AddItem?itemId=" + itemId,
                 success: function () {
-                    alert("success");
+                    alert("Your item has been added successfully!");
                 }
             });
         }
@@ -97,6 +97,7 @@
                                     }
                                     else
                                     {
+                                        @*<a asp-controller="Cart" asp-action="AddItem" asp-route-itemId="@currItem.Id">Add to cart</a>*@
                                         <input type="button" value="Add to cart" onclick="AddToCart('@currItem.Id')" class="btn btn-success">
                                     }
                                 </div>
