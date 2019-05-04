@@ -15,19 +15,11 @@ namespace FoodDelivery.Views.Manage
 
         public static string ChangePassword => "ChangePassword";
 
-        public static string ExternalLogins => "ExternalLogins";
-
-        public static string TwoFactorAuthentication => "TwoFactorAuthentication";
-
         public static string SavedAdresses => "SavedAddresses";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
-
-        public static string ExternalLoginsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ExternalLogins);
-
-        public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
 
         public static string SavedAddresses(ViewContext viewContext) => PageNavClass(viewContext, SavedAdresses);
 

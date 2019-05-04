@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FoodDelivery.Migrations
 {
-    public partial class DALLayer : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,6 +31,21 @@ namespace FoodDelivery.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Baskets", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MenuItems",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Price = table.Column<double>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenuItems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,22 +106,66 @@ namespace FoodDelivery.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuItems",
+                name: "BasketItems",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Price = table.Column<double>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    BasketId = table.Column<string>(nullable: true)
+                    BasketId = table.Column<string>(nullable: false),
+                    MenuItemId = table.Column<string>(nullable: false),
+                    Count = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuItems", x => x.Id);
+                    table.PrimaryKey("PK_BasketItems", x => new { x.BasketId, x.MenuItemId });
                     table.ForeignKey(
-                        name: "FK_MenuItems_Baskets_BasketId",
+                        name: "FK_BasketItems_Baskets_BasketId",
                         column: x => x.BasketId,
                         principalTable: "Baskets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BasketItems_MenuItems_MenuItemId",
+                        column: x => x.MenuItemId,
+                        principalTable: "MenuItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CategoryName = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    MenuItemId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_MenuItems_MenuItemId",
+                        column: x => x.MenuItemId,
+                        principalTable: "MenuItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Discounts",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Percentage = table.Column<double>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    MenuItemId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Discounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Discounts_MenuItems_MenuItemId",
+                        column: x => x.MenuItemId,
+                        principalTable: "MenuItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -218,60 +277,21 @@ namespace FoodDelivery.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CategoryName = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    MenuItemId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Categories_MenuItems_MenuItemId",
-                        column: x => x.MenuItemId,
-                        principalTable: "MenuItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Discounts",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Percentage = table.Column<double>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    MenuItemId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Discounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Discounts_MenuItems_MenuItemId",
-                        column: x => x.MenuItemId,
-                        principalTable: "MenuItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    OrderId = table.Column<string>(nullable: false),
                     SentTime = table.Column<DateTime>(nullable: false),
                     ReceivedTime = table.Column<DateTime>(nullable: false),
                     EstimatedTime = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: true),
                     AddressId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
                     PaymentType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
                         name: "FK_Orders_Addresses_AddressId",
                         column: x => x.AddressId,
@@ -283,6 +303,32 @@ namespace FoodDelivery.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    OrderItemId = table.Column<string>(nullable: false),
+                    MenuItemId = table.Column<string>(nullable: true),
+                    Count = table.Column<int>(nullable: false),
+                    OrderId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => x.OrderItemId);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_MenuItems_MenuItemId",
+                        column: x => x.MenuItemId,
+                        principalTable: "MenuItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -336,6 +382,11 @@ namespace FoodDelivery.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BasketItems_MenuItemId",
+                table: "BasketItems",
+                column: "MenuItemId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Categories_MenuItemId",
                 table: "Categories",
                 column: "MenuItemId");
@@ -346,9 +397,14 @@ namespace FoodDelivery.Migrations
                 column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_BasketId",
-                table: "MenuItems",
-                column: "BasketId");
+                name: "IX_OrderItems_MenuItemId",
+                table: "OrderItems",
+                column: "MenuItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_AddressId",
@@ -379,19 +435,25 @@ namespace FoodDelivery.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BasketItems");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Discounts");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "MenuItems");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

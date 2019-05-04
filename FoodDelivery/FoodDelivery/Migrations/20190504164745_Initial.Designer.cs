@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodDelivery.Migrations
 {
     [DbContext(typeof(FoodDeliveryContext))]
-    [Migration("20190413154951_Menu-Item")]
-    partial class MenuItem
+    [Migration("20190504164745_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -122,7 +122,7 @@ namespace FoodDelivery.Migrations
 
             modelBuilder.Entity("FoodDelivery.DAL.Models.Order", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("OrderId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AddressId");
@@ -135,15 +135,37 @@ namespace FoodDelivery.Migrations
 
                     b.Property<DateTime>("SentTime");
 
+                    b.Property<string>("Status");
+
                     b.Property<string>("UserId");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderId");
 
                     b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.OrderItem", b =>
+                {
+                    b.Property<string>("OrderItemId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Count");
+
+                    b.Property<string>("MenuItemId");
+
+                    b.Property<string>("OrderId");
+
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -372,8 +394,19 @@ namespace FoodDelivery.Migrations
                         .HasForeignKey("AddressId");
 
                     b.HasOne("FoodDelivery.DAL.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("FoodDelivery.DAL.Models.OrderItem", b =>
+                {
+                    b.HasOne("FoodDelivery.DAL.Models.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("MenuItemId");
+
+                    b.HasOne("FoodDelivery.DAL.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
