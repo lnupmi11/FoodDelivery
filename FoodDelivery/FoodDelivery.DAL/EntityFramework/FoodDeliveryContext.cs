@@ -19,7 +19,7 @@ namespace FoodDelivery.DAL.EntityFramework
 
         public FoodDeliveryContext(DbContextOptions<FoodDeliveryContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
