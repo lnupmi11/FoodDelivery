@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FoodDelivery
 {
-    public class AAAcs : IDesignTimeDbContextFactory<FoodDeliveryContext>
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<FoodDeliveryContext>
     {
         public FoodDeliveryContext CreateDbContext(string[] args)
         {
