@@ -108,7 +108,7 @@ namespace FoodDelivery.BLL.Services
                                        .FirstOrDefault(u => u.UserName == userName)
                                        .Basket
                                        .MenuItems;
-                var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi => mi.Categories);
+                var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi => mi.Category).ToList();
 
                 return from basketItem in basketItems
                        join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
@@ -120,12 +120,12 @@ namespace FoodDelivery.BLL.Services
                            Name = menuItem.Name,
                            Price = menuItem.Price,
                            Image = menuItem.Image,
-                           Categories = menuItem.Categories.Select(c => new CategoryDTO
+                           Category = menuItem.Category == null ? null : new CategoryDTO
                            {
-                               CategoryName = c.CategoryName,
-                               Description = c.Description,
-                               Id = c.Id
-                           }).ToList()
+                               CategoryName = menuItem.Category.CategoryName,
+                               Description = menuItem.Category.Description,
+                               Id = menuItem.Category.Id
+                           }
                        };
             }
             catch (NullReferenceException)
