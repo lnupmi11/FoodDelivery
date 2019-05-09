@@ -26,12 +26,22 @@
                 <span asp-validation-for="@Model.MenuItemDTO.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.MenuItemDTO.Categories" class="control-label"></label>
-                <select class="custom-select" asp-for="@Model.MenuItemDTO.Categories[0].Id">
-                    <option value="" disabled>Please choose category</option>
+                <label asp-for="@Model.MenuItemDTO.Category" class="control-label"></label>
+                <select class="custom-select" asp-for="@Model.MenuItemDTO.Category.Id">
+                    <option value="None" disabled>Please choose category</option>
                     @foreach (var cat in Model.Categories)
                     {
                         <option value="@cat.Id">@cat.CategoryName</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.MenuItemDTO.Discount" class="control-label"></label>
+                <select class="custom-select" asp-for="@Model.MenuItemDTO.Discount.Id">
+                    <option value="None">Please choose discount</option>
+                    @foreach (var dis in Model.Discounts)
+                    {
+                        <option value="@dis.Id">@dis.Description</option>
                     }
                 </select>
             </div>

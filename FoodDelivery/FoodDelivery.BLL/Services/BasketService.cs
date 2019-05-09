@@ -107,7 +107,7 @@ namespace FoodDelivery.BLL.Services
                                    .Basket
                                    .MenuItems;
 
-            var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi=>mi.Categories);
+            var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi=>mi.Category);
 
             return from basketItem in basketItems
                    join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
@@ -119,12 +119,12 @@ namespace FoodDelivery.BLL.Services
                        Name = menuItem.Name,
                        Price = menuItem.Price,
                        Image = menuItem.Image,
-                       Categories = menuItem.Categories.Select(c => new CategoryDTO
+                       Category = menuItem.Category == null ? null : new CategoryDTO
                        {
-                           CategoryName = c.CategoryName,
-                           Description = c.Description,
-                           Id = c.Id
-                       }).ToList()
+                           CategoryName = menuItem.Category.CategoryName,
+                           Description = menuItem.Category.Description,
+                           Id = menuItem.Category.Id
+                       }
                    };
         }
 
@@ -183,7 +183,7 @@ namespace FoodDelivery.BLL.Services
 
             if (!string.IsNullOrEmpty(categoryId))
             {
-                result = result.Where(bi => bi.Categories.Any(c => c.Id == categoryId));
+                result = result.Where(bi => bi.Category.Id == categoryId);
             }
 
             if (!string.IsNullOrEmpty(searchWord))

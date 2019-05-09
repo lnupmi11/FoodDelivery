@@ -12,7 +12,6 @@ namespace FoodDelivery.BLL.Interfaces
         void Add(MenuItemDTO menuItem);
         void Update(MenuItemDTO menuItem);
         void Delete(MenuItemDTO menuItem);
-        IEnumerable<MenuItemDTO> GetMenuPage(int page, int pagesize, string sortOpt, string searchWord, string categoryId);
-        int GetPageCount(string searchWord);
+        IEnumerable<MenuItemDTO> GetMenuPage(int page, int pagesize, out int pageCount, string sortOpt, string searchWord, string categoryId, string discountId);
     }
 }

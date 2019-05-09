@@ -22,7 +22,7 @@ namespace FoodDelivery.BLL.Services
         public MenuItemDTO Get(string id)
         {
             var item = _unitOfWork.MenuItemsRepository.GetQuery().Where(i => i.Id == id)
-                .Include(i => i.Discounts).Include(i => i.Categories).FirstOrDefault();
+                .Include(i => i.Discount).Include(i => i.Category).FirstOrDefault();
             if(item != null)
             {
                 var res = new MenuItemDTO
@@ -32,12 +32,18 @@ namespace FoodDelivery.BLL.Services
                     Price = item.Price,
                     Description = item.Description,
                     Image = item.Image,
-                    Categories = item.Categories.Select(c => new CategoryDTO
+                    Category = item.Category == null ? null : new CategoryDTO
                     {
-                        Id = c.Id,
-                        CategoryName = c.CategoryName,
-                        Description = c.Description
-                    }).ToList()
+                        Id = item.Category.Id,
+                        CategoryName = item.Category.CategoryName,
+                        Description = item.Category.Description
+                    },
+                    Discount = item.Discount == null ? null : new DiscountDTO
+                    {
+                        Id = item.Discount.Id,
+                        Percentage = item.Discount.Percentage,
+                        Description = item.Discount.Description
+                    }
                 };
                 return res;
             }
@@ -47,7 +53,7 @@ namespace FoodDelivery.BLL.Services
         public IEnumerable<MenuItemDTO> GetAll()
         {
             var menu = _unitOfWork.MenuItemsRepository.GetQuery()
-                .Include(i => i.Discounts).Include(i => i.Categories);
+                .Include(i => i.Discount).Include(i => i.Category);
 
             if (menu != null)
             {
@@ -58,12 +64,18 @@ namespace FoodDelivery.BLL.Services
                     Description = item.Description,
                     Price = item.Price,
                     Image = item.Image,
-                    Categories = item.Categories.Select(c => new CategoryDTO
+                    Category = item.Category == null ? null : new CategoryDTO
                     {
-                        Id = c.Id,
-                        CategoryName = c.CategoryName,
-                        Description = c.Description
-                    }).ToList()
+                        Id = item.Category.Id,
+                        CategoryName = item.Category.CategoryName,
+                        Description = item.Category.Description
+                    },
+                    Discount = item.Discount == null ? null : new DiscountDTO
+                    {
+                        Id = item.Discount.Id,
+                        Percentage = item.Discount.Percentage,
+                        Description = item.Discount.Description
+                    }
                 });
 
             }
@@ -79,7 +91,9 @@ namespace FoodDelivery.BLL.Services
                 Price = menuItem.Price,
                 Description = menuItem.Description,
                 Image = menuItem.Image,
-                Categories = menuItem.Categories == null ? null :_unitOfWork.CategoriesRepository.GetAllWhere(c => menuItem.Categories.Any(x => x.Id == c.Id)).ToList()
+                Category = menuItem.Category == null ? null : _unitOfWork.CategoriesRepository.Get(menuItem.Category.Id),
+                Discount = menuItem.Discount == null ? null : _unitOfWork.DiscountsRepository.Get(menuItem.Discount.Id)
+
             });
             _unitOfWork.SaveChanges();
         }
@@ -91,7 +105,8 @@ namespace FoodDelivery.BLL.Services
             item.Name = menuItem.Name;
             item.Price = menuItem.Price;
             item.Description = menuItem.Description;
-            item.Categories = _unitOfWork.CategoriesRepository.GetAllWhere(c => menuItem.Categories.Any(x => x.Id == c.Id)).ToList();
+            item.Category = menuItem.Category == null ? null : _unitOfWork.CategoriesRepository.Get(menuItem.Category.Id);
+            item.Discount = menuItem.Discount == null ? null : _unitOfWork.DiscountsRepository.Get(menuItem.Discount.Id);
             if (!string.IsNullOrEmpty(menuItem.Image))
                 item.Image = menuItem.Image;
             _unitOfWork.MenuItemsRepository.Update(item);
@@ -104,17 +119,30 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<MenuItemDTO> GetMenuPage(int page, int pageSize, string filterOpt, string searchWord, string categoryId)
+        public IEnumerable<MenuItemDTO> GetMenuPage(int page, int pageSize, out int pageCount, string filterOpt, string searchWord, string categoryId, string discountId)
         {
             var result = GetAll();
             if(!string.IsNullOrEmpty(categoryId))
             {
-                result = result.Where(c => c.Categories.Any(x => x.Id == categoryId));
+                result = result.Where(i =>
+                {
+                    bool v = i.Category != null && i.Category.Id == categoryId;
+                    return v;
+                });
             }
-            if(!string.IsNullOrEmpty(searchWord))
+            if (!string.IsNullOrEmpty(discountId))
+            {
+                result = result.Where(i =>
+                {
+                    bool v = i.Discount != null && i.Discount.Id == discountId;
+                    return v;
+                });
+            }
+            if (!string.IsNullOrEmpty(searchWord))
             {
                 result = result.Where(i => i.Name.Contains(searchWord));
             }
+            pageCount = (int)Math.Ceiling((double)result.Count() / pageSize);
             switch (filterOpt)
             {
                 case "asc":
@@ -126,15 +154,6 @@ namespace FoodDelivery.BLL.Services
             }
             result = result.Skip((page - 1) * pageSize).Take(pageSize);
             return result;
-        }
-
-        public int GetPageCount(string searchWord)
-        {
-            if(!string.IsNullOrEmpty(searchWord))
-            {
-                return _unitOfWork.MenuItemsRepository.GetAll().Count(i => i.Name.Contains(searchWord.ToLower().Trim()));
-            }
-            return _unitOfWork.MenuItemsRepository.GetAll().Count();
         }
     }
 }
