@@ -12,7 +12,7 @@ namespace FoodDelivery.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return LocalRedirect("~/Menu");
         }
 
         public IActionResult About()
