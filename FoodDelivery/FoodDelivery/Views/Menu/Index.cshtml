@@ -33,9 +33,6 @@
                    asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price descending</a>
                 <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="discounts" asp-route-searchWord="@ViewBag.SearchWord"
                    asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">With discount</a>
-            </div>
-
-            <div class="dropdown show mt-2">
                 <a class="btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Search in category
                 </a>
@@ -51,6 +48,10 @@
                 </div>
             </div>
 
+            <div class="dropdown show mt-2">
+                
+            </div>
+
             <hr />
             <form asp-Controller="Menu" asp-action="Index" method="get">
                 <div class="form-actions no-color">
@@ -58,7 +59,9 @@
                         <input type="text" name="searchWord" class="form-control" value="@ViewBag.SearchWord" />
                     </p>
                     <input type="submit" value="Search" class="btn btn-outline-dark" />
-                    | <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="" asp-route-categoryId="">Back to full list</a>
+                    <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="" asp-route-categoryId="">
+                        <input type="submit" value="Back to full list" class="btn btn-outline-dark" />
+                    </a>
                 </div>
             </form>
 

@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    bool isAdmin = User.Identity.IsAuthenticated && User.IsInRole("Admin");
+    bool isManager = User.Identity.IsAuthenticated && User.IsInRole("OrderManager");
+    bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -25,9 +30,15 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mr-auto">
                     <li><a asp-controller="Menu" asp-action="Index" class="nav-link">Menu</a></li>
-                    <li><a asp-controller="Cart" asp-action="Index" class="nav-link">Cart</a></li>
-                    <li><a asp-controller="Purchase" asp-action="AllPurchases" class="nav-link">Purchases</a></li>
-                    <li><a asp-controller="Order" asp-action="Index" class="nav-link">Orders</a></li>
+                    @if (isAdmin || isManager)
+                    {
+                        <li><a asp-controller="Order" asp-action="Index" class="nav-link">Orders</a></li>
+                    }
+                    @if (isUser)
+                    {
+                        <li><a asp-controller="Cart" asp-action="Index" class="nav-link">Cart</a></li>
+                        <li><a asp-controller="Purchase" asp-action="AllPurchases" class="nav-link">Purchases</a></li>
+                    }
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
