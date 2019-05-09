@@ -31,20 +31,34 @@
                    asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price ascending</a>
                 <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="desc" asp-route-searchWord="@ViewBag.SearchWord"
                    asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price descending</a>
-                <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="discounts" asp-route-searchWord="@ViewBag.SearchWord"
-                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">With discount</a>
-                <a class="btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    With discount
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                    <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                       asp-route-discountId="" class="dropdown-item">All menu items</a>
+                    @foreach (var d in Model.Discounts)
+                    {
+                        <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                            asp-route-discountId="@d.Id" class="dropdown-item">@d.Description @d.Percentage%</a>
+                    }
+                </div>
+
+                <div>
+                <a class="btn btn-outline-dark mt-4" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Search in category
                 </a>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
                     <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                        asp-route-categoryId="" class="dropdown-item">All categories</a>
                     @foreach (var c in Model.Categories)
                     {
                         <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                           asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
+                            asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
                     }
+                </div>
                 </div>
             </div>
 
@@ -66,7 +80,11 @@
             @if (isAdmin || isManager)
             {
                 <hr />
-                <a asp-controller="Menu" asp-action="Add" class="btn btn-dark">Add  menu item</a>
+                <div class="btn-group-vertical">
+                    <a asp-controller="Menu" asp-action="Add" class="btn btn-dark">Add  menu item</a>
+                    <a asp-controller="Category" asp-action="Index" class="btn btn-dark">Manage categories</a>
+                    <a asp-controller="Discount" asp-action="Index" class="btn btn-dark">Manage discounts</a>
+                </div>
             }
 
         </div>
@@ -81,11 +99,16 @@
                             @{currItem = Model.MenuItems.ElementAt(i * 3 + j);}
                             <div class="card">
                                 <img class="card-img-top" src="@currItem.Image" alt="Image">
-                                <h4 class="card-title">
-                                    <a href="#">@currItem.Name</a>
+                                <h4 class="card-title ml-3 mt-3">
+                                    @currItem.Name  @if (currItem.Discount != null)
+                                    {
+                                            <span class="badge badge-pill badge-success float-right mr-4">@currItem.Discount.Percentage%</span>
+                                    }
                                 </h4>
                                 <div class="card-body">
-                                    <span>@currItem.Price $</span>
+                                    <span>
+                                        $@currItem.Price
+                                    </span>
                                     <br>
                                     <span>@currItem.Description</span>
                                     <br>

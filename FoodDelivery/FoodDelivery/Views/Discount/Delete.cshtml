@@ -1,4 +1,4 @@
-﻿@model FoodDelivery.DTO.Menu.CategoryDTO
+﻿@model FoodDelivery.DTO.Menu.DiscountDTO
 
 @{
     ViewData["Title"] = "Delete";
@@ -10,16 +10,16 @@
     <hr />
     <div class="row">
         <div class="col-md-4">
-            <form asp-controller="Category" asp-action="Delete">
+            <form asp-controller="Discount" asp-action="Delete">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for="Id" class="form-control" hidden />
                 <div class="form-group">
-                    <label asp-for="CategoryName" class="control-label"></label>
-                    <input asp-for="CategoryName" class="form-control" readonly />
+                    <label asp-for="Percentage" class="control-label"></label>
+                    <input asp-for="Percentage" class="form-control" readonly/>
                 </div>
                 <div class="form-group">
                     <label asp-for="Description" class="control-label"></label>
-                    <input asp-for="Description" class="form-control" readonly />
+                    <input asp-for="Description" class="form-control" readonly/>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Delete" class="btn btn-danger" />

@@ -19,18 +19,20 @@ namespace FoodDelivery.Controllers
     public class MenuController : Controller
     {
         private readonly IHostingEnvironment _appEnvironment;
-        IMenuService _menuService;
-        ICategoryService _categoryService;
+        private readonly IMenuService _menuService;
+        private readonly ICategoryService _categoryService;
+        private readonly IDiscountService _discountService;
 
-        public MenuController(IMenuService menuService, ICategoryService categoryService, IHostingEnvironment appEnvironment) : base()
+        public MenuController(IMenuService menuService, ICategoryService categoryService, IDiscountService discountService, IHostingEnvironment appEnvironment) : base()
         {
             _menuService = menuService;
             _categoryService = categoryService;
+            _discountService = discountService;
             _appEnvironment = appEnvironment;
         }
 
         [HttpGet]
-        public IActionResult Index(int page = 1, string searchWord = "", string filterOpt="", string categoryId = "")
+        public IActionResult Index(int page = 1, string searchWord = "", string filterOpt="", string categoryId = "", string discountId = "")
         {
             const int kPageSize = 6;
             const int kRows = 2;
@@ -38,31 +40,36 @@ namespace FoodDelivery.Controllers
             ViewBag.Rows = kRows;
             ViewBag.Cols = kCols;
             ViewBag.Page = page;
-            ViewBag.Total = Math.Ceiling(_menuService.GetCount(searchWord)/(double)kPageSize);
 
             ViewBag.FilterOpt = filterOpt;
             ViewBag.SearchWord = searchWord;
             ViewBag.CategoryId = categoryId;
-            return View(new MenuModel
+            ViewBag.DiscountId = discountId;
+            var res = new MenuModel
             {
-                MenuItems = _menuService.GetPaginated(page, kPageSize, filterOpt, searchWord, categoryId),
-                Categories = _categoryService.GetAll()
-            });
+                MenuItems = _menuService.GetMenuPage(page, kPageSize, out int pageCount, filterOpt, searchWord, categoryId, discountId),
+                Categories = _categoryService.GetAll(),
+                Discounts = _discountService.GetAll()
+            };
+            ViewBag.Total = pageCount;
+            return View(res);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
-            var res  = new AddMenuModel
+            var menuItem = new MenuItemDTO
             {
-                MenuItemDTO = new MenuItemDTO
-                {
-                    Categories = new List<CategoryDTO>()
-                },
-                Categories = _categoryService.GetAll()
+                Category = new CategoryDTO(),
+                Discount = new DiscountDTO()
             };
-            res.MenuItemDTO.Categories.Add(new CategoryDTO());
+            var res = new AddMenuModel
+            {
+                MenuItemDTO = menuItem,
+                Categories = _categoryService.GetAll(),
+                Discounts = _discountService.GetAll()
+            };
             return View(res);
         }
 
@@ -80,19 +87,25 @@ namespace FoodDelivery.Controllers
         public IActionResult Edit(string id)
         {
             var menuItem = _menuService.Get(id);
-            if (menuItem != null)
+            if(menuItem == null)
             {
-                var res = new AddMenuModel
-                {
-                    MenuItemDTO = menuItem,
-                    Categories = _categoryService.GetAll()
-                };
-                res.MenuItemDTO.Categories.Add(new CategoryDTO());
-                return View(res);
+                return RedirectToAction("Index");
             }
-            ///TODO:
-            ///Change to some Errro view
-            return RedirectToAction("Index");
+            if(menuItem.Category == null)
+            {
+                menuItem.Category = new CategoryDTO();
+            }
+            if(menuItem.Discount == null)
+            {
+                menuItem.Discount = new DiscountDTO();
+            }
+            var res = new AddMenuModel
+            {
+                Categories = _categoryService.GetAll(),
+                Discounts = _discountService.GetAll(),
+                MenuItemDTO = menuItem
+            };
+            return View(res);
         }
 
         [HttpPost]
@@ -139,10 +152,12 @@ namespace FoodDelivery.Controllers
                     var FileExtension = Path.GetExtension(fileName);
                     var physicalWebRootPath = _appEnvironment.ContentRootPath;
                     var newFileName = myUniqueFileName + FileExtension;
-                    fileName = "wwwroot\\images\\menu" + $@"\{newFileName}";
-                    model.Image = "images\\menu\\" + newFileName;
+                    char sep = Path.DirectorySeparatorChar;
+                    fileName = $@"wwwroot{sep}images{sep}menu{sep}{newFileName}";
+                    model.Image = $@"images{sep}menu{sep}" + newFileName;
 
-                    using (FileStream fs = System.IO.File.Create($"{physicalWebRootPath}\\{fileName}"))
+                    var fullPath = $"{physicalWebRootPath}{sep}{fileName}";
+                    using (FileStream fs = System.IO.File.Create(fullPath))
                     {
                         file.CopyTo(fs);
                         fs.Flush();

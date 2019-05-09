@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\menu\" />
+    <Folder Include="Views\Discount\" />
   </ItemGroup>
 
 </Project>

@@ -189,7 +189,7 @@ public void ClearBasket(string userName)
 
             if (!string.IsNullOrEmpty(categoryId))
             {
-                result = result.Where(bi => bi.Categories.Any(c => c.Id == categoryId));
+                result = result.Where(bi => bi.Category.Id == categoryId);
             }
 
             if (!string.IsNullOrEmpty(searchWord))

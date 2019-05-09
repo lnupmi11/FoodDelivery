@@ -23,7 +23,7 @@ namespace FoodDelivery.BLL.Services
         {
             return _unitOfWork.OrderItemsRepository.GetQuery()
                                                    .Include(oi => oi.MenuItem)
-                                                   .Include(oi=>oi.MenuItem.Categories)
+                                                   .Include(oi=>oi.MenuItem.Category)
                                                    .Include(oi => oi.Order)
                                                    .Where(oi => orderId == oi.Order.OrderId)
                                                    .Select(oi => new PurchaseItemDTO
@@ -34,12 +34,12 @@ namespace FoodDelivery.BLL.Services
                                                        Name = oi.MenuItem.Name,
                                                        Price = oi.MenuItem.Price,
                                                        Image = oi.MenuItem.Image,
-                                                       Categories = oi.MenuItem.Categories.Select(c => new CategoryDTO
+                                                       Category = oi.MenuItem.Category == null ? null : new CategoryDTO
                                                        {
-                                                           CategoryName = c.CategoryName,
-                                                           Description = c.Description,
-                                                           Id = c.Id
-                                                       }).ToList()
+                                                           CategoryName = oi.MenuItem.Category.CategoryName,
+                                                           Description = oi.MenuItem.Category.Description,
+                                                           Id = oi.MenuItem.Category.Id
+                                                       }
                                                    }).ToList();
         }
 
@@ -78,7 +78,7 @@ namespace FoodDelivery.BLL.Services
 
             if (!string.IsNullOrEmpty(categoryId))
             {
-                result = result.Where(bi => bi.Categories.Any(c => c.Id == categoryId));
+                result = result.Where(bi => bi.Category.Id == categoryId);
             }
 
             if (!string.IsNullOrEmpty(searchWord))

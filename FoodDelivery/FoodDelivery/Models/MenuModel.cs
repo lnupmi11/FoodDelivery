@@ -10,5 +10,6 @@ namespace FoodDelivery.Models
     {
         public IEnumerable<MenuItemDTO> MenuItems { get; set; }
         public IEnumerable<CategoryDTO> Categories { get; set; }
+        public IEnumerable<DiscountDTO> Discounts { get; set; }
     }
 }
