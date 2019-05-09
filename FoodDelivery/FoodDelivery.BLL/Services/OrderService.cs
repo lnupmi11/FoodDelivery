@@ -51,20 +51,25 @@ namespace FoodDelivery.BLL.Services
                 var orderItems = _unitOfWork.OrderItemsRepository.GetQuery()
                     .Include(o => o.Order).Where(o => o.Order.OrderId == id)
                     .Include(o => o.MenuItem);
-                double totalPrice = orderItems.Sum(o => o.MenuItem.Price);
-                int itemsCount = orderItems.Sum(o => o.Count);
+                double totalPrice = 0;
+                int itemsCount = 0;
+                if(orderItems != null)
+                {
+                    totalPrice = orderItems.Sum(o => o.MenuItem.Price);
+                    itemsCount = orderItems.Sum(o => o.Count);
+                }
                 return new OrderDTO
                 {
                     OrderId = order.OrderId,
                     SentTime = order.SentTime,
                     ReceivedTime = order.ReceivedTime,
                     EstimatedTime = order.EstimatedTime,
-                    User = order.User,
+                    User = order.User ?? null,
                     OrderStatus = ValueToEnum(order.Status),
-                    OrderItems = orderItems.AsEnumerable(),
+                    OrderItems = orderItems?.AsEnumerable(),
                     TotalPrice = totalPrice,
-                    ItemsCount = itemsCount
-                    //AddressId = order.Address.Id
+                    ItemsCount = itemsCount,
+                    Address = order.Address ?? null
                 };
             }
             return new OrderDTO();
