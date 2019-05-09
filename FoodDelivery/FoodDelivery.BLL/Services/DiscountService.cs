@@ -22,6 +22,7 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.DiscountsRepository.Create(
                 new Discount
                 {
+                    Id = discount.Id,
                     Percentage = discount.Percentage,
                     Description = discount.Description,
                 });
@@ -47,10 +48,10 @@ namespace FoodDelivery.BLL.Services
 
         public IEnumerable<DiscountDTO> GetAll()
         {
-            var categories = _unitOfWork.DiscountsRepository.GetAll();
-            if (categories != null)
+            var discounts = _unitOfWork.DiscountsRepository.GetQuery();
+            if (discounts != null)
             {
-                return categories.Select(d => new DiscountDTO
+                return discounts.Select(d => new DiscountDTO
                 {
                     Id = d.Id,
                     Percentage = d.Percentage,
