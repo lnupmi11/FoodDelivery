@@ -4,6 +4,7 @@ using FoodDelivery.DAL.Interfaces;
 using FoodDelivery.DAL.Models;
 using FoodDelivery.DAL.Models.Enums;
 using FoodDelivery.DTO.Cart;
+using FoodDelivery.DTO.Menu;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -106,7 +107,7 @@ namespace FoodDelivery.BLL.Services
                                    .Basket
                                    .MenuItems;
 
-            var menuItems = _unitOfWork.MenuItemsRepository.GetQuery();
+            var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi=>mi.Categories);
 
             return from basketItem in basketItems
                    join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
@@ -117,7 +118,13 @@ namespace FoodDelivery.BLL.Services
                        Description = menuItem.Description,
                        Name = menuItem.Name,
                        Price = menuItem.Price,
-                       Image = menuItem.Image
+                       Image = menuItem.Image,
+                       Categories = menuItem.Categories.Select(c => new CategoryDTO
+                       {
+                           CategoryName = c.CategoryName,
+                           Description = c.Description,
+                           Id = c.Id
+                       }).ToList()
                    };
         }
 
@@ -168,6 +175,32 @@ namespace FoodDelivery.BLL.Services
             {
                 throw new ArgumentException($"There is no basket for user: {userName}");
             }
+        }
+
+        public IEnumerable<CartItemDTO> GetUserBasketByFilters(int page, string searchWord, string filterOpt, string categoryId, string userName, int itemPerPage)
+        {
+            var result = GetAllUserBasketItems(userName);
+
+            if (!string.IsNullOrEmpty(categoryId))
+            {
+                result = result.Where(bi => bi.Categories.Any(c => c.Id == categoryId));
+            }
+
+            if (!string.IsNullOrEmpty(searchWord))
+            {
+                result = result.Where(bi => bi.Name.Contains(searchWord));
+            }
+
+            if (filterOpt == "desc")
+            {
+                result = result.OrderByDescending(mi => mi.Price);
+            }
+            else if (filterOpt == "asc")
+            {
+                result = result.OrderBy(mi => mi.Price);
+            }
+
+            return result.Skip((page-1)*itemPerPage).Take(itemPerPage);
         }
     }
 }

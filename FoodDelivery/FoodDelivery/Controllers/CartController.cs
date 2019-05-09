@@ -6,6 +6,7 @@ using FoodDelivery.DAL.Models.Enums;
 using FoodDelivery.DTO;
 using FoodDelivery.DTO.Cart;
 using FoodDelivery.DTO.Models;
+using FoodDelivery.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,23 +16,36 @@ namespace FoodDelivery.Controllers
     {
         IBasketService _orderService;
         IUserService _userService;
+        ICategoryService _categoryService;
 
-        public CartController(IBasketService orderService, IUserService userService) : base()
+        public CartController(IBasketService orderService, IUserService userService, ICategoryService categoryService) : base()
         {
             _orderService = orderService;
             _userService = userService;
+            _categoryService = categoryService;
         }
 
         [Authorize]
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, string searchWord = "", string filterOpt = "", string categoryId = "")
         {
+            const int itemsPerPage = 3;
             var userName = User.Identity.Name;
+            CartModel cartModel = new CartModel();
             List<CartItemDTO> cartItems = new List<CartItemDTO>();
             if (!string.IsNullOrEmpty(userName))
             {
-                cartItems = _orderService.GetAllUserBasketItems(userName).ToList();
+                cartItems = _orderService.GetUserBasketByFilters(page,searchWord,filterOpt,categoryId, userName, itemsPerPage).ToList();
+                ViewBag.Total = Math.Ceiling(_orderService.GetAllUserBasketItems(userName).Count() * 1.0 /itemsPerPage);
+                ViewBag.Page = page;
             }
-            return View(cartItems);
+            cartModel.CartItems = cartItems;
+            cartModel.Categories = _categoryService.GetAll();
+
+            ViewBag.FilterOpt = filterOpt;
+            ViewBag.SearchWord = searchWord;
+            ViewBag.CategoryId = categoryId;
+
+            return View(cartModel);
         }
 
         [Authorize]

@@ -1,35 +1,89 @@
-﻿@model IEnumerable<FoodDelivery.DTO.Purchase.PurchaseItemDTO>
+﻿@model PurchaseModel
 @{
     ViewData["Title"] = "ItemsInSelectedPurchase";
 }
 
-@foreach (var item in Model)
-{
-    <div class="card card-item">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3">
-                    <img class="card-img-inline-cart" src="~/@item.Image" alt="Image">
-                </div>
-                <div class="col-md-5">
-                    <div class="card-inline-cart">
-                        <div class="item-description-cart ">
-                            <h3 class="item-title-cart">
-                                <a href="#">@item.Name</a>
-                            </h3>
-                            <p>@item.Description</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <h3 style="margin-top: 20px;">@item.Price $</h3>
-                </div>
-                <div class="col-md-2">
-                    <div class="item-counter-cart">
-                        <input disabled="disabled" type="number" id="@item.Id" class="count" value="@item.Count" style="width:20px;">
-                    </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h1 class="my-4">Sort by</h1>
+            <div class="btn-group-vertical">
+                <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-filterOpt="asc"  asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-searchWord="@ViewBag.SearchWord"
+                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price ascending</a>
+                <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-filterOpt="desc" asp-route-searchWord="@ViewBag.SearchWord"
+                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price descending</a>
+                <a class="btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Search in category
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a asp-controller="Menu" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                       asp-route-categoryId="" class="dropdown-item">All categories</a>
+                    @foreach (var c in Model.Categories)
+                    {
+                        <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                           asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
+                    }
                 </div>
             </div>
+
+            <div class="dropdown show mt-2"></div>
+
+            <hr />
+            <form asp-Controller="Purchase" asp-action="ItemsInSelectedPurchase" method="get">
+                <div class="form-actions no-color">
+                    <p>
+                        <input hidden="hidden" type="text" name="purchaseId" class="form-control" value="@ViewBag.PurchaseId" />
+                        <input type="text" name="searchWord" class="form-control" value="@ViewBag.SearchWord" />
+                    </p>
+                    <input type="submit" value="Search" class="btn btn-outline-dark" />
+                    <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-filterOpt="" asp-route-searchWord="" asp-route-categoryId="">
+                        <input type="submit" value="Back to full list" class="btn btn-outline-dark" />
+                    </a>
+                </div>
+            </form>
         </div>
+        @if (Model.PurchaseItems.Count() > 0)
+        {
+            <div class="col-md-9">
+                @foreach (var item in Model.PurchaseItems)
+                {
+                    <div class="card item-cart-card">
+                        <div class="card-header">
+                            @item.Name
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img class="card-img-inline-cart" src="~/@item.Image" alt="Image">
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="card-title">Price per item: @item.Price $</h5>
+                                    <p class="card-text">@item.Description</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-12">
+                <div class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        @for (var i = 1; i <= ViewBag.Total; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-page="@i"
+                                   asp-route-filterOpt="@ViewBag.FilterOpt"  asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-searchWord="@ViewBag.SearchWord"
+                                   asp-route-categoryId="@ViewBag.CategoryId" class="page-link">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h2>Your cart is empty</h2>
+        }
     </div>
-}
+</div>

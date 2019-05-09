@@ -1,6 +1,5 @@
-﻿using System;
+﻿using FoodDelivery.DTO.Menu;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FoodDelivery.DTO.Purchase
 {
@@ -12,5 +11,6 @@ namespace FoodDelivery.DTO.Purchase
         public double Price { get; set; }
         public int Count { get; set; }
         public string Image { get; set; }
+        public IList<CategoryDTO> Categories { get; set; }
     }
 }
