@@ -87,16 +87,9 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string userName = "thirdTestUser";
             string menuItemId = "firstMenuItemId";
-            try
-            {
-                basketService.AddItemToBasket(userName, menuItemId);
-            }
-            catch (ArgumentException ex)
-            {
-                Assert.IsTrue(ex.Message == $"There is no user item with the following userName: {userName}");
-                return;
-            }
-            Assert.IsTrue(false);
+
+            var ex = Assert.Throws<ArgumentException>(() => basketService.AddItemToBasket(userName, menuItemId));
+            Assert.That(ex.Message, Is.EqualTo($"There is no user item with the following userName: {userName}"));
         }
 
         [Test]
@@ -105,6 +98,7 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string menuItemId = "tenthMenuItemId";
             string userName = "firstUser";
+
             var ex = Assert.Throws<ArgumentException>(() => basketService.AddItemToBasket(userName, menuItemId));
             Assert.That(ex.Message, Is.EqualTo($"There is no menu item with the following id: {menuItemId}"));
         }
@@ -133,6 +127,7 @@ namespace FoodDelivery.TEST
         {
             string userName = "secondTestUser";
             string menuItemId = "firstMenuItemId";
+
             var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
                 .Include(u => u.Basket)
                 .Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
@@ -150,6 +145,7 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string userName = "thirdTestUser";
             string menuItemId = "firstMenuItemId";
+
             var ex = Assert.Throws<ArgumentException>(() => basketService.DeleteItemFromBasket(userName, menuItemId));
             Assert.That(ex.Message, Is.EqualTo($"There is no user item with the following userName: {userName}"));
         }
@@ -160,6 +156,7 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             string menuItemId = "tenthMenuItemId";
             string userName = "firstUser";
+
             var ex = Assert.Throws<ArgumentException>(() => basketService.DeleteItemFromBasket(userName, menuItemId));
             Assert.That(ex.Message, Is.EqualTo($"There is no menu item with the following id: {menuItemId}"));
         }
@@ -217,6 +214,118 @@ namespace FoodDelivery.TEST
             Assert.That(ex.Message, Is.EqualTo($"There is no basket with the following user: {userName}"));
         }
 
+        [Test]
+        public void GetAllItemsFromUserCartSuccessfully()
+        {
+            string userName = "firstTestUser";
+            var user = foodDeliveryUnitOfWork.UsersRepository.GetQuery()
+                .Include(u => u.Basket)
+                .Include(u => u.Basket.MenuItems).FirstOrDefault(u => u.UserName == userName);
+
+            var userItemIds = user.Basket.MenuItems.Select(mi => mi.MenuItemId).ToList();
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetAllUserBasketItems(userName).Select(mi=>mi.Id);
+
+            Assert.AreEqual(userItemIds.Count, userItemIds.Intersect(result).ToList().Count);
+        }
+
+        [Test]
+        public void GetAllItemsFromNotExistingUserCart()
+        {
+            string userName = "firstUser";
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+
+            var ex = Assert.Throws<ArgumentException>(() => basketService.GetAllUserBasketItems(userName));
+            Assert.That(ex.Message, Is.EqualTo($"There is no user item with the following userName: {userName}"));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByPriceDescendingSuccessfully()
+        {
+            string userName = "firstTestUser";
+            const int elementCount = 3;
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetUserBasketByFilters(1, string.Empty, "desc", string.Empty, userName, elementCount);
+            var resultIds = result.Select(r => r.Id).ToArray();
+            var resultOrderedByDescIds = result.OrderByDescending(r => r.Price).Select(r => r.Id).ToArray();
+
+            bool isValidResult = true;
+            for (int i = 0; i < elementCount; i++)
+            {
+                isValidResult = resultIds[i] == resultOrderedByDescIds[i];
+            }
+
+            Assert.IsTrue(isValidResult);
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByItemNameSuccessfully()
+        {
+            string userName = "firstTestUser";
+            const int elementCount = 3;
+            const string searchedItemName = "firstMenuItemId";
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetUserBasketByFilters(1, searchedItemName, "desc", string.Empty, userName, elementCount);
+            Assert.IsTrue(result.All(r=>r.Name.Contains(searchedItemName)));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByCategorySuccessfully()
+        {
+            string userName = "firstTestUser";
+            const int elementCount = 3;
+            const string searchedCtegoryId = "firstCategoryId";
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetUserBasketByFilters(1, string.Empty, "desc", searchedCtegoryId, userName, elementCount);
+            Assert.IsTrue(result.All(r => r.Category.Id == searchedCtegoryId));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByNotExistingCategory()
+        {
+            string userName = "firstTestUser";
+            const int elementCount = 3;
+            const string searchedCtegoryId = "randomCategoryId";
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetUserBasketByFilters(1, string.Empty, "desc", searchedCtegoryId, userName, elementCount).ToList();
+            Assert.IsTrue(result.Count == default(int));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByPageNumberSuccessfully()
+        {
+            string userName = "firstTestUser";
+            const int elementCount = 3;
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetUserBasketByFilters(1, string.Empty, "desc", string.Empty, userName, elementCount).ToArray();
+            Assert.AreEqual(elementCount, result.Length);
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByPriceAscendingSuccessfully()
+        {
+            string userName = "firstTestUser";
+            const int elementCount = 3;
+
+            BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
+            var result = basketService.GetUserBasketByFilters(1, string.Empty, "asc", string.Empty, userName, elementCount);
+            var resultIds = result.Select(r => r.Id).ToArray();
+            var resultOrderedByDescIds = result.OrderBy(r => r.Price).Select(r => r.Id).ToArray();
+
+            bool isValidResult = true;
+            for (int i = 0; i < elementCount; i++)
+            {
+                isValidResult = resultIds[i] == resultOrderedByDescIds[i];
+            }
+
+            Assert.IsTrue(isValidResult);
+        }
+
         public IQueryable<ApplicationUser> GetUserRepositoryQuery()
         {
             var menuItems = GetMenuItems();
@@ -239,11 +348,11 @@ namespace FoodDelivery.TEST
         {
             return new List<MenuItem>
             {
-                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100 },
-                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200 },
-                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300 },
-                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400 },
-                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500 }
+                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100, Category = new Category { Id="firstCategoryId"} },
+                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200, Category = new Category { Id="firstCategoryId"} },
+                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300, Category = new Category{ Id="secondCategoryId"} },
+                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400, Category = new Category{ Id="secondCategoryId"} },
+                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500, Category = new Category{ Id="secondCategoryId"} }
             };
         }
 

@@ -17,7 +17,7 @@
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a asp-controller="Menu" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                    <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                        asp-route-categoryId="" class="dropdown-item">All categories</a>
                     @foreach (var c in Model.Categories)
                     {

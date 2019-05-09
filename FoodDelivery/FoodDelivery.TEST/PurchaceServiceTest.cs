@@ -68,6 +68,93 @@ namespace FoodDelivery.TEST
             Assert.IsTrue(!purchaseItemIds.Any());
         }
 
+        [Test]
+        public void GetItemsFromUserCartByPriceDescendingSuccessfully()
+        {
+            string orderId = "firstOrder";
+            const int elementCount = 3;
+
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", string.Empty, elementCount, orderId);
+            var resultIds = result.Select(r => r.Id).ToArray();
+            var resultOrderedByDescIds = result.OrderByDescending(r => r.Price).Select(r => r.Id).ToArray();
+
+            bool isValidResult = true;
+            for (int i = 0; i < elementCount; i++)
+            {
+                isValidResult = resultIds[i] == resultOrderedByDescIds[i];
+            }
+
+            Assert.IsTrue(isValidResult);
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByItemNameSuccessfully()
+        {
+            string orderId = "firstOrder";
+            const int elementCount = 3;
+            const string searchedItemName = "firstMenuItemId";
+
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var result = purchaseService.GetPurchaseItemsByFilters(1, searchedItemName, "desc", string.Empty, elementCount, orderId);
+            Assert.IsTrue(result.All(r => r.Name.Contains(searchedItemName)));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByCategorySuccessfully()
+        {
+            const int elementCount = 3;
+            string orderId = "firstOrder";
+
+            const string searchedCtegoryId = "firstCategoryId";
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", searchedCtegoryId, elementCount, orderId);
+            Assert.IsTrue(result.All(r => r.Category.Id == searchedCtegoryId));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByNotExistingCategory()
+        {
+            const int elementCount = 3;
+            const string searchedCtegoryId = "randomCategoryId";
+            string orderId = "firstOrder";
+
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", searchedCtegoryId, elementCount, orderId).ToList();
+            Assert.IsTrue(result.Count == default(int));
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByPageNumberSuccessfully()
+        {
+            string orderId = "firstOrder";
+            const int elementCount = 3;
+
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", string.Empty, elementCount, orderId).ToArray();
+            Assert.AreEqual(elementCount, result.Length);
+        }
+
+        [Test]
+        public void GetItemsFromUserCartByPriceAscendingSuccessfully()
+        {
+            string orderId = "firstOrder";
+            const int elementCount = 3;
+
+            PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
+            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "asc", string.Empty, elementCount, orderId);
+            var resultIds = result.Select(r => r.Id).ToArray();
+            var resultOrderedByDescIds = result.OrderBy(r => r.Price).Select(r => r.Id).ToArray();
+
+            bool isValidResult = true;
+            for (int i = 0; i < elementCount; i++)
+            {
+                isValidResult = resultIds[i] == resultOrderedByDescIds[i];
+            }
+
+            Assert.IsTrue(isValidResult);
+        }
+
         public IQueryable<ApplicationUser> GetUserRepositoryQuery()
         {
             var menuItems = GetMenuItems();
@@ -96,11 +183,11 @@ namespace FoodDelivery.TEST
         {
             return new List<MenuItem>
             {
-                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100 },
-                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200 },
-                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300 },
-                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400 },
-                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500 }
+                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100, Category = new Category { Id = "firstCategoryId" } },
+                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200, Category = new Category{ Id = "firstCategoryId" } },
+                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300, Category = new Category{ Id = "firstCategoryId" } },
+                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400, Category = new Category{ Id = "secondCategoryId" } },
+                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500, Category = new Category{ Id = "secondCategoryId" } }
             };
         }
 

@@ -100,35 +100,41 @@ namespace FoodDelivery.BLL.Services
 
         public IEnumerable<CartItemDTO> GetAllUserBasketItems(string userName)
         {
-            var basketItems = _unitOfWork.UsersRepository.GetQuery()
-                                   .Include(u => u.Basket)
-                                   .Include(u => u.Basket.MenuItems)
-                                   .FirstOrDefault(u => u.UserName == userName)
-                                   .Basket
-                                   .MenuItems;
+            try
+            {
+                var basketItems = _unitOfWork.UsersRepository.GetQuery()
+                                       .Include(u => u.Basket)
+                                       .Include(u => u.Basket.MenuItems)
+                                       .FirstOrDefault(u => u.UserName == userName)
+                                       .Basket
+                                       .MenuItems;
+                var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi => mi.Category).ToList();
 
-            var menuItems = _unitOfWork.MenuItemsRepository.GetQuery().Include(mi=>mi.Category);
-
-            return from basketItem in basketItems
-                   join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
-                   select new CartItemDTO
-                   {
-                       Count = basketItem.Count,
-                       Id = menuItem.Id,
-                       Description = menuItem.Description,
-                       Name = menuItem.Name,
-                       Price = menuItem.Price,
-                       Image = menuItem.Image,
-                       Category = menuItem.Category == null ? null : new CategoryDTO
+                return from basketItem in basketItems
+                       join menuItem in menuItems on basketItem.MenuItemId equals menuItem.Id
+                       select new CartItemDTO
                        {
-                           CategoryName = menuItem.Category.CategoryName,
-                           Description = menuItem.Category.Description,
-                           Id = menuItem.Category.Id
-                       }
-                   };
+                           Count = basketItem.Count,
+                           Id = menuItem.Id,
+                           Description = menuItem.Description,
+                           Name = menuItem.Name,
+                           Price = menuItem.Price,
+                           Image = menuItem.Image,
+                           Category = menuItem.Category == null ? null : new CategoryDTO
+                           {
+                               CategoryName = menuItem.Category.CategoryName,
+                               Description = menuItem.Category.Description,
+                               Id = menuItem.Category.Id
+                           }
+                       };
+            }
+            catch (NullReferenceException)
+            {
+                throw new ArgumentException($"There is no user item with the following userName: {userName}");
+            }
         }
 
-        public void ClearBasket(string userName)
+public void ClearBasket(string userName)
         {
             try
             {
