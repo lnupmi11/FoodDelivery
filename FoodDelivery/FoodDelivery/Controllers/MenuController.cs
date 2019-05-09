@@ -139,10 +139,12 @@ namespace FoodDelivery.Controllers
                     var FileExtension = Path.GetExtension(fileName);
                     var physicalWebRootPath = _appEnvironment.ContentRootPath;
                     var newFileName = myUniqueFileName + FileExtension;
-                    fileName = "wwwroot\\images\\menu" + $@"\{newFileName}";
-                    model.Image = "images\\menu\\" + newFileName;
+                    char sep = Path.DirectorySeparatorChar;
+                    fileName = $@"wwwroot{sep}images{sep}menu{sep}{newFileName}";
+                    model.Image = $@"images{sep}menu{sep}" + newFileName;
 
-                    using (FileStream fs = System.IO.File.Create($"{physicalWebRootPath}\\{fileName}"))
+                    var fullPath = $"{physicalWebRootPath}{sep}{fileName}";
+                    using (FileStream fs = System.IO.File.Create(fullPath))
                     {
                         file.CopyTo(fs);
                         fs.Flush();
