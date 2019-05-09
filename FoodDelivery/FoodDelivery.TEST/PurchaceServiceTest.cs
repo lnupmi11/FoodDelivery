@@ -1,6 +1,7 @@
 ﻿using FoodDelivery.BLL.Services;
 using FoodDelivery.DAL.Interfaces;
 using FoodDelivery.DAL.Models;
+using FoodDelivery.DTO;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -72,15 +73,22 @@ namespace FoodDelivery.TEST
         public void GetItemsFromUserCartByPriceDescendingSuccessfully()
         {
             string orderId = "firstOrder";
-            const int elementCount = 3;
 
             PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
-            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", string.Empty, elementCount, orderId);
+            var filterObj = new FilterMenuItem
+            {
+                CategoryId = string.Empty,
+                FilterOpt = "desc",
+                ItemPerPage = 3,
+                Page = 1,
+                SearchWord = string.Empty
+            };
+            var result = purchaseService.GetPurchaseItemsByFilters(filterObj, orderId);
             var resultIds = result.Select(r => r.Id).ToArray();
             var resultOrderedByDescIds = result.OrderByDescending(r => r.Price).Select(r => r.Id).ToArray();
 
             bool isValidResult = true;
-            for (int i = 0; i < elementCount; i++)
+            for (int i = 0; i < filterObj.ItemPerPage; i++)
             {
                 isValidResult = resultIds[i] == resultOrderedByDescIds[i];
             }
@@ -92,35 +100,58 @@ namespace FoodDelivery.TEST
         public void GetItemsFromUserCartByItemNameSuccessfully()
         {
             string orderId = "firstOrder";
-            const int elementCount = 3;
             const string searchedItemName = "firstMenuItemId";
 
             PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
-            var result = purchaseService.GetPurchaseItemsByFilters(1, searchedItemName, "desc", string.Empty, elementCount, orderId);
+            var filterObj = new FilterMenuItem
+            {
+                CategoryId = string.Empty,
+                FilterOpt = "desc",
+                ItemPerPage = 3,
+                Page = 1,
+                SearchWord = searchedItemName
+            };
+            var result = purchaseService.GetPurchaseItemsByFilters(filterObj, orderId);
             Assert.IsTrue(result.All(r => r.Name.Contains(searchedItemName)));
         }
 
         [Test]
         public void GetItemsFromUserCartByCategorySuccessfully()
         {
-            const int elementCount = 3;
             string orderId = "firstOrder";
 
             const string searchedCtegoryId = "firstCategoryId";
             PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
-            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", searchedCtegoryId, elementCount, orderId);
+            var filterObj = new FilterMenuItem
+            {
+                CategoryId = searchedCtegoryId,
+                FilterOpt = string.Empty,
+                ItemPerPage = 3,
+                Page = 1,
+                SearchWord = string.Empty
+            };
+
+            var result = purchaseService.GetPurchaseItemsByFilters(filterObj, orderId);
             Assert.IsTrue(result.All(r => r.Category.Id == searchedCtegoryId));
         }
 
         [Test]
         public void GetItemsFromUserCartByNotExistingCategory()
         {
-            const int elementCount = 3;
             const string searchedCtegoryId = "randomCategoryId";
             string orderId = "firstOrder";
 
+            var filterObj = new FilterMenuItem
+            {
+                CategoryId = searchedCtegoryId,
+                FilterOpt = string.Empty,
+                ItemPerPage = 3,
+                Page = 1,
+                SearchWord = string.Empty
+            };
+
             PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
-            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", searchedCtegoryId, elementCount, orderId).ToList();
+            var result = purchaseService.GetPurchaseItemsByFilters(filterObj, orderId).ToList();
             Assert.IsTrue(result.Count == default(int));
         }
 
@@ -128,26 +159,41 @@ namespace FoodDelivery.TEST
         public void GetItemsFromUserCartByPageNumberSuccessfully()
         {
             string orderId = "firstOrder";
-            const int elementCount = 3;
+
+            var filterObj = new FilterMenuItem
+            {
+                CategoryId = string.Empty,
+                FilterOpt = string.Empty,
+                ItemPerPage = 3,
+                Page = 1,
+                SearchWord = string.Empty
+            };
 
             PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
-            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "desc", string.Empty, elementCount, orderId).ToArray();
-            Assert.AreEqual(elementCount, result.Length);
+            var result = purchaseService.GetPurchaseItemsByFilters(filterObj, orderId).ToArray();
+            Assert.AreEqual(filterObj.ItemPerPage, result.Length);
         }
 
         [Test]
         public void GetItemsFromUserCartByPriceAscendingSuccessfully()
         {
             string orderId = "firstOrder";
-            const int elementCount = 3;
+            var filterObj = new FilterMenuItem
+            {
+                CategoryId = string.Empty,
+                FilterOpt = "asc",
+                ItemPerPage = 3,
+                Page = 1,
+                SearchWord = string.Empty
+            };
 
             PurchaseService purchaseService = new PurchaseService(foodDeliveryUnitOfWork);
-            var result = purchaseService.GetPurchaseItemsByFilters(1, string.Empty, "asc", string.Empty, elementCount, orderId);
+            var result = purchaseService.GetPurchaseItemsByFilters(filterObj, orderId);
             var resultIds = result.Select(r => r.Id).ToArray();
             var resultOrderedByDescIds = result.OrderBy(r => r.Price).Select(r => r.Id).ToArray();
 
             bool isValidResult = true;
-            for (int i = 0; i < elementCount; i++)
+            for (int i = 0; i < filterObj.ItemPerPage; i++)
             {
                 isValidResult = resultIds[i] == resultOrderedByDescIds[i];
             }

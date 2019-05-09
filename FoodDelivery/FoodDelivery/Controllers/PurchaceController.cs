@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FoodDelivery.BLL.Interfaces;
 using FoodDelivery.BLL.Services;
+using FoodDelivery.DTO;
 using FoodDelivery.DTO.Purchase;
 using FoodDelivery.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -40,7 +41,14 @@ namespace FoodDelivery.Controllers
             List<PurchaseItemDTO> purchasedItems = new List<PurchaseItemDTO>();
             if (!string.IsNullOrEmpty(userName))
             {
-                purchasedItems = _purchaseService.GetPurchaseItemsByFilters(page,searchWord,filterOpt,categoryId,itemsPerPage,purchaseId).ToList();
+                var filterObj = new FilterMenuItem {
+                    CategoryId = categoryId,
+                    FilterOpt = filterOpt,
+                    ItemPerPage = itemsPerPage,
+                    Page = page,
+                    SearchWord = searchWord
+                };
+                purchasedItems = _purchaseService.GetPurchaseItemsByFilters(filterObj,purchaseId).ToList();
                 ViewBag.Total = Math.Ceiling(_purchaseService.GetPurchaseItems(purchaseId).Count() * 1.0 / itemsPerPage);
                 ViewBag.Page = page;
             }
