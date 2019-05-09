@@ -14,29 +14,41 @@ namespace FoodDelivery.TEST
     class MenuServiceTest
     {
         IUnitOfWork _unitOfWork;
+        IList<MenuItem> _menuItems;
 
         [SetUp]
         public void Setup()
         {
+            _menuItems = new List<MenuItem>
+            {
+                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100 },
+                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200 },
+                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300 },
+                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400 },
+                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500 }
+            };
+
             var menuItemRepositoryMock = new Mock<IRepository<MenuItem>>();
-            menuItemRepositoryMock.Setup(repository => repository.GetQuery()).Returns(GetMenuItemRepositoryQuery());
-            menuItemRepositoryMock.Setup(repository => repository.Get(It.IsAny<string>())).Returns((string menuItemId) => GetMenuItem(menuItemId));
+            menuItemRepositoryMock.Setup(repository => repository.GetQuery()).Returns(_menuItems.AsQueryable());
+            menuItemRepositoryMock.Setup(repository => repository.Get(It.IsAny<string>())).Returns((string menuItemId) => _menuItems.FirstOrDefault(i => i.Id == menuItemId));
+            menuItemRepositoryMock.Setup(repository => repository.Create(It.IsAny<MenuItem>())).Callback((MenuItem mi) => _menuItems.Add(mi));
 
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(ufw => ufw.MenuItemsRepository).Returns(menuItemRepositoryMock.Object);
+
 
             _unitOfWork = unitOfWorkMock.Object;
         }
 
         [Test]
-        public void AddMenuItemsSuccessfully()
+        public void AddMenuItemTest()
         {
             var newItem = new MenuItemDTO()
             {
-                Id = "New id",
-                Price = 100,
-                Description = "Description",
-                Name = "Item1"
+                Id = "sixthMenuItem",
+                Price = 5600,
+                Description = "sixthMenuItemDescription",
+                Name = "sixthMenuItemName"
             };
 
             int startCount = _unitOfWork.MenuItemsRepository.GetQuery().Count();
@@ -46,28 +58,15 @@ namespace FoodDelivery.TEST
 
             int finalCount = _unitOfWork.MenuItemsRepository.GetQuery().Count();
             Assert.AreEqual(startCount + 1, finalCount);
+
+            MenuItem menuItem = _unitOfWork.MenuItemsRepository.Get(newItem.Id);
+            Assert.AreEqual(menuItem.Id, newItem.Id);
         }
 
-        private IQueryable<MenuItem> GetMenuItemRepositoryQuery()
+        [Test]
+        public void GetPaginatedTest()
         {
-            return GetMenuItems().AsQueryable();
-        }
 
-        private List<MenuItem> GetMenuItems()
-        {
-            return new List<MenuItem>
-            {
-                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100 },
-                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200 },
-                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300 },
-                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400 },
-                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500 }
-            };
-        }
-
-        private MenuItem GetMenuItem(string itemId)
-        {
-            return GetMenuItems().FirstOrDefault(i => i.Id == itemId);
         }
     }
 }

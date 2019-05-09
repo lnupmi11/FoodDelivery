@@ -9,20 +9,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDelivery.Controllers
 {
-    public class CategoryController : Controller
+    public class DiscountController : Controller
     {
-        readonly ICategoryService _categoryService;
+        IDiscountService _discountService;
 
-        public CategoryController(ICategoryService categoryService) : base()
+        public DiscountController(IDiscountService discountService) : base()
         {
-            _categoryService = categoryService;
+            _discountService = discountService;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            return View(_categoryService.GetAll());
+            return View(_discountService.GetAll());
         }
 
         [HttpGet]
@@ -34,9 +34,9 @@ namespace FoodDelivery.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Add(CategoryDTO modelToAdd)
+        public IActionResult Add(DiscountDTO modelToAdd)
         {
-            _categoryService.Add(modelToAdd);
+            _discountService.Add(modelToAdd);
             return RedirectToAction("Index");
         }
 
@@ -44,7 +44,7 @@ namespace FoodDelivery.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id)
         {
-            var res = _categoryService.Get(id);
+            var res = _discountService.Get(id);
             if (res != null)
             {
                 return View(res);
@@ -54,9 +54,9 @@ namespace FoodDelivery.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(CategoryDTO newDataItem)
+        public IActionResult Edit(DiscountDTO newDataItem)
         {
-            _categoryService.Update(newDataItem);
+            _discountService.Update(newDataItem);
             return RedirectToAction("Index");
         }
 
@@ -64,7 +64,7 @@ namespace FoodDelivery.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
-            var res = _categoryService.Get(id);
+            var res = _discountService.Get(id);
             if (res != null)
             {
                 return View(res);
@@ -74,9 +74,9 @@ namespace FoodDelivery.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Delete(CategoryDTO newDataItem)
+        public IActionResult Delete(DiscountDTO newDataItem)
         {
-            _categoryService.Delete(newDataItem);
+            _discountService.Delete(newDataItem);
             return RedirectToAction("Index");
         }
     }

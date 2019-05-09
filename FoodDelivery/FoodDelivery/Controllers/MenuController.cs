@@ -38,14 +38,14 @@ namespace FoodDelivery.Controllers
             ViewBag.Rows = kRows;
             ViewBag.Cols = kCols;
             ViewBag.Page = page;
-            ViewBag.Total = Math.Ceiling(_menuService.GetCount(searchWord)/(double)kPageSize);
+            ViewBag.Total = Math.Ceiling(_menuService.GetPageCount(searchWord)/(double)kPageSize);
 
             ViewBag.FilterOpt = filterOpt;
             ViewBag.SearchWord = searchWord;
             ViewBag.CategoryId = categoryId;
             return View(new MenuModel
             {
-                MenuItems = _menuService.GetPaginated(page, kPageSize, filterOpt, searchWord, categoryId),
+                MenuItems = _menuService.GetMenuPage(page, kPageSize, filterOpt, searchWord, categoryId),
                 Categories = _categoryService.GetAll()
             });
         }

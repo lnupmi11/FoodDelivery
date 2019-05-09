@@ -66,7 +66,11 @@
             @if (isAdmin || isManager)
             {
                 <hr />
-                <a asp-controller="Menu" asp-action="Add" class="btn btn-dark">Add  menu item</a>
+                <div class="btn-group-vertical">
+                    <a asp-controller="Menu" asp-action="Add" class="btn btn-dark">Add  menu item</a>
+                    <a asp-controller="Category" asp-action="Index" class="btn btn-dark">Manage categories</a>
+                    <a asp-controller="Discount" asp-action="Index" class="btn btn-dark">Manage discounts</a>
+                </div>
             }
 
         </div>
@@ -81,8 +85,8 @@
                             @{currItem = Model.MenuItems.ElementAt(i * 3 + j);}
                             <div class="card">
                                 <img class="card-img-top" src="@currItem.Image" alt="Image">
-                                <h4 class="card-title">
-                                    <a href="#">@currItem.Name</a>
+                                <h4 class="card-title ml-3 mt-3">
+                                    @currItem.Name
                                 </h4>
                                 <div class="card-body">
                                     <span>@currItem.Price $</span>

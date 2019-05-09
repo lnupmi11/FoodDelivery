@@ -1,17 +1,17 @@
-﻿@model IEnumerable<FoodDelivery.DTO.Menu.CategoryDTO>
+﻿@model IEnumerable<FoodDelivery.DTO.Menu.DiscountDTO>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h4>All categories</h4>
+<h4>All discounts</h4>
 
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
+                @Html.DisplayNameFor(model => model.Percentage)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -24,14 +24,14 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CategoryName)
+                    @Html.DisplayFor(modelItem => item.Percentage)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    <a asp-controller="Category" asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
-                    <a asp-controller="Category" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+                    <a asp-controller="Discount" asp-action="Edit" class="btn btn-primary" asp-route-id="@item.Id">Edit</a>
+                    <a asp-controller="Discount" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
@@ -39,5 +39,5 @@
 </table>
 
 <p>
-    <a asp-controller="Category" asp-action="Add" class="btn btn-primary">Create New</a>
+    <a asp-controller="Discount" asp-action="Add" class="btn btn-primary">Create New</a>
 </p>

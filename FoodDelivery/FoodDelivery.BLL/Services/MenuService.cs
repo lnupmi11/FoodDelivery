@@ -12,7 +12,7 @@ namespace FoodDelivery.BLL.Services
 {
     public class MenuService : IMenuService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public MenuService(IUnitOfWork unitOfWork)
         {
@@ -79,7 +79,7 @@ namespace FoodDelivery.BLL.Services
                 Price = menuItem.Price,
                 Description = menuItem.Description,
                 Image = menuItem.Image,
-                Categories = _unitOfWork.CategoriesRepository.GetAllWhere(c => menuItem.Categories.Any(x => x.Id == c.Id)).ToList()
+                Categories = menuItem.Categories == null ? null :_unitOfWork.CategoriesRepository.GetAllWhere(c => menuItem.Categories.Any(x => x.Id == c.Id)).ToList()
             });
             _unitOfWork.SaveChanges();
         }
@@ -92,7 +92,7 @@ namespace FoodDelivery.BLL.Services
             item.Price = menuItem.Price;
             item.Description = menuItem.Description;
             item.Categories = _unitOfWork.CategoriesRepository.GetAllWhere(c => menuItem.Categories.Any(x => x.Id == c.Id)).ToList();
-            if (menuItem.Image != null && menuItem.Image != String.Empty)
+            if (!string.IsNullOrEmpty(menuItem.Image))
                 item.Image = menuItem.Image;
             _unitOfWork.MenuItemsRepository.Update(item);
             _unitOfWork.SaveChanges();
@@ -104,14 +104,14 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<MenuItemDTO> GetPaginated(int page, int pageSize, string filterOpt, string searchWord, string categoryId)
+        public IEnumerable<MenuItemDTO> GetMenuPage(int page, int pageSize, string filterOpt, string searchWord, string categoryId)
         {
             var result = GetAll();
-            if(categoryId != null && categoryId != String.Empty)
+            if(!string.IsNullOrEmpty(categoryId))
             {
                 result = result.Where(c => c.Categories.Any(x => x.Id == categoryId));
             }
-            if(searchWord != null && searchWord != String.Empty)
+            if(!string.IsNullOrEmpty(searchWord))
             {
                 result = result.Where(i => i.Name.Contains(searchWord));
             }
@@ -128,11 +128,11 @@ namespace FoodDelivery.BLL.Services
             return result;
         }
 
-        public int GetCount(string searchWord)
+        public int GetPageCount(string searchWord)
         {
-            if(searchWord != null && searchWord != String.Empty)
+            if(!string.IsNullOrEmpty(searchWord))
             {
-                return _unitOfWork.MenuItemsRepository.GetAll().Where(i => i.Name.Contains(searchWord)).Count();
+                return _unitOfWork.MenuItemsRepository.GetAll().Count(i => i.Name.Contains(searchWord.ToLower().Trim()));
             }
             return _unitOfWork.MenuItemsRepository.GetAll().Count();
         }
