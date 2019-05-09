@@ -4,59 +4,59 @@ namespace FoodDelivery.DAL.Models.Enums
 {
     public enum Region
     {
-        [Description("Autonomous Republic of Crimea")]
+        [Description("AutonomousRepublicofCrimea")]
         AutonomousRepublicOfCrimea,
-        [Description("Cherkasy Region")]
+        [Description("CherkasyRegion")]
         CherkasyRegion,
-        [Description("Chernihiv Region")]
+        [Description("ChernihivRegion")]
         ChernihivRegion,
-        [Description("Chernivtsi Region")]
+        [Description("ChernivtsiRegion")]
         ChernivtsiRegion,
-        [Description("Dnipropetrovs'k Region")]
+        [Description("DnipropetrovskRegion")]
         DnipropetrovskRegion,
-        [Description("Donets'k Region")]
+        [Description("DonetskRegion")]
         DonetskRegion,
-        [Description("Ivano-Frankivs'k Region")]
+        [Description("IvanoFrankivskRegion")]
         IvanoFrankivskRegion,
-        [Description("Kharkiv Region")]
+        [Description("KharkivRegion")]
         KharkivRegion,
-        [Description("Kherson Region")]
+        [Description("KhersonRegion")]
         KhersonRegion,
-        [Description("Khmelnytsky Region")]
+        [Description("KhmelnytskyRegion")]
         KhmelnytskyRegion,
-        [Description("Kirovograd Region")]
+        [Description("KirovogradRegion")]
         KirovogradRegion,
-        [Description("Kyiv Region")]
+        [Description("KyivRegion")]
         KyivRegion,
-        [Description("Luhans'k Region")]
+        [Description("LuhanskRegion")]
         LuhanskRegion,
-        [Description("L'viv Region")]
+        [Description("LvivRegion")]
         LvivRegion,
-        [Description("Mykolayiv Region")]
+        [Description("MykolayivRegion")]
         MykolayivRegion,
-        [Description("Odesa Region")]
+        [Description("OdesaRegion")]
         OdesaRegion,
-        [Description("Poltava Region")]
+        [Description("PoltavaRegion")]
         PoltavaRegion,
-        [Description("Rivne Region")]
+        [Description("RivneRegion")]
         RivneRegion,
-        [Description("Sumy Region")]
+        [Description("SumyRegion")]
         SumyRegion,
-        [Description("Ternopil Region")]
+        [Description("TernopilRegion")]
         TernopilRegion,
-        [Description("The City of Kyiv")]
+        [Description("TheCityoOfKyiv")]
         TheCityOfKyiv,
-        [Description("Vinnytsya Region")]
+        [Description("VinnytsyaRegion")]
         VinnytsyaRegion,
-        [Description("Volyn Region")]
+        [Description("VolynRegion")]
         VolynRegion,
-        [Description("Zakarpattya Region")]
+        [Description("ZakarpattyaRegion")]
         ZakarpattyaRegion,
-        [Description("Zaporizhzhya Region")]
+        [Description("ZaporizhzhyaRegion")]
         ZaporizhzhyaRegion,
-        [Description("Zhytomyr Region")]
+        [Description("ZhytomyrRegion")]
         ZhytomyrRegion,
-        [Description("The city of Sevastopol")]
+        [Description("TheCityOfSevastopol")]
         TheCityOfSevastopol
     }
 }

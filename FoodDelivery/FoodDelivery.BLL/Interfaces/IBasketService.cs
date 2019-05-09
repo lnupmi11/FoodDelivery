@@ -12,5 +12,6 @@ namespace FoodDelivery.BLL.Interfaces
         void ClearBasket(string basketId);
         void SubmitBasket(string basketId, string addressId, int paymentType);
         IEnumerable<CartItemDTO> GetAllUserBasketItems(string basketId);
+        IEnumerable<CartItemDTO> GetUserBasketByFilters(int page, string searchWord, string filterOpt, string categoryId, string userName, int itemPerPage);
     }
 }

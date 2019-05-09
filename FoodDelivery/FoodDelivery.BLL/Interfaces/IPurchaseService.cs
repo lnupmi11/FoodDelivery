@@ -8,7 +8,7 @@ namespace FoodDelivery.BLL.Interfaces
     public interface IPurchaseService
     {
         List<PurchaseDTO> GetListOfPurchases(string userName);
-        List<PurchaseItemDTO> GetPurchaseItems(string purchaseId);
-
+        IEnumerable<PurchaseItemDTO> GetPurchaseItems(string purchaseId);
+        IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(int page, string searchWord, string filterOpt, string categoryId, int itemPerPage, string purchaseId);
     }
 }

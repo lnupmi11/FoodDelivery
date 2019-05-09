@@ -20,7 +20,7 @@ namespace FoodDelivery.BLL
                         .GetCustomAttributes(typeof(DescriptionAttribute), false)
                         .FirstOrDefault() as DescriptionAttribute;
 
-                    if (description == descriptionAttribute.Description)
+                    if (description.ToLower() == descriptionAttribute.Description.ToLower())
                     {
                         return val;
                     }
