@@ -21,37 +21,43 @@
 }
 <h3>Cart submition</h3>
 
-<label>
-    <input onclick="hideNewAddressForm()" type="radio" asp-for="IsSavedAddress" value="false" /> Choose from saved addresses
-</label>
-<label style="margin-left: 10px;">
-    <input onclick="hideSavedAddressForm()" type="radio" asp-for="IsSavedAddress" value="true" /> Enter new address
-</label>
+<div class="btn-group-toggle">
+    <label class="btn btn-outline-dark">
+        <input onclick="hideNewAddressForm()" type="radio" asp-for="IsSavedAddress" value="false" /> Saved addresses
+    </label>
+    <label class="btn btn-outline-dark">
+        <input onclick="hideSavedAddressForm()" type="radio" asp-for="IsSavedAddress" value="true" /> Enter new address
+    </label>
+</div>
 
-<div id="savedAddressForm" style="margin-top:30px;">
-    <div class="row">
+<div id="savedAddressForm">
+    <div class="row mt-3">
         <div class="col-md-12">
             @using (Html.BeginForm("SubmitOnSavedAddres", "Cart", FormMethod.Post))
             {
-                <label class="cartSubmitionInput" for="addressId">Saved Address:</label>
-                <select class="cartSubmitionInput" name="addressId">
-                    @foreach (var address in Model.SavedAddresses)
-                    {
-                        <option value="@address.AddressId">@address.Region, @address.Street, @address.BuildingNumber </option>
-                    }
-                </select>
-                <br /><br />
-                <label class="cartSubmitionInput" for="additionalInfo">Comments (additional)</label>
-                <input class="cartSubmitionInput" name="additionalInfo" />
-                <br /><br />
-                <label class="cartSubmitionInput" for="paymentType">Payment type:</label>
-                <select class="cartSubmitionInput" name="paymentType">
-                    <option value="0">Cash</option>
-                    <option value="1">Debit card</option>
-                </select>
-                <br /><br />
-                <input type="submit" value="Submit" class="btn btn-success"/>
-                <br /><br />
+                <div class="form-group">
+                    <label class="control-label" for="addressId">Saved Address:</label>
+                    <select class="custom-select" name="addressId">
+                        @foreach (var address in Model.SavedAddresses)
+                        {
+                            <option value="@address.AddressId">@address.Region, @address.Street, @address.BuildingNumber </option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="additionalInfo">Comments (additional)</label>
+                    <input class="form-control" name="additionalInfo" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="paymentType">Payment type:</label>
+                    <select class="custom-select" name="paymentType">
+                        <option value="0">Cash</option>
+                        <option value="1">Debit card</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-success" />
+                </div>
             }
         </div>
     </div>
@@ -61,31 +67,37 @@
         <div class="col-md-12">
             @using (Html.BeginForm("SubmitOnNewAddres", "Cart", FormMethod.Post))
             {
-                <label class="cartSubmitionInput" for="address.Region">Region</label>
-                <select class="cartSubmitionInput" name="address.Region">
-                    @foreach (var address in Model.Regions)
-                    {
-                        <option value="@address">@address</option>
-                    }
-                </select>
-                <br /><br />
-                <label class="cartSubmitionInput" for="address.Street">Street</label>
-                <input class="cartSubmitionInput" name="address.Street" />
-                <br /><br />
-                <label class="cartSubmitionInput" for="address.BuildingNumber">Building Number</label>
-                <input class="cartSubmitionInput" name="address.BuildingNumber" />
-                <br /><br />
-                <label class="cartSubmitionInput" for="additionalInfo">Comments (additional)</label>
-                <input class="cartSubmitionInput" name="additionalInfo" />
-                <br /><br />
-                <label class="cartSubmitionInput" for="paymentType">Payment type:</label>
-                <select class="cartSubmitionInput" name="paymentType">
-                    <option value="0">Cash</option>
-                    <option value="1">Debit card</option>
-                </select>
-                <br /><br />
-                <input type="submit" value="Submit" class="btn btn-success" />
-                <br /><br />
+                <div class="form-group">
+                    <label class="control-label" for="address.Region">Region</label>
+                    <select class="custom-select" name="address.Region">
+                        @foreach (var address in Model.Regions)
+                        {
+                            <option value="@address">@address</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="address.Street">Street</label>
+                    <input class="form-control" name="address.Street" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="address.BuildingNumber">Building Number</label>
+                    <input class="form-control" name="address.BuildingNumber" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="additionalInfo">Comments (additional)</label>
+                    <input class="form-control" name="additionalInfo" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="paymentType">Payment type:</label>
+                    <select class="custom-select" name="paymentType">
+                        <option value="0">Cash</option>
+                        <option value="1">Debit card</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-success" />
+                </div>
             }
         </div>
     </div>
