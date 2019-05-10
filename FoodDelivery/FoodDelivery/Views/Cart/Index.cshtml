@@ -32,11 +32,6 @@
         });
     </script>
 }
-@if (Model.CartItems.Any())
-{
-    <a asp-controller="Cart" asp-action="Clear" class="btn btn-success">Clear Cart</a>
-    <a asp-controller="Cart" asp-action="Submit" class="btn btn-success">Submit Cart</a>
-}
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -54,10 +49,10 @@
                     <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                        asp-route-categoryId="" class="dropdown-item">All categories</a>
                     @foreach (var c in Model.Categories)
-                    {
-                        <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                           asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
-                    }
+            {
+                <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                   asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
+    }
                 </div>
             </div>
 
@@ -75,6 +70,14 @@
                     </a>
                 </div>
             </form>
+
+            @if (Model.CartItems.Any())
+            {
+                <div class="btn-group mt-4">
+                    <a asp-controller="Cart" asp-action="Clear" class="btn btn-outline-dark">Clear Cart</a>
+                    <a asp-controller="Cart" asp-action="Submit" class="btn btn-dark">Submit Cart</a>
+                </div>
+            }
         </div>
         @if (Model.CartItems.Count() > 0)
         {
@@ -88,12 +91,12 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <img class="card-img-inline-cart" src="@item.Image" alt="Image">
+                                    <img class="card-img-top" src="@item.Image" alt="Image">
                                 </div>
                                 <div class="col-md-6">
                                     <h5 class="card-title">Price per item: @item.Price $</h5>
                                     <p class="card-text">@item.Description</p>
-                                    <a asp-controller="Cart" asp-action="DeleteItemFromCart" class="btn btn-success">Remove from Cart</a>
+                                    <a asp-controller="Cart" asp-action="DeleteItemFromCart" class="btn btn-danger">Remove from Cart</a>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="item-counter-cart">
@@ -109,7 +112,7 @@
             </div>
             <div class="col-md-12">
                 <div class="d-flex justify-content-center">
-                    <ul class="pagination">
+                    <ul class="pagination mt-4">
                         @for (var i = 1; i <= ViewBag.Total; i++)
                         {
                             <li class="page-item @(i == ViewBag.Page ? "active" : "")">

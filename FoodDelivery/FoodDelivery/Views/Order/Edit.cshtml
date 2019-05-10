@@ -7,16 +7,14 @@
 
 <h2>Edit</h2>
 
-<h4>OrderDTO</h4>
+<h4>Order @Model.OrderId</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="OrderId" class="control-label"></label>
-                <input asp-for="OrderId" class="form-control" readonly />
-                <span asp-validation-for="OrderId" class="text-danger"></span>
+                <input asp-for="OrderId" class="form-control" hidden />
             </div>
             <div class="form-group">
                 <label asp-for="SentTime" class="control-label"></label>
@@ -40,33 +38,39 @@
                 <span asp-validation-for="OrderStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label lass="control-label">Total cost:</label>
+                <input class="form-control" value="@Model.TotalPrice" readonly />
             </div>
-        </form>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <span class="ml-3">|</span><a asp-action="Index" class="ml-2">Back to List</a>
+            </div>
+           </form>
     </div>
     <div class="col-md-8">
-        <h4>Total: $@Model.TotalPrice</h4>
         @foreach (var mi in Model.OrderItems)
         {
             <div class="card mt-2">
                 <h5 class="card-header">MenuItem @mi.MenuItem.Name</h5>
                 <div class="card-body">
-                    <img class="card-img float-left mr-5" style="width: auto; height: 150px;" src="~/@mi.MenuItem.Image" />
-                    <h5 class="card-title">Count #@mi.Count</h5>
-                    <p class="card-text">
-                        Price per item: @mi.MenuItem.Price
-                        <br />
-                        Description: @mi.MenuItem.Description
-                        <br />
-                    </p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img class="card-img-top" src="~/@mi.MenuItem.Image" />
+                        </div>
+                        <div class="col-md-9">
+                            <h5 class="card-title">Count #@mi.Count</h5>
+                            <p class="card-text">
+                                Price per item: @mi.MenuItem.Price
+                                <br />
+                                Description: @mi.MenuItem.Description
+                                <br />
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         }
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
