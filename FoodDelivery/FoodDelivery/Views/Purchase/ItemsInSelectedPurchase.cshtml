@@ -61,6 +61,11 @@
                                     <h5 class="card-title">Price per item: @item.Price $</h5>
                                     <p class="card-text">@item.Description</p>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="item-counter-cart">
+                                        <input disabled="disabled" type="number" id="@item.Id" class="count" value="@item.Count" style="width: 40px; display:inline-block;">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

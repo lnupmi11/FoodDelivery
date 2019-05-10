@@ -1,5 +1,6 @@
 ﻿using FoodDelivery.BLL.Interfaces;
 using FoodDelivery.DAL.Interfaces;
+using FoodDelivery.DTO;
 using FoodDelivery.DTO.Menu;
 using FoodDelivery.DTO.Purchase;
 using Microsoft.EntityFrameworkCore;
@@ -72,29 +73,29 @@ namespace FoodDelivery.BLL.Services
 
         }
 
-        public IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(int page, string searchWord, string filterOpt, string categoryId, int itemPerPage, string purchaseId)
+        public IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(FilterMenuItem filter,  string purchaseId)
         {
             var result = GetPurchaseItems(purchaseId);
 
-            if (!string.IsNullOrEmpty(categoryId))
+            if (!string.IsNullOrEmpty(filter.CategoryId))
             {
-                result = result.Where(bi => bi.Category.Id == categoryId);
+                result = result.Where(bi => bi.Category.Id == filter.CategoryId);
             }
 
-            if (!string.IsNullOrEmpty(searchWord))
+            if (!string.IsNullOrEmpty(filter.SearchWord))
             {
-                result = result.Where(bi => bi.Name.Contains(searchWord));
+                result = result.Where(bi => bi.Name.Contains(filter.SearchWord));
             }
 
-            if (filterOpt == "desc")
+            if (filter.FilterOpt == "desc")
             {
                 result = result.OrderByDescending(mi => mi.Price);
             }
-            else if (filterOpt == "asc")
+            else if (filter.FilterOpt == "asc")
             {
                 result = result.OrderBy(mi => mi.Price);
             }
-            return result.Skip((page - 1) * itemPerPage).Take(itemPerPage);
+            return result.Skip((filter.Page - 1) * filter.ItemPerPage).Take(filter.ItemPerPage);
         }
     }
 }

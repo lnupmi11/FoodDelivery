@@ -1,4 +1,5 @@
-﻿using FoodDelivery.DTO.Purchase;
+﻿using FoodDelivery.DTO;
+using FoodDelivery.DTO.Purchase;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,6 @@ namespace FoodDelivery.BLL.Interfaces
     {
         List<PurchaseDTO> GetListOfPurchases(string userName);
         IEnumerable<PurchaseItemDTO> GetPurchaseItems(string purchaseId);
-        IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(int page, string searchWord, string filterOpt, string categoryId, int itemPerPage, string purchaseId);
+        IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(FilterMenuItem filter, string purchaseId);
     }
 }
