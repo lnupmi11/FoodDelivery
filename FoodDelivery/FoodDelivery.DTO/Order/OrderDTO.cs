@@ -11,7 +11,7 @@ namespace FoodDelivery.DTO.Order
         public string OrderId { get; set; }
         public DateTime SentTime { get; set; }
         public DateTime ReceivedTime { get; set; }
-        public DateTime EstimatedTime { get; set; }
+        public TimeSpan EstimatedTime { get; set; }
         public double TotalPrice { get; set; }
         public int ItemsCount { get; set; }
 

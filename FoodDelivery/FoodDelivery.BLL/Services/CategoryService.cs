@@ -23,6 +23,7 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.CategoriesRepository.Create(
                 new Category
                 {
+                    Id=category.Id,
                     CategoryName = category.CategoryName,
                     Description = category.Description
                 });
@@ -48,7 +49,7 @@ namespace FoodDelivery.BLL.Services
 
         public IEnumerable<CategoryDTO> GetAll()
         {
-            var categories = _unitOfWork.CategoriesRepository.GetAll();
+            var categories = _unitOfWork.CategoriesRepository.GetQuery();
             if (categories != null)
             {
                 return categories.Select(c => new CategoryDTO

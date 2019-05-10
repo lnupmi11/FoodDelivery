@@ -140,7 +140,7 @@ namespace FoodDelivery.BLL.Services
             }
             if (!string.IsNullOrEmpty(searchWord))
             {
-                result = result.Where(i => i.Name.Contains(searchWord));
+                result = result.Where(i => i.Name.ToLower().Contains(searchWord.ToLower()));
             }
             pageCount = (int)Math.Ceiling((double)result.Count() / pageSize);
             switch (filterOpt)
