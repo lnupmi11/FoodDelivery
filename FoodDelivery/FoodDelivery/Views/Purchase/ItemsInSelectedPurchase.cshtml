@@ -73,16 +73,18 @@
             </div>
             <div class="col-md-12">
                 <div class="d-flex justify-content-center">
-                    <ul class="pagination">
-                        @for (var i = 1; i <= ViewBag.Total; i++)
-                        {
-                            <li class="page-item @(i == ViewBag.Page ? "active" : "")">
-                                <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-page="@i"
-                                   asp-route-filterOpt="@ViewBag.FilterOpt"  asp-route-purchaseId = "@ViewBag.PurchaseId" asp-route-searchWord="@ViewBag.SearchWord"
-                                   asp-route-categoryId="@ViewBag.CategoryId" class="page-link">@i</a>
-                            </li>
-                        }
-                    </ul>
+                    <div class="pagination mt-4">
+                        <ul class="pagination">
+                            @for (var i = 1; i <= ViewBag.Total; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                    <a asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-page="@i"
+                                       asp-route-filterOpt="@ViewBag.FilterOpt" asp-route-purchaseId="@ViewBag.PurchaseId" asp-route-searchWord="@ViewBag.SearchWord"
+                                       asp-route-categoryId="@ViewBag.CategoryId" class="page-link">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         }
