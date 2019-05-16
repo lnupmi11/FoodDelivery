@@ -237,15 +237,6 @@ namespace FoodDelivery.Controllers
             return result.ToString().ToLowerInvariant();
         }
 
-        private string GenerateQrCodeUri(string email, string unformattedKey)
-        {
-            return string.Format(
-                AuthenicatorUriFormat,
-                _urlEncoder.Encode("FoodDelivery"),
-                _urlEncoder.Encode(email),
-                unformattedKey);
-        }
-
         #endregion
     }
 }

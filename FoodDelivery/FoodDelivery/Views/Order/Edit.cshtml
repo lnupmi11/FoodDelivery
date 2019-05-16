@@ -38,6 +38,10 @@
                 <span asp-validation-for="OrderStatus" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label lass="control-label">Address:</label>
+                <input class="form-control" value="@Model.Address.Region.ToString(), @Model.Address.Street.ToString(),  @Model.Address.BuildingNum" readonly />
+            </div>
+            <div class="form-group">
                 <label lass="control-label">Total cost:</label>
                 <input class="form-control" value="@Model.TotalPrice" readonly />
             </div>

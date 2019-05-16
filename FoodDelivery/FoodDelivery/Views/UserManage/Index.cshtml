@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="btn-group-vertical btn-block">
+                <a asp-controller="UserManage" asp-action="Index" asp-route-role=""
+                   class="btn btn-outline-dark">All users</a>
+                @{
+                    foreach (var role in Enum.GetValues(typeof(Roles)))
+                    {
+                        <a asp-controller="UserManage" asp-action="Index" asp-route-role="@role"
+                           class="btn btn-outline-dark">@role</a>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-md-9">
+            @foreach (var user in Model)
+            {
+            <div class="card mt-2">
+                <h5 class="card-header">User @user.Id</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img class="card-img-top" src="~/images/anonymous-user.png" alt="avatar" />
+                        </div>
+                        <div class="col-md-9">
+                            <h5 class="card-title">@user.FirstName @user.LastName</h5>
+                            <p class="card-text">
+                                Registration date: @user.RegistrationDate
+                            </p>
+                            <a asp-controller="UserManage" asp-action="BlockUser" asp-route-id="@user.Id" class="btn btn-warning" >Block</a>
+                            <a asp-controller="UserManage" asp-action="UnblockUser" asp-route-id="@user.Id" class="btn btn-primary">Unblock</a>
+                            <a asp-controller="UserManage" asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
+                            <a class="btn btn-outline-primary ml-4" mt-4" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Assign role
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                                @foreach (var role in Enum.GetValues(typeof(Roles)))
+                                {
+                                <a asp-controller="UserManage" asp-action="AssignRoleToUser" asp-route-role="@role"
+                                   asp-route-id="@user.Id" class="btn btn-outline-dark">@role</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

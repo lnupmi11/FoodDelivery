@@ -9,16 +9,21 @@ using System.Linq;
 using FoodDelivery.DTO;
 using Microsoft.EntityFrameworkCore;
 using FoodDelivery.DAL.Models.Enums;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Collections;
 
 namespace FoodDelivery.BLL.Services
 {
     public class UserService : IUserService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public ApplicationUser GetApplicationUser(string id)
@@ -29,6 +34,28 @@ namespace FoodDelivery.BLL.Services
         public IEnumerable<ApplicationUser> GetApplicationUsers()
         {
             return _unitOfWork.UsersRepository.GetAll();
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetApplicatinoUsersByRole(string role)
+        {
+            if (string.IsNullOrEmpty(role))
+            {
+                return GetApplicationUsers();
+            }
+            var users = await _userManager.GetUsersInRoleAsync(role);
+            return users;
+        }
+
+        public async Task BlockApplicatoinUser(string id)
+        {
+            var user = GetApplicationUser(id);
+            await _userManager.SetLockoutEnabledAsync(user, true);
+        }
+
+        public async Task UnblockApplicationUser(string id)
+        {
+            var user = GetApplicationUser(id);
+            await _userManager.SetLockoutEnabledAsync(user, false);
         }
 
         public void ChangeFirstName(ApplicationUser user, string firstName)
@@ -48,9 +75,9 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.UsersRepository.Update(user);
         }
 
-        public void Delete(ApplicationUser user)
+        public void Delete(string id)
         {
-            //_unitOfWork.UsersRepository.Delete(user);
+            _unitOfWork.UsersRepository.Delete(id);
         }
 
         public void AddSavedAddress(string userName, AddressDTO address)
@@ -127,6 +154,13 @@ namespace FoodDelivery.BLL.Services
                 regions.Add(region.ToString());
             }
             return regions;
+        }
+
+        public async Task AssignRoleToUser(string id, string role)
+        {
+            var user = GetApplicationUser(id);
+            var roles = new List<string>{ role };
+            await _userManager.AddToRolesAsync(user, roles);
         }
     }
 }
