@@ -14,13 +14,13 @@ namespace FoodDelivery.Controllers
 {
     public class CartController : Controller
     {
-        IBasketService _orderService;
+        IBasketService _basketService;
         IUserService _userService;
         ICategoryService _categoryService;
 
         public CartController(IBasketService orderService, IUserService userService, ICategoryService categoryService) : base()
         {
-            _orderService = orderService;
+            _basketService = orderService;
             _userService = userService;
             _categoryService = categoryService;
         }
@@ -34,8 +34,8 @@ namespace FoodDelivery.Controllers
             List<CartItemDTO> cartItems = new List<CartItemDTO>();
             if (!string.IsNullOrEmpty(userName))
             {
-                cartItems = _orderService.GetUserBasketByFilters(page,searchWord,filterOpt,categoryId, userName, itemsPerPage).ToList();
-                ViewBag.Total = Math.Ceiling(_orderService.GetAllUserBasketItems(userName).Count() * 1.0 /itemsPerPage);
+                cartItems = _basketService.GetUserBasketByFilters(page,searchWord,filterOpt,categoryId, userName, itemsPerPage).ToList();
+                ViewBag.Total = Math.Ceiling(_basketService.GetAllUserBasketItems(userName).Count() * 1.0 /itemsPerPage);
                 ViewBag.Page = page;
             }
             cartModel.CartItems = cartItems;
@@ -52,7 +52,7 @@ namespace FoodDelivery.Controllers
         public IActionResult AddItem(string itemId)
         {
             var userName = User.Identity.Name;
-            _orderService.AddItemToBasket(userName, itemId);
+            _basketService.AddItemToBasket(userName, itemId);
             return new EmptyResult();
         }
 
@@ -60,7 +60,7 @@ namespace FoodDelivery.Controllers
         public IActionResult RemoveItem(string itemId)
         {
             var userName = User.Identity.Name;
-            _orderService.DeleteItemFromBasket(userName, itemId);
+            _basketService.DeleteItemFromBasket(userName, itemId);
             return new EmptyResult();
         }
 
@@ -82,7 +82,7 @@ namespace FoodDelivery.Controllers
             var userName = User.Identity.Name;
             _userService.AddSavedAddress(userName, address);
             var addressId = _userService.GetSavedAddressId(address);
-            _orderService.SubmitBasket(userName, addressId, paymentType);
+            _basketService.SubmitBasket(userName, addressId, paymentType);
             return new RedirectToRouteResult(new { controller = "Purchase", action = "AllPurchases" });
         }
 
@@ -91,7 +91,7 @@ namespace FoodDelivery.Controllers
         public IActionResult SubmitOnSavedAddres(string addressId, string additionalInfo, int paymentType)
         {
             var userName = User.Identity.Name;
-            _orderService.SubmitBasket(userName, addressId, paymentType);
+            _basketService.SubmitBasket(userName, addressId, paymentType);
             return new RedirectToRouteResult(new { controller = "Purchase", action = "AllPurchases" });
         }
 
@@ -99,9 +99,8 @@ namespace FoodDelivery.Controllers
         public IActionResult Clear()
         {
             var userName = User.Identity.Name;
-            _orderService.ClearBasket(userName);
+            _basketService.ClearBasket(userName);
             return RedirectToRoute(new { controller = "Menu", action = "Index" });
         }
-
     }
 }
