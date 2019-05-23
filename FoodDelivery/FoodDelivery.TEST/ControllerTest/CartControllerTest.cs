@@ -32,12 +32,14 @@ namespace FoodDelivery.TEST.ControllerTest
             _basketServiceMock.Setup(service => service.AddItemToBasket(It.IsAny<string>(), It.IsAny<string>()));
             _basketServiceMock.Setup(service => service.DeleteItemFromBasket(It.IsAny<string>(), It.IsAny<string>()));
             _basketServiceMock.Setup(service => service.ClearBasket(It.IsAny<string>()));
+            _basketServiceMock.Setup(service => service.SubmitBasket(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
             _basketService = _basketServiceMock.Object;
 
 
             _userServiceMock = new Mock<IUserService>();
             _userServiceMock.Setup(service => service.GetRegions()).Returns(ListOfRegions);
             _userServiceMock.Setup(service => service.GetSavedAddresses(It.IsAny<string>())).Returns(ListOfAddresses);
+            _userServiceMock.Setup(service => service.AddSavedAddress(It.IsAny<string>(), It.IsAny<AddressDTO>()));
             _userService = _userServiceMock.Object;
 
             var identityMock = new Mock<IIdentity>();
@@ -96,6 +98,27 @@ namespace FoodDelivery.TEST.ControllerTest
             var model = result.Model as PreSubmitCartDTO;
             Assert.IsTrue(model.Regions.All(r => ListOfRegions.Contains(r)));
             Assert.IsTrue(model.SavedAddresses.All(a => ListOfAddresses.Any(sa => sa.AddressId == a.AddressId)));
+        }
+
+        [Test]
+        public void SubmitCartOnExistingAddressSuccssesfully()
+        {
+            var contoller = new CartController(_basketService, _userService, _categoryService);
+            contoller.ControllerContext = _controllerContext;
+            var result = contoller.SubmitOnSavedAddres(string.Empty, string.Empty, 0) as RedirectToRouteResult;
+            Assert.IsNotNull(result);
+            _basketServiceMock.Verify(mock => mock.SubmitBasket(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+        }
+
+        [Test]
+        public void SubmitCartOnNewAddressSuccssesfully()
+        {
+            var contoller = new CartController(_basketService, _userService, _categoryService);
+            contoller.ControllerContext = _controllerContext;
+            var result = contoller.SubmitOnNewAddres(new AddressDTO(), string.Empty, 0) as RedirectToRouteResult;
+            Assert.IsNotNull(result);
+            _userServiceMock.Verify(mock => mock.AddSavedAddress(It.IsAny<string>(), It.IsAny<AddressDTO>()), Times.Once);
+            _basketServiceMock.Verify(mock => mock.SubmitBasket(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once());
         }
 
         public List<CategoryDTO> ListOfCategories = new List<CategoryDTO>
