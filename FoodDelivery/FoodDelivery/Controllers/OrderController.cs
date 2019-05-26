@@ -39,5 +39,12 @@ namespace FoodDelivery.Controllers
             _orderService.Update(order);
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public IActionResult UpdateOrderStatus(string id, string status)
+        {
+            _orderService.UpdateOrderStatus(id, status);
+            return View("Index", _orderService.GetByStatus(""));
+        }
     }
 }

@@ -26,66 +26,63 @@
     <div class="row">
         <div class="col-lg-3">
             <h1 class="my-4">Sort by</h1>
-            <div class="btn-group-vertical">
-                <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="asc" asp-route-searchWord="@ViewBag.SearchWord"
-                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price ascending</a>
-                <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="desc" asp-route-searchWord="@ViewBag.SearchWord"
-                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price descending</a>
-                <a class="btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="asc" asp-route-searchWord="@ViewBag.SearchWord"
+               asp-route-categoryId="@ViewBag.CategoryId" class="w-100 m-1 btn btn-outline-dark">Price ascending</a>
+            <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="desc" asp-route-searchWord="@ViewBag.SearchWord"
+               asp-route-categoryId="@ViewBag.CategoryId" class="w-100 m-1 btn btn-outline-dark">Price descending</a>
+            <div>
+                <a class="w-100 m-1 btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     With discount
                 </a>
-
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
+                <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink1">
                     <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                        asp-route-discountId="" class="dropdown-item">All menu items</a>
                     @foreach (var d in Model.Discounts)
                     {
                         <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                            asp-route-discountId="@d.Id" class="dropdown-item">@d.Description @d.Percentage%</a>
+                            asp-route-discountId="@d.Id" class="dropdown-item">@d.Description@d.Percentage%</a>
                     }
                 </div>
-
-                <div>
-                <a class="btn btn-outline-dark mt-4" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </div>
+            <div>
+                <a class="w-100 m-1 btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Search in category
                 </a>
-
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink2">
+                    <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink2">
                     <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                        asp-route-categoryId="" class="dropdown-item">All categories</a>
                     @foreach (var c in Model.Categories)
                     {
                         <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                            asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
+                           asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
                     }
-                </div>
-                </div>
+
+                    </div>
             </div>
 
-            <div class="dropdown show mt-2"></div>
-
             <hr />
+
             <form asp-Controller="Menu" asp-action="Index" method="get">
-                <div class="form-actions no-color">
+                <div class="form-actions">
                     <p>
                         <input type="text" name="searchWord" class="form-control" value="@ViewBag.SearchWord" />
                     </p>
-                    <input type="submit" value="Search" class="btn btn-outline-dark" />
-                    <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="" asp-route-categoryId="">
-                        <input type="submit" value="Back to full list" class="btn btn-outline-dark" />
+                    <input type="submit" value="Search items" class="btn btn-outline-dark" />
+                    <a class="ml-1 btn btn-outline-dark" asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="" asp-route-categoryId="">
+                        Go to full list
                     </a>
                 </div>
             </form>
 
             @if (isAdmin || isManager)
-            {
-                <hr />
-                <div class="btn-group-vertical">
-                    <a asp-controller="Menu" asp-action="Add" class="btn btn-outline-dark">Add  menu item</a>
-                    <a asp-controller="Category" asp-action="Index" class="btn btn-outline-dark">Manage categories</a>
-                    <a asp-controller="Discount" asp-action="Index" class="btn btn-outline-dark">Manage discounts</a>
-                </div>
-            }
+    {
+        <hr />
+        <div class="">
+            <a asp-controller="Menu" asp-action="Add" class="w-100 m-1 btn btn-outline-dark">Add  menu item</a>
+            <a asp-controller="Category" asp-action="Index" class="w-100 m-1 btn btn-outline-dark">Manage categories</a>
+            <a asp-controller="Discount" asp-action="Index" class="w-100 m-1 btn btn-outline-dark">Manage discounts</a>
+        </div>
+}
 
         </div>
 

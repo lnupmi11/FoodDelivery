@@ -183,3 +183,11 @@ input:disabled {
 .item-cart-card {
     margin-top: 20px;
 }
+
+.btn-group-vertical.special {
+    display: flex;
+}
+
+.special .btn {
+    flex: 1
+}

@@ -14,5 +14,6 @@ namespace FoodDelivery.BLL.Interfaces
         void Add(OrderDTO order);
         void Update(OrderDTO order);
         void Delete(OrderDTO order);
+        void UpdateOrderStatus(string id, string statusName);
     }
 }

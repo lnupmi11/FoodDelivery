@@ -137,6 +137,14 @@ namespace FoodDelivery.BLL.Services
             _unitOfWork.SaveChanges();
         }
 
+        public void UpdateOrderStatus(string id, string statusName)
+        {
+            var order = _unitOfWork.OrdersRepository.Get(id);
+            order.Status = statusName;
+            _unitOfWork.OrdersRepository.Update(order);
+            _unitOfWork.SaveChanges();
+        }
+
         private OrderStatus ValueToEnum(string value)
         {
             Enum.TryParse(value, out OrderStatus outStatus);

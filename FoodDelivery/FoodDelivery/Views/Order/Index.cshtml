@@ -38,6 +38,15 @@
                             Order status: @order.OrderStatus.ToString()
                             <br />
                         </p>
+                        
+                        @foreach(OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                        {
+                            <a asp-controller="Order" asp-action="UpdateOrderStatus" asp-route-id="@order.OrderId"
+                               asp-route-status="@status.ToString()" class="m-1 btn btn-outline-secondary @Html.Raw(order.OrderStatus == status ? "focus active" : "" )">
+                               @status.ToString()
+                               </a>
+                        }
+
                         <a asp-controller="Order" asp-action="Edit" asp-route-id="@order.OrderId"
                            class="btn btn-success">Handle order</a>
                     </div>
