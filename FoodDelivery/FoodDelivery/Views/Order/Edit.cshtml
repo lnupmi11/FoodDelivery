@@ -5,8 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
-
 <h4>Order @Model.OrderId</h4>
 <hr />
 <div class="row">
@@ -14,23 +12,19 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <input asp-for="OrderId" class="form-control" hidden />
+                <label class="control-label" for="SentTime">Sent time:</label>
+                <input class="form-control" readonly type="datetime-local" data-val="true" id="SentTime" name="SentTime" value="@Model.SentTime.ToShortTimeString()">
             </div>
             <div class="form-group">
-                <label asp-for="SentTime" class="control-label"></label>
-                <input asp-for="SentTime" class="form-control" readonly />
-                <span asp-validation-for="SentTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstimatedTime" class="control-label"></label>
+                <label class="control-label" for="EstimatedTime">Estimated time:</label>
                 <input asp-for="EstimatedTime" class="form-control" />
                 <span asp-validation-for="EstimatedTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="OrderStatus" class="control-label"></label>
+                <label class="control-label" for="OrderStatus">Order status:</label>
                 <select class="custom-select" asp-for="@Model.OrderStatus">
                     <option value="" disabled>Please choose category</option>
-                    @foreach(var status in Enum.GetValues(typeof(OrderStatus)))
+                    @foreach (var status in Enum.GetValues(typeof(OrderStatus)))
                     {
                         <option value="@status">@status</option>
                     }
@@ -49,20 +43,23 @@
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <span class="ml-3">|</span><a asp-action="Index" class="ml-2">Back to List</a>
             </div>
-           </form>
+            <div class="form-group">
+                <input asp-for="OrderId" class="form-control" hidden />
+            </div>
+        </form>
     </div>
     <div class="col-md-8">
         @foreach (var mi in Model.OrderItems)
         {
             <div class="card mt-2">
-                <h5 class="card-header">MenuItem @mi.MenuItem.Name</h5>
+                <h5 class="card-header">Item: "@mi.MenuItem.Name"</h5>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
                             <img class="card-img-top" src="~/@mi.MenuItem.Image" />
                         </div>
                         <div class="col-md-9">
-                            <h5 class="card-title">Count #@mi.Count</h5>
+                            <h5 class="card-title">Quantity: @mi.Count</h5>
                             <p class="card-text">
                                 Price per item: @mi.MenuItem.Price
                                 <br />

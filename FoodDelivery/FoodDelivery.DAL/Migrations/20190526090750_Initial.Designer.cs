@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodDelivery.DAL.Migrations
 {
     [DbContext(typeof(FoodDeliveryContext))]
-    [Migration("20190509172744_Initial2")]
-    partial class Initial2
+    [Migration("20190526090750_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,7 +127,7 @@ namespace FoodDelivery.DAL.Migrations
 
                     b.Property<string>("AddressId");
 
-                    b.Property<DateTime>("EstimatedTime");
+                    b.Property<TimeSpan>("EstimatedTime");
 
                     b.Property<int>("PaymentType");
 
