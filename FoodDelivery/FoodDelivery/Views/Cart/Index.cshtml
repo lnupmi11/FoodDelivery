@@ -36,25 +36,24 @@
     <div class="row">
         <div class="col-md-3">
             <h1 class="my-4">Sort by</h1>
-            <div class="btn-group-vertical">
-                <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="asc" asp-route-searchWord="@ViewBag.SearchWord"
-                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price ascending</a>
-                <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="desc" asp-route-searchWord="@ViewBag.SearchWord"
-                   asp-route-categoryId="@ViewBag.CategoryId" class="btn btn-outline-dark">Price descending</a>
-                <a class="btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Search in category
-                </a>
+            <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="asc" asp-route-searchWord="@ViewBag.SearchWord"
+               asp-route-categoryId="@ViewBag.CategoryId" class="w-100 m-1 btn btn-outline-dark">Price ascending</a>
+            <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="desc" asp-route-searchWord="@ViewBag.SearchWord"
+               asp-route-categoryId="@ViewBag.CategoryId" class="w-100 m-1 btn btn-outline-dark">Price descending</a>
+            <a class="w-100 m-1 btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Search in category
+            </a>
 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                       asp-route-categoryId="" class="dropdown-item">All categories</a>
-                    @foreach (var c in Model.Categories)
-            {
+            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink">
                 <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                   asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
-    }
-                </div>
+                   asp-route-categoryId="" class="dropdown-item">All categories</a>
+                @foreach (var c in Model.Categories)
+                {
+                    <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
+                       asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
+                }
             </div>
+
 
             <div class="dropdown show mt-2"></div>
 
@@ -64,19 +63,18 @@
                     <p>
                         <input type="text" name="searchWord" class="form-control" value="@ViewBag.SearchWord" />
                     </p>
-                    <input type="submit" value="Search" class="btn btn-outline-dark" />
+                    <input type="submit" value="Search" class="w-100 m-1 btn btn-outline-dark" />
                     <a asp-controller="Cart" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="" asp-route-categoryId="">
-                        <input type="submit" value="Back to full list" class="btn btn-outline-dark" />
+                        <input type="submit" value="Back to full list" class="w-100 m-1 btn btn-outline-dark" />
                     </a>
                 </div>
             </form>
 
             @if (Model.CartItems.Any())
             {
-                <div class="btn-group mt-4">
-                    <a asp-controller="Cart" asp-action="Clear" class="btn btn-outline-dark">Clear Cart</a>
-                    <a asp-controller="Cart" asp-action="Submit" class="btn btn-dark">Submit Cart</a>
-                </div>
+                <hr />
+                <a asp-controller="Cart" asp-action="Clear" class="w-100 m-1 btn btn-outline-dark">Clear Cart</a>
+                <a asp-controller="Cart" asp-action="Submit" class="w-100 m-1 btn btn-outline-dark">Submit Cart</a>
             }
         </div>
         @if (Model.CartItems.Count() > 0)
