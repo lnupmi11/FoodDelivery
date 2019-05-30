@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using global::FoodDelivery.DAL.Models;
 using global::FoodDelivery.Models.AccountViewModels;
 using FoodDelivery.DAL.Models.Enums;
+using FoodDelivery.BLL.Interfaces;
 
 namespace FoodDelivery.Controllers
 {
@@ -18,15 +19,18 @@ namespace FoodDelivery.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserService _userService;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            IUserService userService,
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
             _logger = logger;
         }
 
@@ -53,8 +57,9 @@ namespace FoodDelivery.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                var user = _userService.GetUserByEmail(model.Email);
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
+                if (result.Succeeded && !await _userManager.IsLockedOutAsync(user))
                 {
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
@@ -88,7 +93,7 @@ namespace FoodDelivery.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, EmailConfirmed = true, RegistrationDate = DateTime.Now };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

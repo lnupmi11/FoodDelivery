@@ -159,8 +159,18 @@ namespace FoodDelivery.BLL.Services
         public async Task AssignRoleToUser(string id, string role)
         {
             var user = GetApplicationUser(id);
-            var roles = new List<string>{ role };
-            await _userManager.AddToRolesAsync(user, roles);
+            await _userManager.AddToRoleAsync(user, role);
+        }
+
+        public async Task RemoveRoleFromUser(string id, string role)
+        {
+            var user = GetApplicationUser(id);
+            await _userManager.RemoveFromRoleAsync(user, role);
+        }
+
+        public ApplicationUser GetUserByEmail(string email)
+        {
+            return GetApplicationUsers().FirstOrDefault(u => u.Email == email);
         }
     }
 }

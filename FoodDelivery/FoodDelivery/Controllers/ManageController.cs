@@ -21,6 +21,7 @@ namespace FoodDelivery.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserService _userService;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
 
@@ -29,11 +30,13 @@ namespace FoodDelivery.Controllers
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
+          IUserService userService,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
             _logger = logger;
             _urlEncoder = urlEncoder;
         }
@@ -44,7 +47,7 @@ namespace FoodDelivery.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = _userService.GetApplicationUser(_userManager.GetUserId(User));
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -54,6 +57,8 @@ namespace FoodDelivery.Controllers
             {
                 Username = user.UserName,
                 PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 IsEmailConfirmed = user.EmailConfirmed,
                 StatusMessage = StatusMessage
             };
@@ -84,6 +89,16 @@ namespace FoodDelivery.Controllers
                 {
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }
+            }
+
+            if(!String.IsNullOrEmpty(model.FirstName))
+            {
+                _userService.ChangeFirstName(user, model.FirstName);
+            }
+
+            if(!String.IsNullOrEmpty(model.LastName))
+            {
+                _userService.ChangeSecondName(user, model.LastName);
             }
 
             StatusMessage = "Your UserProfile has been updated";

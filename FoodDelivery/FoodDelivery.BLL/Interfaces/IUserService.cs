@@ -9,6 +9,7 @@ namespace FoodDelivery.BLL.Interfaces
     public interface IUserService
     {
         ApplicationUser GetApplicationUser(string id);
+        ApplicationUser GetUserByEmail(string email);
         IEnumerable<ApplicationUser> GetApplicationUsers();
         Task<IEnumerable<ApplicationUser>> GetApplicatinoUsersByRole(string role);
         Task BlockApplicatoinUser(string id);
@@ -18,6 +19,7 @@ namespace FoodDelivery.BLL.Interfaces
         void Update(ApplicationUser user);
         void Delete(string id);
         Task AssignRoleToUser(string id, string role);
+        Task RemoveRoleFromUser(string id, string role);
         void AddSavedAddress(string userName, AddressDTO address);
         IEnumerable<AddressDTO> GetSavedAddresses(string userName);
         string GetSavedAddressId(AddressDTO address);

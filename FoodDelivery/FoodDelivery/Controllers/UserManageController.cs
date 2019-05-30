@@ -33,6 +33,7 @@ namespace FoodDelivery.Controllers
         {
             var user = _userService.GetApplicationUser(id);
             await _userManager.SetLockoutEnabledAsync(user, true);
+            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
             return View("Index", _userService.GetApplicationUsers());
         }
 
@@ -52,6 +53,12 @@ namespace FoodDelivery.Controllers
         public async Task<IActionResult> AssignRoleToUser(string id, string role)
         {
             await _userService.AssignRoleToUser(id, role);
+            return View("Index", _userService.GetApplicationUsers());
+        }
+
+        public async Task<IActionResult> RemoveRoleFromUser(string id, string role)
+        {
+            await _userService.RemoveRoleFromUser(id, role);
             return View("Index", _userService.GetApplicationUsers());
         }
     }
