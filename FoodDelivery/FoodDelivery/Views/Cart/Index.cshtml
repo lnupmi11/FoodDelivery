@@ -51,8 +51,8 @@
             @if (Model.CartItems.Any())
             {
                 <hr />
-                <a asp-controller="Cart" asp-action="Clear" class="w-100 m-1 btn btn-outline-dark">Clear Cart</a>
-                <a asp-controller="Cart" asp-action="Submit" class="w-100 m-1 btn btn-outline-dark">Submit Cart</a>
+                <a asp-controller="Cart" asp-action="Clear" class="w-100 m-1 btn btn-danger">Clear Cart</a>
+                <a asp-controller="Cart" asp-action="Submit" class="w-100 m-1 btn btn-success">Submit Cart</a>
             }
         </div>
         @if (Model.CartItems.Count() > 0)
@@ -68,12 +68,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <img class="card-img-top" src="@item.Image" alt="Image">
+                                <img class="card-img-inline-cart" src="@item.Image" alt="Image">
                             </div>
                             <div class="col-md-6">
                                 <h5 class="card-title">Price per item: @item.Price $</h5>
                                 <p class="card-text">@item.Description</p>
-                                <a asp-controller="Cart" asp-action="DeleteItemFromCart" class="btn btn-danger">Remove from Cart</a>
+                                @*<a asp-controller="Cart" asp-action="DeleteItemFromCart" class="btn btn-danger">Remove from Cart</a>*@
                             </div>
                             <div class="col-md-3">
                                 <div class="item-counter-cart">

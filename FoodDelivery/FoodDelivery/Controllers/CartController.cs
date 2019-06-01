@@ -34,6 +34,7 @@ namespace FoodDelivery.Controllers
             CartModel cartModel = new CartModel();
             List<CartItemDTO> cartItems = new List<CartItemDTO>();
             double totalPrice;
+
             if (!string.IsNullOrEmpty(userName))
             {
                 cartItems = _basketService.GetUserBasketByFilters(page,searchWord,filterOpt,categoryId, userName, itemsPerPage).ToList();

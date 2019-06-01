@@ -18,7 +18,7 @@
     ViewData["Title"] = "Submit";
 }
 <h3>Cart submition</h3>
-@if (Model.IsAuthorize)
+@if (Model.IsAuthorize && Model.SavedAddresses.Any())
 {
     <div class="btn-group-toggle">
         <label class="btn btn-outline-dark">
@@ -28,9 +28,7 @@
             <input onclick="hideSavedAddressForm()" type="radio" asp-for="IsSavedAddress" value="true" /> Enter new address
         </label>
     </div>
-}
-@if (Model.IsAuthorize)
-{
+
     <div id="savedAddressForm" style="display:none; margin-top:30px;">
         <div class="row mt-3">
             <div class="col-md-12">

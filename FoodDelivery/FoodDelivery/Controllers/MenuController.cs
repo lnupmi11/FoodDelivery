@@ -127,7 +127,7 @@ namespace FoodDelivery.Controllers
                 return View(res);
             }
             ///TODO:
-            ///Change to some Errro view
+            ///Change to some Error view
             return RedirectToAction("Index");
         }
 
