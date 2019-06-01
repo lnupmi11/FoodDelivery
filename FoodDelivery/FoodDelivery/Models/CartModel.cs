@@ -9,5 +9,6 @@ namespace FoodDelivery.Models
     {
         public IEnumerable<CartItemDTO> CartItems { get; set; }
         public IEnumerable<CategoryDTO> Categories { get; set; }
+        public double TotalPrice { get; internal set; }
     }
 }

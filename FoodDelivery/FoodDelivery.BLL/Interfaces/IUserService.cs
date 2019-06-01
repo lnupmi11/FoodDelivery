@@ -24,5 +24,6 @@ namespace FoodDelivery.BLL.Interfaces
         IEnumerable<AddressDTO> GetSavedAddresses(string userName);
         string GetSavedAddressId(AddressDTO address);
         IEnumerable<string> GetRegions();
+        void AddAddressOfUnauthorizeUser(AddressDTO address);
     }
 }

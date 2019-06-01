@@ -15,9 +15,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3"></div>
-                <div class="col-md-2">
-                    <h3 style="margin-top: 10px;">@item.TotalPrice $</h3>
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <p style="margin-top: 20px;">Total price: @item.TotalPrice$</p>
                 </div>
                 <div class="col-md-2">
                     <a style="margin-top:10px" asp-controller="Purchase" asp-action="ItemsInSelectedPurchase" asp-route-purchaseId="@item.Id" class="btn btn-success">View Details</a>

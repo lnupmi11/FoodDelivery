@@ -1,32 +1,10 @@
 ﻿@model CartModel
-
 @{
     ViewData["Title"] = "Index";
 }
-
 @section Scripts
     {
     <script>
-        function AddToCart(itemId) {
-            $.ajax({
-                url: "Cart/AddItem?itemId=" + itemId,
-                success: function () {
-                    $('#' + itemId).val(parseInt($('#' + itemId).val()) + 1);
-                }
-            });
-        }
-
-        function RemoveFromCart(itemId) {
-            if ($('#' + itemId).val() != 1) {
-                $.ajax({
-                    url: "Cart/RemoveItem?itemId=" + itemId,
-                    success: function () {
-                        $('#' + itemId).val(parseInt($('#' + itemId).val()) - 1);
-                    }
-                });
-            }
-        }
-
         $(document).ready(function () {
             $('.count').prop('disabled', true);
         });
@@ -79,35 +57,36 @@
         </div>
         @if (Model.CartItems.Count() > 0)
         {
-            <div class="col-md-9">
-                @foreach (var item in Model.CartItems)
-                {
-                    <div class="card item-cart-card">
-                        <div class="card-header">
-                            @item.Name
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <img class="card-img-top" src="@item.Image" alt="Image">
-                                </div>
-                                <div class="col-md-6">
-                                    <h5 class="card-title">Price per item: @item.Price $</h5>
-                                    <p class="card-text">@item.Description</p>
-                                    <a asp-controller="Cart" asp-action="DeleteItemFromCart" class="btn btn-danger">Remove from Cart</a>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="item-counter-cart">
-                                        <span class="minus" onclick="return RemoveFromCart('@item.Id')">-</span>
-                                        <input disabled="disabled" type="number" id="@item.Id" class="count" value="@item.Count" style="width: 40px; display:inline-block;">
-                                        <span class="plus" onclick="return AddToCart('@item.Id')">+</span>
-                                    </div>
+        <div class="col-md-9">
+            <h1 class="my-4">Total price: @Model.TotalPrice$</h1>
+            @foreach (var item in Model.CartItems)
+            {
+                <div class="card item-cart-card">
+                    <div class="card-header">
+                        @item.Name
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img class="card-img-top" src="@item.Image" alt="Image">
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="card-title">Price per item: @item.Price $</h5>
+                                <p class="card-text">@item.Description</p>
+                                <a asp-controller="Cart" asp-action="DeleteItemFromCart" class="btn btn-danger">Remove from Cart</a>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="item-counter-cart">
+                                    <a asp-controller="Cart" asp-action="RemoveItem" asp-route-itemId="@item.Id" style="text-decoration:none" class="minus">-</a>
+                                    <input disabled="disabled" type="number" id="@item.Id" class="count" value="@item.Count" style="width: 40px; display:inline-block;">
+                                    <a asp-controller="Cart" asp-action="AddItem" asp-route-itemId="@item.Id" style="text-decoration:none" class="plus">+</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
+        </div>
             <div class="col-md-12">
                 <div class="d-flex justify-content-center">
                     <ul class="pagination mt-4">
@@ -129,5 +108,4 @@
         }
     </div>
 </div>
-
 
