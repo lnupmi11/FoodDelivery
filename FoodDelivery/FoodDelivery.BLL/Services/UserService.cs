@@ -96,6 +96,19 @@ namespace FoodDelivery.BLL.Services
             }
         }
 
+        public void AddAddressOfUnauthorizeUser(AddressDTO address)
+        {
+            int regionNumber = EnumConverter.GetEnumByDescription<Region>(address.Region, Region.OdesaRegion);
+
+            _unitOfWork.AddressesRepository.Create(new Address
+            {
+                BuildingNum = address.BuildingNumber,
+                Region = (Region)regionNumber,
+                Street = address.Street
+            });
+            _unitOfWork.SaveChanges();
+        }
+
         public void UpdateSavedAddress(ApplicationUser user, Address address)
         {
             user.SavedAdresses.ToList().RemoveAll(a => a.Id == address.Id);

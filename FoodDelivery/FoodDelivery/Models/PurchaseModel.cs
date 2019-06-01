@@ -11,5 +11,6 @@ namespace FoodDelivery.Models
     {
         public IEnumerable<PurchaseItemDTO> PurchaseItems { get; set; }
         public IEnumerable<CategoryDTO> Categories { get; set; }
+        public double TotalPrice { get; internal set; }
     }
 }

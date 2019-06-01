@@ -54,6 +54,7 @@ namespace FoodDelivery.Controllers
             }
             purchaseModel.PurchaseItems = purchasedItems;
             purchaseModel.Categories = _categoryService.GetAll();
+            purchaseModel.TotalPrice = _purchaseService.GetPriceOfPurchaseItems(purchaseId);
 
             ViewBag.FilterOpt = filterOpt;
             ViewBag.SearchWord = searchWord;

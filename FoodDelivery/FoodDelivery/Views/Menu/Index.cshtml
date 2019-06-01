@@ -116,7 +116,7 @@
                                         <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id" class="btn btn-primary">Edit</a>
                                         <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id" class="btn btn-danger">Delete</a>
                                     }
-                                    else if(isUser)
+                                    else if(!isAdmin && !isManager)
                                     {
                                         @*<a asp-controller="Cart" asp-action="AddItem" asp-route-itemId="@currItem.Id">Add to cart</a>*@
                                         <input type="button" value="Add to cart" onclick="AddToCart('@currItem.Id')" class="btn btn-success">

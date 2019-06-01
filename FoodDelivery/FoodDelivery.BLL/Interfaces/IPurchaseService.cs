@@ -11,5 +11,6 @@ namespace FoodDelivery.BLL.Interfaces
         List<PurchaseDTO> GetListOfPurchases(string userName);
         IEnumerable<PurchaseItemDTO> GetPurchaseItems(string purchaseId);
         IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(FilterMenuItem filter, string purchaseId);
+        double GetPriceOfPurchaseItems(string purchaseId);
     }
 }

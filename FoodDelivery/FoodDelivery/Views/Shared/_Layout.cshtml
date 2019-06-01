@@ -34,15 +34,18 @@
                     {
                         <li><a asp-controller="Order" asp-action="Index" class="nav-link">Orders</a></li>
                     }
-                    @if (isUser)
+                    @if (!isAdmin && !isManager)
                     {
                         <li><a asp-controller="Cart" asp-action="Index" class="nav-link">Cart</a></li>
+                    }
+                    @if (isUser)
+                    {
                         <li><a asp-controller="Purchase" asp-action="AllPurchases" class="nav-link">Purchases</a></li>
                     }
                     @if (isAdmin)
                     {
                         <li><a asp-controller="UserManage" asp-action="Index" class="nav-link">User Manager</a></li>
-                        
+
                     }
                 </ul>
                 <partial name="_LoginPartial" />

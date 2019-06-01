@@ -61,7 +61,7 @@ namespace FoodDelivery.TEST.ControllerTest
         {
             var contoller = new CartController(_basketService,_userService, _categoryService);
             contoller.ControllerContext = _controllerContext;
-            var result = contoller.AddItem("itemId") as EmptyResult;
+            var result = contoller.AddItem("itemId") as RedirectToRouteResult;
             Assert.IsNotNull(result);
 
             _basketServiceMock.Verify(mock => mock.AddItemToBasket(It.IsAny<string>(), It.IsAny<string>()), Times.Once());
@@ -72,7 +72,7 @@ namespace FoodDelivery.TEST.ControllerTest
         {
             var contoller = new CartController(_basketService, _userService, _categoryService);
             contoller.ControllerContext = _controllerContext;
-            var result = contoller.RemoveItem("itemId") as EmptyResult;
+            var result = contoller.RemoveItem("itemId") as RedirectToRouteResult;
             Assert.IsNotNull(result);
 
             _basketServiceMock.Verify(mock => mock.DeleteItemFromBasket(It.IsAny<string>(), It.IsAny<string>()), Times.Once());

@@ -97,5 +97,10 @@ namespace FoodDelivery.BLL.Services
             }
             return result.Skip((filter.Page - 1) * filter.ItemPerPage).Take(filter.ItemPerPage);
         }
+
+        public double GetPriceOfPurchaseItems(string purchaseId)
+        {
+            return GetPurchaseItems(purchaseId).Sum(p => p.Count * p.Price);
+        }
     }
 }
