@@ -15,5 +15,7 @@ namespace FoodDelivery.DAL.Models
         public virtual Category Category { get; set; }
         public virtual Discount Discount { get; set; }
         public virtual ICollection<BasketItem> Baskets { get; set; }
+
+        public ICollection<AdditionalInfoAboutMenuItem> AdditionalInfoAboutMenuItems { get; set; }
     }
 }

@@ -23,10 +23,17 @@ namespace FoodDelivery.Controllers
         }
 
         [Authorize]
-        public IActionResult AllPurchases()
+        public IActionResult AllPurchases(int page = 1, string priceOrder = "", string orderStatus = "")
         {
+            int itemsPerPage = 5;
             var userName = User.Identity.Name;
-            var purchases = _purchaseService.GetListOfPurchases(userName);
+            var purchases = _purchaseService.GetFilteredListOfPurchases(userName, page, itemsPerPage, priceOrder, orderStatus);
+
+            ViewBag.TotalPageCount = (int)Math.Ceiling((double)_purchaseService.GetPurchasesCount(userName, itemsPerPage, priceOrder, orderStatus) / itemsPerPage);
+            ViewBag.CurrentPage = page;
+            ViewBag.PriceOrder = priceOrder;
+            ViewBag.OrderStatus = orderStatus;
+
             return View(purchases);
         }
 

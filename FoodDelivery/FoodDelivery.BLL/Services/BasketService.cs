@@ -178,7 +178,14 @@ namespace FoodDelivery.BLL.Services
                     if (address != null)
                     {
                         var paymentTypeEnum = (PaymentType)paymentType;
-                        _unitOfWork.OrdersRepository.Create(new Order { OrderItems = orderItems, User = user, SentTime = DateTime.Now, Address = address, PaymentType = paymentTypeEnum });
+                        _unitOfWork.OrdersRepository.Create(new Order {
+                            OrderItems = orderItems,
+                            User = user,
+                            SentTime = DateTime.Now,
+                            Address = address,
+                            PaymentType = paymentTypeEnum,
+                            Status = OrderStatus.WaitingResponse.ToString()
+                        });
                         ClearBasket(userName);
                     }
                 }

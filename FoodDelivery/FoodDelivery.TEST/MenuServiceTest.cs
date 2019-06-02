@@ -21,11 +21,11 @@ namespace FoodDelivery.TEST
         {
             _menuItems = new List<MenuItem>
             {
-                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100 },
-                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200 },
-                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300 },
-                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400 },
-                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500 }
+                new MenuItem { Id = "firstMenuItemId", Name = "firstMenuItemName", Description = "firstMenuItemDescription", Price = 100, IsActive = true },
+                new MenuItem { Id = "secondMenuItemId", Name = "secondMenuItemName", Description = "secondMenuItemDescription", Price = 200, IsActive = true },
+                new MenuItem { Id = "thirdMenuItemId", Name = "thirdMenuItemName", Description = "thirdMenuItemDescription", Price = 300, IsActive = true },
+                new MenuItem { Id = "fourthMenuItemId", Name = "fourthMenuItemName", Description = "fourthMenuItemDescription", Price = 400, IsActive = true },
+                new MenuItem { Id = "fifthMenuItemId", Name = "fifthMenuItemName", Description = "fifthMenuItemDescription", Price = 500, IsActive = true }
             };
 
             var menuItemRepositoryMock = new Mock<IRepository<MenuItem>>();
@@ -33,7 +33,7 @@ namespace FoodDelivery.TEST
             menuItemRepositoryMock.Setup(repository => repository.Get(It.IsAny<string>())).Returns((string menuItemId) => _menuItems.FirstOrDefault(i => i.Id == menuItemId));
             menuItemRepositoryMock.Setup(repository => repository.Create(It.IsAny<MenuItem>())).Callback((MenuItem mi) => _menuItems.Add(mi));
             menuItemRepositoryMock.Setup(repository => repository.Update(It.IsAny<MenuItem>())).Callback((MenuItem mi) => _menuItems[_menuItems.ToList().FindIndex(i => i.Id == mi.Id)] = mi);
-            menuItemRepositoryMock.Setup(repository => repository.Delete(It.IsAny<string>())).Callback((string id) => _menuItems.Remove(_menuItems.FirstOrDefault(i => i.Id == id)));
+            menuItemRepositoryMock.Setup(repository => repository.Delete(It.IsAny<string>())).Callback((string id) => _menuItems.FirstOrDefault(i => i.Id == id).IsActive = false);
 
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(ufw => ufw.MenuItemsRepository).Returns(menuItemRepositoryMock.Object);
@@ -110,15 +110,13 @@ namespace FoodDelivery.TEST
         public void DeleteMenuItemTest()
         {
             var menuItems = _menuItems.AsQueryable();
-            var expectedCount = menuItems.Count() - 1;
 
             var menuService = new MenuService(_unitOfWork);
             var toRemoveId = "fourthMenuItemId";
             var toRemove = menuService.Get(toRemoveId);
             menuService.Delete(toRemove);
-            var actualCount = menuService.GetAll().Count();
-
-            Assert.AreEqual(expectedCount, actualCount);
+            var result = menuService.GetAll().ToArray();
+            Assert.IsFalse(result.Any(i=>i.Id == toRemoveId));
         }
 
         [Test]

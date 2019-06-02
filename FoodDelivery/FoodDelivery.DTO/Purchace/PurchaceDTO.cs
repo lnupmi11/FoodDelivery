@@ -11,5 +11,6 @@ namespace FoodDelivery.DTO.Purchase
         public string Id { get; set; }
         public List<PurchaseItemDTO> Items { get; set; }
         public double TotalPrice { get; set; }
+        public string Status { get; set; }
     }
 }
