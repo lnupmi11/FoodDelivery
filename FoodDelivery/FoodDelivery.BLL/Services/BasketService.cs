@@ -77,9 +77,14 @@ namespace FoodDelivery.BLL.Services
                     }
 
                     var cartItem = basket?.MenuItems.FirstOrDefault(mi => mi.MenuItemId == itemId);
-                    if (cartItem != null)
+                    if (cartItem != null && cartItem.Count > 1)
                     {
                         cartItem.Count--;
+                        _unitOfWork.SaveChanges();
+                    }
+                    else if(cartItem != null && cartItem.Count == 1)
+                    {
+                        basket?.MenuItems.Remove(cartItem);
                         _unitOfWork.SaveChanges();
                     }
                     else
