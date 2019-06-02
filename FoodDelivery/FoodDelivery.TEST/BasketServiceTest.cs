@@ -118,8 +118,7 @@ namespace FoodDelivery.TEST
             BasketService basketService = new BasketService(foodDeliveryUnitOfWork);
             basketService.DeleteItemFromBasket(userName, menuItemId);
 
-            int finalCount = user.Basket.MenuItems.FirstOrDefault(mi => mi.MenuItemId == menuItemId).Count;
-            Assert.AreEqual(startCount - 1, finalCount);
+            Assert.IsNull(user.Basket.MenuItems.FirstOrDefault(mi => mi.MenuItemId == menuItemId));
         }
 
         [Test]

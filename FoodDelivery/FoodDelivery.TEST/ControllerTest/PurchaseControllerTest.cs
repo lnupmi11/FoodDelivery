@@ -28,7 +28,7 @@ namespace FoodDelivery.TEST.ControllerTest
         public void Setup()
         {
             var purchaseServiceMock = new Mock<IPurchaseService>();
-            purchaseServiceMock.Setup(service => service.GetListOfPurchases(It.IsAny<string>())).Returns(ListOfPurchases);
+            purchaseServiceMock.Setup(service => service.GetFilteredListOfPurchases(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(ListOfPurchases);
             purchaseServiceMock.Setup(service => service.GetPurchaseItems(It.IsAny<string>())).Returns(PurchaseItemsByFilters);
             purchaseServiceMock.Setup(service => service.GetPurchaseItemsByFilters(It.IsAny<FilterMenuItem>(), It.IsAny<string>())).Returns(PurchaseItemsByFilters);
             _purchaseService = purchaseServiceMock.Object;

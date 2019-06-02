@@ -63,7 +63,8 @@ namespace FoodDelivery.BLL.Services
                                                        {
                                                            Id = oi.Key,
                                                            TotalPrice = oi.Sum(v => v.MenuItem.Price * v.Count),
-                                                           SubmittedTime = oi.FirstOrDefault().Order.SentTime
+                                                           SubmittedTime = oi.FirstOrDefault().Order.SentTime,
+                                                           Status = oi.FirstOrDefault().Order.Status
                                                        }).ToList();
             }
             catch(ArgumentNullException)
@@ -71,6 +72,34 @@ namespace FoodDelivery.BLL.Services
                 throw new ArgumentException($"There is no user item with the following userName: {userName}");
             }
 
+        }
+
+        public List<PurchaseDTO> GetFilteredListOfPurchases(string userName, int page, int itemsPerPage, string priceOrder, string orderStatus)
+        {
+            var result = GetFilteredListOfPurchasesWithoutPage(userName, itemsPerPage,priceOrder, orderStatus);
+            result = result.Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
+            return result;
+        }
+
+        public List<PurchaseDTO> GetFilteredListOfPurchasesWithoutPage(string userName, int itemsPerPage, string priceOrder, string orderStatus)
+        {
+            var result = GetListOfPurchases(userName);
+            switch (priceOrder)
+            {
+                case "asc":
+                    result = result.OrderBy(r => r.TotalPrice).ToList();
+                    break;
+                case "desc":
+                    result = result.OrderByDescending(r => r.TotalPrice).ToList();
+                    break;
+            }
+            result = result.Where(p => string.IsNullOrEmpty(orderStatus) || p.Status.ToLower().Contains(orderStatus.ToLower())).ToList();
+            return result;
+        }
+
+        public int GetPurchasesCount(string userName, int itemsPerPage, string priceOrder, string orderStatus)
+        {
+            return GetFilteredListOfPurchasesWithoutPage(userName, itemsPerPage, priceOrder, orderStatus).Count;
         }
 
         public IEnumerable<PurchaseItemDTO> GetPurchaseItemsByFilters(FilterMenuItem filter,  string purchaseId)

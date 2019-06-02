@@ -1,5 +1,4 @@
 @model MenuModel
-
 @{
     ViewData["Title"] = "Index";
     MenuItemDTO currItem = null;
@@ -7,9 +6,8 @@
     bool isManager = User.Identity.IsAuthenticated && User.IsInRole("OrderManager");
     bool isUser = User.Identity.IsAuthenticated && User.IsInRole("User");
 }
-
 @section Scripts
-{
+    {
     <script>
         function AddToCart(itemId) {
             $.ajax({
@@ -21,7 +19,6 @@
         }
     </script>
 }
-
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
@@ -40,7 +37,7 @@
                     @foreach (var d in Model.Discounts)
                     {
                         <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
-                            asp-route-discountId="@d.Id" class="dropdown-item">@d.Description@d.Percentage%</a>
+                           asp-route-discountId="@d.Id" class="dropdown-item">@d.Description@d.Percentage%</a>
                     }
                 </div>
             </div>
@@ -48,7 +45,7 @@
                 <a class="w-100 m-1 btn btn-outline-dark" href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Search in category
                 </a>
-                    <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink2">
+                <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuLink2">
                     <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                        asp-route-categoryId="" class="dropdown-item">All categories</a>
                     @foreach (var c in Model.Categories)
@@ -56,8 +53,7 @@
                         <a asp-controller="Menu" asp-action="Index" asp-route-filterOpt="" asp-route-searchWord="@ViewBag.SearchWord"
                            asp-route-categoryId="@c.Id" class="dropdown-item">@c.CategoryName</a>
                     }
-
-                    </div>
+                </div>
             </div>
 
             <hr />
@@ -75,17 +71,16 @@
             </form>
 
             @if (isAdmin || isManager)
-    {
-        <hr />
-        <div class="">
-            <a asp-controller="Menu" asp-action="Add" class="w-100 m-1 btn btn-outline-dark">Add  menu item</a>
-            <a asp-controller="Category" asp-action="Index" class="w-100 m-1 btn btn-outline-dark">Manage categories</a>
-            <a asp-controller="Discount" asp-action="Index" class="w-100 m-1 btn btn-outline-dark">Manage discounts</a>
-        </div>
-}
+            {
+                <hr />
+                <div class="">
+                    <a asp-controller="Menu" asp-action="Add" class="w-100 m-1 btn btn-outline-dark">Add  menu item</a>
+                    <a asp-controller="Category" asp-action="Index" class="w-100 m-1 btn btn-outline-dark">Manage categories</a>
+                    <a asp-controller="Discount" asp-action="Index" class="w-100 m-1 btn btn-outline-dark">Manage discounts</a>
+                </div>
+            }
 
         </div>
-
         <div class="col-lg-9" style="margin-top: 50px;">
             @for (int i = 0; i < ViewBag.Rows; ++i)
             {
@@ -99,7 +94,7 @@
                                 <h4 class="card-title ml-3 mt-3">
                                     @currItem.Name  @if (currItem.Discount != null)
                                     {
-                                            <span class="badge badge-pill badge-success float-right mr-4">@currItem.Discount.Percentage%</span>
+                                        <span class="badge badge-pill badge-success float-right mr-4">@currItem.Discount.Percentage%</span>
                                     }
                                 </h4>
                                 <div class="card-body">
@@ -116,7 +111,7 @@
                                         <a asp-controller="Menu" asp-action="Edit" asp-route-id="@currItem.Id" class="btn btn-primary">Edit</a>
                                         <a asp-controller="Menu" asp-action="Delete" asp-route-id="@currItem.Id" class="btn btn-danger">Delete</a>
                                     }
-                                    else if(!isAdmin && !isManager)
+                                    else if (!isAdmin && !isManager)
                                     {
                                         @*<a asp-controller="Cart" asp-action="AddItem" asp-route-itemId="@currItem.Id">Add to cart</a>*@
                                         <input type="button" value="Add to cart" onclick="AddToCart('@currItem.Id')" class="btn btn-success">
@@ -133,8 +128,8 @@
                     {
                         <li class="page-item @(i == ViewBag.Page ? "active" : "")">
                             <a asp-controller="Menu" asp-action="Index" asp-route-page="@i"
-                                 asp-route-filterOpt="@ViewBag.FilterOpt" asp-route-searchWord="@ViewBag.SearchWord"
-                                 asp-route-categoryId="@ViewBag.CategoryId" class="page-link">@i</a>
+                               asp-route-filterOpt="@ViewBag.FilterOpt" asp-route-searchWord="@ViewBag.SearchWord"
+                               asp-route-categoryId="@ViewBag.CategoryId" class="page-link">@i</a>
                         </li>
                     }
                 </ul>
