@@ -47,7 +47,7 @@ namespace FoodDelivery.Controllers
                 string allItems = HttpContext.Request.Cookies["menuItems"];
                 Dictionary<string, string> itemsDictionary = string.IsNullOrEmpty(allItems) ? new Dictionary<string, string>() : ComplexCookiesExtension.FromComplexCookieString(allItems);
                 cartItems = _basketService.GetUnAuthorizeUserBasketItems(itemsDictionary, page, searchWord, filterOpt, categoryId, itemsPerPage).ToList();
-                ViewBag.Total = Math.Ceiling(cartItems.Count() * 1.0 / itemsPerPage);
+                ViewBag.Total = Math.Ceiling(itemsDictionary.Count() * 1.0 / itemsPerPage);
                 totalPrice = _basketService.GetTotalPriceOfUnAuthorizeUserBasketItems(itemsDictionary);
                 ViewBag.Page = page;
             }
