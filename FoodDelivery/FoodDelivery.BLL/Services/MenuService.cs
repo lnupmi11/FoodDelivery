@@ -53,7 +53,7 @@ namespace FoodDelivery.BLL.Services
         public IEnumerable<MenuItemDTO> GetAll()
         {
             var menu = _unitOfWork.MenuItemsRepository.GetQuery()
-                .Include(i => i.Discount).Include(i => i.Category);
+                .Include(i => i.Discount).Include(i => i.Category).Where(mi=>mi.IsActive.Value);
 
             if (menu != null)
             {
@@ -92,7 +92,8 @@ namespace FoodDelivery.BLL.Services
                 Description = menuItem.Description,
                 Image = menuItem.Image,
                 Category = menuItem.Category == null ? null : _unitOfWork.CategoriesRepository.Get(menuItem.Category.Id),
-                Discount = menuItem.Discount == null ? null : _unitOfWork.DiscountsRepository.Get(menuItem.Discount.Id)
+                Discount = menuItem.Discount == null ? null : _unitOfWork.DiscountsRepository.Get(menuItem.Discount.Id),
+                IsActive = true
 
             });
             _unitOfWork.SaveChanges();
@@ -115,7 +116,9 @@ namespace FoodDelivery.BLL.Services
 
         public void Delete(MenuItemDTO menuItem)
         {
-            _unitOfWork.MenuItemsRepository.Delete(menuItem.Id);
+            var result = _unitOfWork.MenuItemsRepository.Get(menuItem.Id);
+            result.IsActive = false;
+            _unitOfWork.MenuItemsRepository.Update(result);
             _unitOfWork.SaveChanges();
         }
 
