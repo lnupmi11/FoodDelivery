@@ -33,7 +33,7 @@ namespace FoodDelivery
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration.GetConnectionString("DefaultConnection");
+            string connection = Configuration.GetConnectionString("ReleaseConnection");
             services.AddDbContext<FoodDeliveryContext>(options =>
                 options.UseSqlServer(connection, b => b.MigrationsAssembly("FoodDelivery")));
 
