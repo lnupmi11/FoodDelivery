@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\menu\" />
     <Folder Include="Views\Discount\" />
     <Folder Include="Views\UserManage\" />
+    <Folder Include="wwwroot\images\menu\" />
   </ItemGroup>
 
 </Project>
