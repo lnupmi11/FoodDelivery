@@ -1,1 +1,190 @@
-﻿body{padding-top:50px;padding-bottom:20px}.body-content{padding-left:15px;padding-right:15px}.carousel-caption p{font-size:20px;line-height:1.4}.carousel-inner .item img[src$=".svg"]{width:100%}#qrCode{margin:15px}@media screen and (max-width:767px){.carousel-caption{display:none}}
+﻿body {
+    padding-top: 50px
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 50px;
+    padding-bottom: 50px
+}
+
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4
+}
+
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%
+}
+
+.card-img-top {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover
+}
+
+#qrCode {
+    margin: 15px
+}
+
+@media screen and (max-width:767px) {
+    .carousel-caption {
+        display: none
+    }
+}
+
+.float-reight {
+    display: inline-block;
+    margin-left: 100px
+}
+
+.float-left {
+    display: inline-block
+}
+
+.count {
+    color: #000;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 30px;
+    padding: 0 2px;
+    min-width: 35px;
+    text-align: center
+}
+
+.plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    font: 30px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%
+}
+
+.minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    font: 30px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-clip: padding-box
+}
+
+span {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none
+}
+
+input::-webkit-inner-spin-button, nput::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0
+}
+
+input:disabled {
+    background-color: #fff
+}
+
+.card-img-inline-cart {
+    display: inline-block;
+    height: 150px;
+    width: 150px;
+    margin-right: 50px
+}
+
+.item-counter-cart {
+    padding-top: 20px;
+    display: inline-block
+}
+
+.card-item {
+    margin-top: 15px
+}
+
+.float-reight {
+    display: inline-block;
+    margin-left: 100px
+}
+
+.float-left {
+    display: inline-block
+}
+
+.count {
+    color: #000;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 30px;
+    padding: 0 2px;
+    min-width: 35px;
+    text-align: center
+}
+
+.plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: #000;
+    width: 30px;
+    height: 30px;
+    font: 30px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%
+}
+
+.minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: #000;
+    width: 30px;
+    height: 30px;
+    font: 30px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-clip: padding-box
+}
+
+    .minus:hover {
+        background-color: #b9f9c4 !important
+    }
+
+.plus:hover {
+    background-color: #b9f9c4 !important
+}
+
+.cartSubmitionInput {
+    width: 300px
+}
+
+.item-cart-card {
+    margin-top: 20px
+}
+
+.btn-group-vertical.special {
+    display: flex
+}
+
+.special .btn {
+    flex: 1
+}
+
+&.right {
+    left: 33%
+}
+
+.prev {
+    left: -33%
+}
